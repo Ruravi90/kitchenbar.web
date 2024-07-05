@@ -1,14 +1,16 @@
-<div class="flex flex-wrap grid">
-    @for (table of tables; track table) {
-        <div class="col-6" >
-            <p-button class="flex align-items-center justify-content-center" label="{{ table.name }}" [raised]="true"  icon="pi pi-table" />
+<div class="grid">
+    <div class="col-9 col-offset-2">
+        <div class="flex flex-wrap ">
+            @for (table of tables; track table) {
+                <a class=" mr-3 mb-3 button-table flex align-items-center justify-content-center" routerLink="/categories">{{ table.name }}</a>
+            }
+            @empty {
+                <div class="col-2" >
+                    Sin mesas registradas
+                </div>
+            }
         </div>
-    }
-    @empty {
-        <div class="col-2" >
-            Sin mesas registradas
-        </div>
-    }
+    </div>
 </div>
 
 

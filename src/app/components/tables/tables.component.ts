@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-import { ImportModules } from '../../app.imports'
 import { TablesService } from '../../services/index';
 import { Table } from '../../models/index';
 
 @Component({
   selector: 'app-tables',
-  standalone: true,
-  imports: [ImportModules],
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.scss'
 })

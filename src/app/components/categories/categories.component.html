@@ -1,1 +1,14 @@
-<p>categories works!</p>
+<div class="grid">
+    <div class="col-9 col-offset-2">
+        <div class="flex flex-wrap ">
+            @for (category of categories; track category) {
+                <a class=" mr-3 mb-3 button-table flex align-items-center justify-content-center" routerLink="/categories">{{ category.name }}</a>
+            }
+            @empty {
+                <div class="col-2" >
+                    Sin mesas registradas
+                </div>
+            }
+        </div>
+    </div>
+</div>

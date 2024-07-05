@@ -1,0 +1,14 @@
+<div class="flex flex-wrap grid">
+    @for (table of tables; track table) {
+        <div class="col-6" >
+            <p-button class="flex align-items-center justify-content-center" label="{{ table.name }}" [raised]="true"  icon="pi pi-table" />
+        </div>
+    }
+    @empty {
+        <div class="col-2" >
+            Sin mesas registradas
+        </div>
+    }
+</div>
+
+

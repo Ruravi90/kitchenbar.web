@@ -15,20 +15,28 @@ export class AppMenuComponent implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: 'PintoWins',
+                label: 'Menu',
                 items: [
-                    { label: 'Mesas', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
+                   
+                ]
+            },
+            {
+                label: 'kitchen',
+                items: [
+                    { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/tables'] },
+                    { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/kitchen/categories'] },
                 ]
             },
             {
                 label: 'Configuracion',
                 items: [
-                    { label: 'Ordenes', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                    { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-                    { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
-                    { label: 'Usuarios', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
+                    { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/tables'] },
+                    { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/categories'] },
+                    { label: 'Usuarios', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/users'] },
                 ]
             }
         ];
     }
 }
+
+

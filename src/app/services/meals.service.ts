@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { MealsInterface } from '../interfaces/meals.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MealsService {
+export class MealsService implements MealsInterface{
 
   private apiUrl = environment.apiBase + 'meals';
   constructor(private http: HttpClient) { }

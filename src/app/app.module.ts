@@ -10,6 +10,7 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 
 import {AuthService,CategoriesService,MealsService,OrdersService,TablesService,UsersService} from './services' 
+import { AuthInterface, CategoriesInterface, MealsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
@@ -23,7 +24,12 @@ import {AuthService,CategoriesService,MealsService,OrdersService,TablesService,U
   ],
   providers: [
     { provide: LocationStrategy, useClass: PathLocationStrategy },
-    AuthService,CategoriesService,MealsService,OrdersService,TablesService,UsersService
+    { provide: MealsInterface, useClass: MealsService },
+    { provide: AuthInterface, useClass: AuthService },
+    { provide: CategoriesInterface, useClass: CategoriesService },
+    { provide: OrdersInterface, useClass: OrdersService },
+    { provide: TablesInterface, useClass: TablesService },
+    { provide: UsersInterface, useClass: UsersService },
   ],
   bootstrap: [AppComponent]
 })

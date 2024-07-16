@@ -1,0 +1,6 @@
+export * from "./auth.interface"
+export * from "./categories.interface"
+export * from "./meals.interface"
+export * from "./orders.interface"
+export * from "./tables.interface"
+export * from "./users.interface"

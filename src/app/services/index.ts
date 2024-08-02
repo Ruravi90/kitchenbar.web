@@ -4,3 +4,6 @@ export * from "./meals.service";
 export * from "./orders.service";
 export * from "./tables.service";
 export * from "./users.service";
+export * from "./instances.service";
+export * from "./licenses.service";
+export * from "./hub.service";

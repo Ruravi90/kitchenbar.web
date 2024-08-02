@@ -13,6 +13,9 @@ export class UsersService {
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+  getItemsByInstance(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/ByInstance");
+  }
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }

@@ -1,10 +1,9 @@
 import { Observable } from "rxjs";
-import { Category } from "../models";
+import { Category, User } from "../models";
 
 export abstract class AuthInterface{
-    abstract getItems(): Observable<any[]>;
-    abstract getItem(id: number): Observable<any>;
-    abstract createItem(item: any): Observable<any>;
-    abstract updateItem(id: number, item: any): Observable<any> ;
-    abstract deleteItem(id: number): Observable<any>;
+    abstract login(model: User): Observable<boolean>;
+    abstract getToken(): string;
+    abstract getCurrentUser(): any;
+    abstract checkLogin() : boolean;
 }

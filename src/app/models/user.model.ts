@@ -6,4 +6,5 @@ export class User extends Base{
     emailVerifiedAt?: string;
     image?: string;
     password?: string;
+    user_name?:string;
 }

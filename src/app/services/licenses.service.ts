@@ -2,23 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Order } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrdersService {
+export class LicensesService {
 
-  private apiUrl = environment.apiBase + 'orders';
+  private apiUrl = environment.apiBase + 'licenses';
   constructor(private http: HttpClient) { }
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
-  }
-  getItemsByInstance(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl+"/ByInstance");
-  }
-  getItemWithIncludes(id:number): Observable<Order> {
-    return this.http.get<Order>(`${this.apiUrl}/${id}/WithIncludes`);
   }
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);

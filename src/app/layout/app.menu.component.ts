@@ -24,6 +24,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'kitchen',
                 items: [
                     { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/tables'] },
+                    { label: 'Ordenes', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/orders'] },
                     { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/kitchen/categories'] },
                 ]
             },
@@ -33,6 +34,13 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/tables'] },
                     { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/categories'] },
                     { label: 'Usuarios', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/users'] },
+                ]
+            },
+            {
+                label: 'Administracion',
+                items: [
+                    { label: 'Licensias', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/licenses'] },
+                    { label: 'Instancias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/admin/instances'] },
                 ]
             }
         ];

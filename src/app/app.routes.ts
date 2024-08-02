@@ -2,16 +2,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { canActivateChild } from './utilities/AlwaysAuthGuard';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
             {
                 path: '', component: AppLayoutComponent,
+                canActivate: [canActivateChild],
                 children: [
                     { path: '', loadChildren: () => import('./components/documentation/documentation.module').then(m => m.DocumentationModule) },
                     { path: 'kitchen', loadChildren: () => import('./components/kitchen/kitchen.module').then(m => m.KitchenModule) },
                     { path: 'settings', loadChildren: () => import('./components/settings/settings.module').then(m => m.SettingsModule) },
+                    { path: 'admin', loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
                 ]
 
             },

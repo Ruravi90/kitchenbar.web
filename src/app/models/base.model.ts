@@ -1,6 +1,7 @@
 export class Base {
-    id?: any;
+    id?: number;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
+    instanceId?:number
 }

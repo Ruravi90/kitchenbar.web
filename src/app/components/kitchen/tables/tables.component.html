@@ -1,8 +1,16 @@
 <div class="grid">
-    <div class="col-10 col-offset-2">
-        <div class="flex flex-wrap ">
-            @for (table of tables; track table) {
-                <a class=" mr-3 mb-3 button-table flex align-items-center justify-content-center" routerLink="/categories">{{ table.name }}</a>
+    <div class="col-lg-10 col-sm-12 col-lg-offset-2">
+        <div class="flex justify-content-between flex-wrap gap-3">
+            @for (i of tables; track i) {
+                <a class="mr-3 mb-3 button-kitchen flex align-items-center justify-content-center"
+                    [ngClass]="{
+                            'button-flash':(i.isRequestAttendace || i.isRequestCheck),
+                            'button-attendance':(i.isRequestAttendace),
+                            'button-check':(i.isRequestCheck)
+                        }"
+                    routerLink="/kitchen/table/{{ i.identity}}">
+                    {{ i.name }}
+                </a>
             }
             @empty {
                 <div class="col-2" >
@@ -12,5 +20,19 @@
         </div>
     </div>
 </div>
-
+<p-toast position="top-center" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="headless" let-closeFn="closeFn">
+        <section class="flex p-3 gap-3 w-full bg-black-alpha-90 shadow-2" style="border-radius: 10px">
+            <i class="pi pi-info text-primary-300 text-2xl"></i>
+            <div class="flex flex-column gap-3 w-full">
+                <p class="m-0 font-semibold text-base text-white">
+                    {{ message.summary }}
+                </p>
+                <p class="m-0 text-base text-400">
+                    {{ message.detail }}
+                </p>
+            </div>
+        </section>
+    </ng-template>
+</p-toast>
 

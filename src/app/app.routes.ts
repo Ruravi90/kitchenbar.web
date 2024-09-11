@@ -18,6 +18,7 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
                 ]
 
             },
+            { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },

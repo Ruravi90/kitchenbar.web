@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { SidebarModule } from 'primeng/sidebar';
 import { BadgeModule } from 'primeng/badge';
@@ -13,6 +13,7 @@ import { AppFooterComponent } from './app.footer.component';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { CommonModule } from '@angular/common';
+import { HubInterface } from '../interfaces';
 
 @NgModule({
     declarations: [
@@ -36,4 +37,8 @@ import { CommonModule } from '@angular/common';
     ],
     exports: [AppLayoutComponent]
 })
-export class AppLayoutModule { }
+export class AppLayoutModule{ 
+
+  
+  
+}

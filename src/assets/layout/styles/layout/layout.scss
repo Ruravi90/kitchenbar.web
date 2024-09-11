@@ -10,3 +10,129 @@
 @import "./_responsive";
 @import "./_utils";
 @import "./_typography";
+
+@-moz-keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* Firefox */
+@-webkit-keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* Webkit */
+@-ms-keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* IE */
+@keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* Opera */
+
+.button-flash {
+  -moz-transition:all 0.5s ease-in-out;
+  -webkit-transition:all 0.5s ease-in-out;
+  -o-transition:all 0.5s ease-in-out;
+  -ms-transition:all 0.5s ease-in-out;
+  transition:all 0.5s ease-in-out; 
+  -moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */
+  -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */
+  -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */
+  animation:blink normal 1.5s infinite ease-in-out; /* Opera */
+}
+
+.button-flash-danger{
+   background-color: orangered;
+   color: #D6D6E7;
+}
+
+.button-kitchen {
+    appearance: none;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    border-width: 0;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,var(--highlight-text-color) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #36395A;
+    cursor: pointer;
+    font-family: "JetBrains Mono",monospace;
+    
+    list-style: none;
+    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+}
+
+.button-kitchen:focus {
+    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, var(--highlight-text-color) 0 -3px 0 inset;
+}
+
+.button-kitchen:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, var(--highlight-text-color) 0 -3px 0 inset;
+    transform: translateY(-2px);
+}
+
+.button-kitchen:active {
+    box-shadow: #D6D6E7 0 3px 7px inset;
+    transform: translateY(2px);
+}
+
+.button-attendance {
+    color: #D6D6E7;
+    background-color: var(--attendance);
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,var(--attendance-highlight) 0 -3px 0 inset;
+
+}
+
+.button-attendance:focus {
+    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, var(--attendance-highlight) 0 -3px 0 inset;
+}
+
+.button-attendance:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, var(--attendance-highlight) 0 -3px 0 inset;
+}
+
+.button-check {
+    color: #D6D6E7;
+    background-color: var(--check);
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,var(--check-highlight) 0 -3px 0 inset;
+
+}
+
+.button-check:focus {
+    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, var(--check-highlight) 0 -3px 0 inset;
+}
+
+.button-check:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, var(--check-highlight) 0 -3px 0 inset;
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+    .button-kitchen {
+      height: 10vi;
+      width: 30vi;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .button-kitchen {
+        height: 25vi;
+        width: 41vi;
+    }
+    @media (min-width:344px)  { 
+        .button-kitchen {
+            height: 15vi;
+            width: 39vi;
+          }
+     }
+    @media (min-width:1024px) { 
+        .button-kitchen {
+            height: 10vi;
+            width: 20vi;
+          }
+     }
+}
+
+@media (min-width:320px)  { /* smartphones, iPhone, portrait 480x320 phones */ }
+
+@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
+@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
+
+@media (min-width:1281px) { /* hi-res laptops and desktops */ }

@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { TablesRoutingModule } from './table-routing.module';
 import { TablesComponent } from './tables.component';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { TablesComponent } from './tables.component';
         CheckboxModule,
         InputTextModule,
         FormsModule,
-        PasswordModule
+        PasswordModule,
+        ToastModule
     ],
     declarations: [TablesComponent]
 })

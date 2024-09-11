@@ -8,5 +8,6 @@ export class Order extends Base{
     tableId?:number;
     table?:Table;
     quantity?: number;
-
+    aditional?:string;
+    isCancel?:boolean = false;
 }

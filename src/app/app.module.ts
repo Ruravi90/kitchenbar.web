@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -15,8 +15,8 @@ export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
 ];
 
-import {AuthService,CategoriesService,MealsService,OrdersService,TablesService,UsersService} from './services' 
-import { AuthInterface, CategoriesInterface, MealsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
+import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService} from './services' 
+import { AuthInterface, CategoriesInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
@@ -36,8 +36,11 @@ import { AuthInterface, CategoriesInterface, MealsInterface, OrdersInterface, Ta
     { provide: OrdersInterface, useClass: OrdersService },
     { provide: TablesInterface, useClass: TablesService },
     { provide: UsersInterface, useClass: UsersService },
+    { provide: HubInterface, useClass: OrderHubService },
     httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule{ 
+  
+}

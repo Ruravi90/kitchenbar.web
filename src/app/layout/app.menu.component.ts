@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
+import { HubInterface } from '../interfaces';
 
 @Component({
     selector: 'app-menu',
@@ -10,7 +11,7 @@ export class AppMenuComponent implements OnInit {
 
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(private hub: HubInterface,public layoutService: LayoutService) { }
 
     ngOnInit() {
         this.model = [
@@ -25,7 +26,6 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/tables'] },
                     { label: 'Ordenes', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/orders'] },
-                    { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/kitchen/categories'] },
                 ]
             },
             {
@@ -44,6 +44,10 @@ export class AppMenuComponent implements OnInit {
                 ]
             }
         ];
+        
+        this.hub.receiveOrderToKitchen().subscribe(x =>  {
+            
+        });
     }
 }
 

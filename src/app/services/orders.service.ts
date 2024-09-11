@@ -15,7 +15,10 @@ export class OrdersService {
     return this.http.get<any[]>(this.apiUrl);
   }
   getItemsByInstance(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl+"/ByInstance");
+    return this.http.get<any[]>(this.apiUrl+"/byInstance");
+  }
+  getItemsByTable(identity:string): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/byTable/"+identity);
   }
   getItemWithIncludes(id:number): Observable<Order> {
     return this.http.get<Order>(`${this.apiUrl}/${id}/WithIncludes`);

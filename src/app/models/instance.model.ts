@@ -5,5 +5,6 @@ export class Instance{
     updatedAt?: Date;
     deletedAt?: Date;
     name?: string;
+    identity?:string;
     licenseId?:number;
 }

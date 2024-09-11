@@ -1,0 +1,127 @@
+<div class="grid">
+    <div class="col-10 col-offset-1">
+        <p-card header="{{table?.name}}">
+            <div class="formgroup-inline" *ngIf="isLogin">
+                <div class="field col-12 md:col-12 lg:col-9">
+                    <p-autoComplete 
+                        [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                        [(ngModel)]="selectedItem" 
+                        [suggestions]="suggestionsMeal!" 
+                        (onFocus)="focusSearchMeal($event)"
+                        (completeMethod)="searchMeal($event)" 
+                        (onSelect)="completeSelectMeal($event)"
+                        placeholder="Buscar alimento(s) o bebida(s)"
+                        [dropdown]="true" 
+                        optionLabel="name"/>
+                </div>
+                <div class="field col-12 md:col-12 lg:col-2">
+                    <p-inputNumber 
+                        [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                        [(ngModel)]="order.quantity" 
+                        placeholder="Cantidad"
+                        [showButtons]="true" 
+                        buttonLayout="horizontal" 
+                        spinnerMode="horizontal" 
+                        [step]="1"
+                        [min]="1" 
+                        [max]="100" 
+                        incrementButtonIcon="pi pi-plus" 
+                        decrementButtonIcon="pi pi-minus" />
+                </div>
+            </div>
+            <div class="formgroup-inline" *ngIf="isLogin">
+                <div class="field col-12 md:col-12 lg:col-9">
+                    <textarea 
+                        [style]="{'width':'100%'}"
+                        rows="1"
+                        cols="30" 
+                        pInputTextarea 
+                        placeholder="Complementos u/o Observación"
+                        [autoResize]="true"
+                        [(ngModel)]="order.aditional" >
+                    </textarea>
+                </div>
+                <div class="field col-12 md:col-12 lg:col-2">
+                    <button 
+                        [style]="{'width':'100%'}"
+                        pButton 
+                        pRipple 
+                        icon="pi pi-plus" 
+                        label="Agregar"
+                        (click)="addOrder()" >
+                    </button>
+                </div>
+            </div>
+
+            <div class="formgroup-inline" *ngIf="!isLogin">
+                <div class="field col-12 md:col-12 lg:col-4">
+                    <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-list"/>
+                </div>
+                <div class="field col-12 md:col-12 lg:col-4">
+                    <p-button [style]="{'width':'100%'}" label="Asistencia" [raised]="true" icon="pi pi-bell" severity="info" [ngClass]="{'button-flash':(table?.isRequestAttendace)}" (click)="requestAttendace()" />
+                </div>
+                <div class="field col-12 md:col-12 lg:col-3">
+                    <p-button [style]="{'width':'100%'}" label="Cuenta" [raised]="true" icon="pi pi-check" [ngClass]="{'button-flash':(table?.isRequestCheck)}" (click)="requestCheck()" />
+                </div>
+            </div>
+            <p-dataView #dv [value]="items" emptyMessage="Sin ordenes en proceso">
+                <ng-template pTemplate="list" let-items>
+                    <div class="grid grid-nogutter">
+                        <div class="col-12" *ngFor="let item of items; let first = first" [ngClass]="{ }">
+                            <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first, 'item-cancel': item.isCancel}">
+                                <div class="col gap-2">
+                                    <div class="text-lg font-medium text-900 mt-1">{{ item.quantity + " " + item.meal?.name}}</div>
+                                </div>
+                                <div class="col-fixed gap-1">
+                                    <div class="text-lg font-medium text-900 mt-1">{{ (item.meal?.price * item.quantity) | currency}}</div>
+                                </div>
+                                <div class="col-fixed gap-1" *ngIf="isLogin">
+                                    <p-button icon="pi pi-times" severity="danger" [disabled]="item.isCancel" (onClick)="confirmCancel(item)"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="flex flex-column sm:flex-row sm:align-items-center p-3 gap-3 border-top-1">
+                                <div class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-1">
+                                    <div class="flex flex-row md:flex-column justify-content-between align-items-start gap-1">
+                                        <div>
+                                            <div class="text-lg font-medium text-900 mt-1">Total: {{ totalOrder | currency}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dataView>
+        </p-card>
+    </div>
+</div>
+<p-toast />
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless" let-message>
+        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+            <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                <i class="pi pi-question text-5xl"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-4">
+                {{ message.header }}
+            </span>
+            <p class="mb-0">{{ message.message }}</p>
+            <div class="flex align-items-center gap-2 mt-4">
+                <button 
+                    pButton 
+                    label="Si" 
+                    (click)="cd.accept()" 
+                    class="w-8rem">
+                </button>
+                <button 
+                    pButton 
+                    label="No" 
+                    (click)="cd.reject()" 
+                    class="p-button-outlined w-8rem ">
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>

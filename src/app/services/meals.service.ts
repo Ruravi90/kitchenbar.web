@@ -15,7 +15,10 @@ export class MealsService implements MealsInterface{
     return this.http.get<any[]>(this.apiUrl);
   }
   getItemsByInstance(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl+"/ByInstance");
+    return this.http.get<any[]>(this.apiUrl+"/byInstance");
+  }
+  getByInstanceIdentity(identity: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/byInstance/${identity}`);
   }
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);

@@ -3,7 +3,7 @@ $scale:14px;                    /* main font size */
 $borderRadius:12px;             /* border radius of layout element e.g. card, sidebar */ 
 $transitionDuration:.2s;        /* transition duration of layout elements e.g. sidebar, overlay menus */ 
 
-/*
+
 :root {
   font-family: "Inter var", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -55,6 +55,12 @@ $transitionDuration:.2s;        /* transition duration of layout elements e.g. s
   --highlight-bg: #fffbeb;
   --highlight-text-color: #b45309;
   color-scheme: light;
-}
 
-*/
+  --attendance: #0f478f;
+  --attendance-focus: #2f588d;
+  --attendance-highlight: #003c8a;
+
+  --check: #ff5400;
+  --check-focus: #ff6000;
+  --check-highlight: #ff4800;
+}

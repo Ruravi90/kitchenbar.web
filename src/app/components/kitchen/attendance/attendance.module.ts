@@ -1,35 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TableRoutingModule } from './table-routing.module';
-import { TableComponent } from './table.component';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
-import { CardModule } from 'primeng/card';
-import { PanelModule } from 'primeng/panel';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { AttendanceRoutingModule } from './attendance-routing.module';
+import { AttendanceComponent } from './attendance.component';
 import { DataViewModule } from 'primeng/dataview';
+import { CardModule } from 'primeng/card';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     imports: [
         CommonModule,
-        TableRoutingModule,
+        AttendanceRoutingModule,
         ButtonModule,
         CheckboxModule,
         InputTextModule,
         FormsModule,
         PasswordModule,
+        DataViewModule,
         CardModule,
-        PanelModule,
-        IconFieldModule,
-        InputIconModule,
         AutoCompleteModule,
-        DataViewModule
+        InputNumberModule,
+        InputTextareaModule,
+        ConfirmDialogModule,
+        ToastModule
     ],
-    declarations: [TableComponent]
+    declarations: [AttendanceComponent]
 })
-export class TableModule { }
+export class AttendaceModule { }

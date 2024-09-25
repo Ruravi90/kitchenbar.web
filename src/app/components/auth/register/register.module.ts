@@ -1,27 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RegisterRoutingModule } from './register-routing.module';
+import { RegisterComponent } from './register.component';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
-import { InstancesRoutingModule } from './instances-routing.module';
-import { InstancesComponent } from './instances.component';
-import { DataViewModule } from 'primeng/dataview';
-import { CardModule } from 'primeng/card';
 
 @NgModule({
     imports: [
         CommonModule,
-        InstancesRoutingModule,
+        RegisterRoutingModule,
         ButtonModule,
         CheckboxModule,
         InputTextModule,
         FormsModule,
-        PasswordModule,
-        DataViewModule,
-        CardModule
+        PasswordModule
     ],
-    declarations: [InstancesComponent]
+    declarations: [RegisterComponent]
 })
-export class InstancesModule { }
+export class RegisterModule { }

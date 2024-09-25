@@ -16,7 +16,7 @@
             </div>
         </p-panel>
 
-        <p-dataView #dv [value]="items">
+        <p-dataView #dv [value]="items" emptyMessage="Usuarios no registrados">
             <ng-template pTemplate="list" let-items>
                 <div class="grid grid-nogutter">
                     <div class="col-12" *ngFor="let item of items; let first = first" class="col-12">
@@ -29,8 +29,8 @@
                                 </div>
                                 <div class="flex flex-column md:align-items-end gap-5">
                                     <div class="flex md:flex-row gap-2">
-                                        <p-button icon="pi pi-pencil" class="flex-auto md:align-items-end white-space-nowrap" label="Editar" />
-                                        <p-button severity="danger" icon="pi pi-trash" class="flex-auto md:align-items-end white-space-nowrap" label="Eliminar" />
+                                        <p-button icon="pi pi-pencil" class="flex-auto md:align-items-end white-space-nowrap"/>
+                                        <p-button severity="danger" icon="pi pi-trash" class="flex-auto md:align-items-end white-space-nowrap"/>
                                     </div>
                                 </div>
                             </div>

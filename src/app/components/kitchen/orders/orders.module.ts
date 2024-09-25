@@ -8,6 +8,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersComponent } from './orders.component';
 import { DataViewModule } from 'primeng/dataview';
+import { CardModule } from 'primeng/card';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
     imports: [
@@ -18,7 +21,10 @@ import { DataViewModule } from 'primeng/dataview';
         InputTextModule,
         FormsModule,
         PasswordModule,
-        DataViewModule
+        DataViewModule,
+        CardModule,
+        ConfirmDialogModule,
+        OverlayPanelModule
     ],
     declarations: [OrdersComponent]
 })

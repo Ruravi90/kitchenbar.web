@@ -47,6 +47,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     }
     
     this.order.quantity = 1;
+    this.order.statusOrderId = 1;
     this.tableIdentity = this.route.snapshot.paramMap.get('identity')!;
     this.getTable();
     this.getOrders();
@@ -135,6 +136,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.order = {
       mealId: event.value.id,
       tableId: this.table?.id,
+      statusOrderId:1,
       quantity: 1
     }
   }
@@ -168,5 +170,21 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             this.cancelOrder(order);
         }
     });
-}
+  }
+  changeStatusOrder(event: Event, order:Order){
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: "",
+        header: 'Se entrego el alimento?',
+        accept: () => {
+          order.statusOrderId = 4;
+          this._serviceOrder.updateItem(order.id!,order).subscribe({
+            next: (data) => {
+              this.hub.sendOrder(order);
+            },
+            error: (e) => console.error(e)
+          });
+        }
+    });
+  }
 }

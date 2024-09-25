@@ -10,4 +10,5 @@ export class Order extends Base{
     quantity?: number;
     aditional?:string;
     isCancel?:boolean = false;
+    statusOrderId?: number = 1;
 }

@@ -5,8 +5,8 @@ import { AuthService } from '../../../services';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
+    selector: 'app-register',
+    templateUrl: './register.component.html',
     styles: [`
         :host ::ng-deep .pi-eye,
         :host ::ng-deep .pi-eye-slash {
@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
         }
     `]
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
     user: User = new User();
     isBusy: Boolean = false;
     isAuthorized: Boolean | null = null;
@@ -36,11 +36,6 @@ export class LoginComponent implements OnInit {
         });
 
         this.isBusy = false;
-       
         this.isAuthorized = false;
-    }
-
-    register(){
-        this.router.navigate(['/auth/register']);
     }
 }

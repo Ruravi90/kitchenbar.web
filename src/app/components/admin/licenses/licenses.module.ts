@@ -7,6 +7,9 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { LicensesRoutingModule } from './licenses-routing.module';
 import { LicensesComponent } from './licenses.component';
+import { DataViewModule } from 'primeng/dataview';
+import { CardModule } from 'primeng/card';
+
 
 @NgModule({
     imports: [
@@ -16,7 +19,9 @@ import { LicensesComponent } from './licenses.component';
         CheckboxModule,
         InputTextModule,
         FormsModule,
-        PasswordModule
+        PasswordModule,
+        DataViewModule,
+        CardModule
     ],
     declarations: [LicensesComponent]
 })

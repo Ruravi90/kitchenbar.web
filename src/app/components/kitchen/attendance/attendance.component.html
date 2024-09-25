@@ -12,7 +12,14 @@
                         (onSelect)="completeSelectMeal($event)"
                         placeholder="Buscar alimento(s) o bebida(s)"
                         [dropdown]="true" 
-                        optionLabel="name"/>
+                        optionLabel="name">
+                        <ng-template let-item pTemplate="item">
+                            <div class="grid">
+                                <div class="col">{{ item.name }}</div>
+                                <div class="col-fixed">{{ item.price | currency }}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
                 </div>
                 <div class="field col-12 md:col-12 lg:col-2">
                     <p-inputNumber 
@@ -54,7 +61,7 @@
             </div>
 
             <div class="formgroup-inline" *ngIf="!isLogin">
-                <div class="field col-12 md:col-12 lg:col-4">
+                <div class="field col-12 md:col-12 lg:col-4" *ngIf="false">
                     <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-list"/>
                 </div>
                 <div class="field col-12 md:col-12 lg:col-4">
@@ -69,14 +76,24 @@
                     <div class="grid grid-nogutter">
                         <div class="col-12" *ngFor="let item of items; let first = first" [ngClass]="{ }">
                             <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first, 'item-cancel': item.isCancel}">
-                                <div class="col gap-2">
-                                    <div class="text-lg font-medium text-900 mt-1">{{ item.quantity + " " + item.meal?.name}}</div>
+                                <div class="col-fixed">
+                                    <img *ngIf="item.isCancel" alt="dropdown icon" src="/assets/images/icon/ban.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" alt="dropdown icon" src="/assets/images/icon/process.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" alt="dropdown icon" src="/assets/images/icon/uniform.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 3 && !item.isCancel" alt="dropdown icon" src="/assets/images/icon/delivery.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 4 && !item.isCancel" alt="dropdown icon" src="/assets/images/icon/meal.svg" style="width: 25px;">
                                 </div>
-                                <div class="col-fixed gap-1">
-                                    <div class="text-lg font-medium text-900 mt-1">{{ (item.meal?.price * item.quantity) | currency}}</div>
+                                <div class="col">
+                                    <div class="text-900 mt-1">{{ item.quantity + " " + item.meal?.name}}</div>
+                                </div>
+                                <div class="col-fixed gap-1" >
+                                    <div class=" text-900 mt-1">{{ (item.meal?.price * item.quantity) | currency}}</div>
                                 </div>
                                 <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button icon="pi pi-times" severity="danger" [disabled]="item.isCancel" (onClick)="confirmCancel(item)"/>
+                                    <p-button icon="pi pi-check" severity="success" [disabled]="item.statusOrderId != 3" (onClick)="changeStatusOrder($event,item)"></p-button>
+                                </div>
+                                <div class="col-fixed gap-1" *ngIf="isLogin">
+                                    <p-button icon="pi pi-ban" severity="danger" [disabled]="item.isCancel || item.statusOrderId >= 3" (onClick)="confirmCancel(item)"></p-button>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +102,7 @@
                                 <div class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-1">
                                     <div class="flex flex-row md:flex-column justify-content-between align-items-start gap-1">
                                         <div>
-                                            <div class="text-lg font-medium text-900 mt-1">Total: {{ totalOrder | currency}}</div>
+                                            <div class="text-lg font-medium text-900 mt-1">Total: {{ totalOrder | currency}} MXN</div>
                                         </div>
                                     </div>
                                 </div>

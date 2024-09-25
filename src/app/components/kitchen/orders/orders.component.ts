@@ -1,49 +1,71 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Order, User } from '../../../models';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Order } from '../../../models';
 import { HubInterface, OrdersInterface } from '../../../interfaces';
+import { ConfirmationService } from 'primeng/api';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-tables',
   templateUrl: './orders.component.html',
-  styleUrl: './orders.component.scss'
+  styleUrl: './orders.component.scss',
+  providers: [ConfirmationService]
 })
 export class OrdersComponent implements OnInit{
 
-  
   private user?:any;
+  public coments?:string;
   
-  constructor(private _services: OrdersInterface, private hub: HubInterface){
+  constructor(
+    private confirmationService: ConfirmationService,
+    private _serviceOrder: OrdersInterface, 
+    private hub: HubInterface
+  ){
     
   }
 
   items?: Order[];
 
   async ngOnInit() {
-    this.retrieveTables();
+    this.retrieveOrders();
 
     this.hub.receiveOrderToKitchen().subscribe(x =>  {
-        this._services.getItemWithIncludes(x.id!).subscribe({
-          next: (data) => {
-            this.items?.push(data);
-          },
-          error: (e) => console.error(e)
-        });
+      this.retrieveOrders();
     });
   }
-
-
 
   async delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
-  retrieveTables(): void {
-    this._services.getItemsByInstance().subscribe({
+  retrieveOrders(): void {
+    this._serviceOrder.getItemsByInstance().subscribe({
       next: (data) => {
-        this.items = data;
+        this.items = data.filter((i) => i.isCancel == false && (i.statusOrderId ==1 || i.statusOrderId ==2));
       },
       error: (e) => console.error(e)
     });
+  }
+
+  changeStatusOrder(event: Event, order:Order, statusId:number){
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: "",
+        header: statusId==2?'Se inicio con la preparacion?':'Se envio el alimento?',
+        accept: () => {
+          order.statusOrderId = statusId;
+          this._serviceOrder.updateItem(order.id!,order).subscribe({
+            next: (data) => {
+              this.hub.sendOrder(order);
+            },
+            error: (e) => console.error(e)
+          });
+        }
+    });
+  }
+
+  toggleComents(event: Event,op: OverlayPanel, order:Order){
+    this.coments = order.aditional;
+    op.toggle(event);
   }
 
 }

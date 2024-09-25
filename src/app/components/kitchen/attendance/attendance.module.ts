@@ -15,7 +15,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 
+
 @NgModule({
+    declarations: [
+        AttendanceComponent
+    ],
     imports: [
         CommonModule,
         AttendanceRoutingModule,
@@ -31,7 +35,6 @@ import { ToastModule } from 'primeng/toast';
         InputTextareaModule,
         ConfirmDialogModule,
         ToastModule
-    ],
-    declarations: [AttendanceComponent]
+    ]
 })
 export class AttendaceModule { }

@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    apiBase: 'https://localhost:4201/api/',
-    hubBase: 'https://localhost:4201/hubs/',
+    apiBase: 'https://kitchenbarapi-production.up.railway.app/api/',
+    hubBase: 'https://kitchenbarapi-production.up.railway.app/hubs/base',
 };
 

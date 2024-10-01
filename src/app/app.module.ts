@@ -1,7 +1,7 @@
 import { NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
@@ -18,29 +18,23 @@ export const httpInterceptorProviders = [
 import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService} from './services' 
 import { AuthInterface, CategoriesInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
 
-@NgModule({
-  declarations: [AppComponent, NotfoundComponent],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    AppRoutingModule, 
-    AppLayoutModule
-  ],
-  providers: [
-    { provide: LocationStrategy, useClass: PathLocationStrategy },
-    { provide: MealsInterface, useClass: MealsService },
-    { provide: AuthInterface, useClass: AuthService },
-    { provide: CategoriesInterface, useClass: CategoriesService },
-    { provide: OrdersInterface, useClass: OrdersService },
-    { provide: TablesInterface, useClass: TablesService },
-    { provide: UsersInterface, useClass: UsersService },
-    { provide: HubInterface, useClass: OrderHubService },
-    httpInterceptorProviders
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [AppComponent, NotfoundComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        AppLayoutModule], providers: [
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: MealsInterface, useClass: MealsService },
+        { provide: AuthInterface, useClass: AuthService },
+        { provide: CategoriesInterface, useClass: CategoriesService },
+        { provide: OrdersInterface, useClass: OrdersService },
+        { provide: TablesInterface, useClass: TablesService },
+        { provide: UsersInterface, useClass: UsersService },
+        { provide: HubInterface, useClass: OrderHubService },
+        httpInterceptorProviders,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule{ 
   
 }

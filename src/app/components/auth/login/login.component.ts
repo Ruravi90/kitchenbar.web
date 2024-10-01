@@ -32,7 +32,10 @@ export class LoginComponent implements OnInit {
         this.isBusy = true;
         this.uS.login(this.user).subscribe(resp=>{
             this.isAuthorized = true;
-           this.router.navigate(['/kitchen/tables']);
+            if(resp.instanceId != null)
+                this.router.navigate(['/kitchen/tables']);
+            else
+                this.router.navigate(['/admin/licenses']);
         });
 
         this.isBusy = false;

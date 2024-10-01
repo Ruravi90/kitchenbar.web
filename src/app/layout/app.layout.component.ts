@@ -4,7 +4,7 @@ import { filter, Subscription } from 'rxjs';
 import { LayoutService } from "./service/app.layout.service";
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from './app.topbar.component';
-import { HubInterface } from '../interfaces';
+import { AuthInterface, HubInterface } from '../interfaces';
 
 @Component({
     selector: 'app-layout',
@@ -24,7 +24,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
     public joined = false;
 
-    constructor(private hub: HubInterface,public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
+    constructor(private auth:AuthInterface, private hub: HubInterface,public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -61,19 +61,21 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.hub.connect();
-        await this.delay(1000);
-        this.hub.joinGroup();
+        if(this.auth.getCurrentRol() != 0){
+            this.hub.connect();
+            await this.delay(1000);
+            this.hub.joinGroup();
+        
+            this.hub.newUser().subscribe(x =>{
+            this.joined = true ;
+            });
+            this.hub.leftUser().subscribe(x =>{
+            this.joined = false;
+            });
+            this.hub.receiveOrderToKitchen().subscribe(x =>  {
     
-        this.hub.newUser().subscribe(x =>{
-          this.joined = true ;
-        });
-        this.hub.leftUser().subscribe(x =>{
-          this.joined = false;
-        });
-        this.hub.receiveOrderToKitchen().subscribe(x =>  {
- 
-        });
+            });
+        }
     }
 
     async delay(ms: number) {

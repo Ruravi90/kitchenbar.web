@@ -13,6 +13,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DataViewModule } from 'primeng/dataview';
 import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './users.component';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @NgModule({
     imports: [
@@ -28,7 +30,9 @@ import { UsersComponent } from './users.component';
         IconFieldModule,
         InputIconModule,
         AutoCompleteModule,
-        DataViewModule
+        DataViewModule,
+        InputGroupModule,
+        InputGroupAddonModule
     ],
     declarations: [UsersComponent]
 })

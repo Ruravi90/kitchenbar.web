@@ -19,7 +19,7 @@ export class UsersComponent {
   }
 
   getTables(): void {
-    this.usersServices.getItems().subscribe({
+    this.usersServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.items = data;
       },

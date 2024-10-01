@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Table } from '../../../models';
-import { TablesService } from '../../../services';
-import { HubInterface } from '../../../interfaces';
+import { HubInterface, TablesInterface } from '../../../interfaces';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -14,7 +13,7 @@ export class TablesComponent {
 
   constructor(
     private messageService: MessageService,
-    private tableServices: TablesService, 
+    private tableServices: TablesInterface, 
     private hub: HubInterface){}
 
   tables?: Table[];

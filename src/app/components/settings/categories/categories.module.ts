@@ -14,6 +14,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DataViewModule } from 'primeng/dataview';
 import {NgxImageCompressService} from 'ngx-image-compress';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @NgModule({
     imports: [
@@ -29,7 +31,9 @@ import {NgxImageCompressService} from 'ngx-image-compress';
         IconFieldModule,
         InputIconModule,
         AutoCompleteModule,
-        DataViewModule
+        DataViewModule,
+        InputGroupModule,
+        InputGroupAddonModule
     ],
     declarations: [CategoriesComponent],
     providers:[NgxImageCompressService]

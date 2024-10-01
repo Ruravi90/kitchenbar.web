@@ -18,7 +18,7 @@ export class CategoriesComponent {
   }
 
   getCategories(){
-    this.categoriesServices.getItems().subscribe({
+    this.categoriesServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.categories = data;
       },

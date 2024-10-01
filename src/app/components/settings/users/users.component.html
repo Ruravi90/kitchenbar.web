@@ -3,20 +3,15 @@
         <img alt="Card" src="../../../../assets/layout/images/restaurante.webp"  style="max-height: 15vh; object-fit:cover;"/>
     </ng-template>
     <div>
-        <p-panel header="Agregar usuario">
-            <div class="flex flex-column sm:flex-row">
-                <div class="flex flex-column md:align-items-start p-2 ">
-                    <input type="text" pInputText style="width: 100%;" />
-                </div>
-                <div class="flex flex-column md:align-items-end">
-                    <div class="flex flex-row-reverse md:flex-row gap-2">
-                        <p-button class="md:align-items-end white-space-nowrap" icon="pi pi-plus" label="Agregar" />
-                    </div>
-                </div>
-            </div>
-        </p-panel>
+        <p-inputGroup class="w-full">
+            <p-inputGroupAddon>
+                <i class="pi pi-search"></i>
+            </p-inputGroupAddon>
+            <input type="text" pInputText placeholder="Buscar/agregar" />
+            <button type="button" pButton icon="pi pi-plus" class="p-button-success">Agregar</button>
+        </p-inputGroup>
 
-        <p-dataView #dv [value]="items" emptyMessage="Usuarios no registrados">
+        <p-dataView #dv [value]="items" [rows]="5" [paginator]="true" emptyMessage="Usuarios no registrados">
             <ng-template pTemplate="list" let-items>
                 <div class="grid grid-nogutter">
                     <div class="col-12" *ngFor="let item of items; let first = first" class="col-12">

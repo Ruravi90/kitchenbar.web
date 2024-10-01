@@ -12,7 +12,7 @@ export class AuthService {
   private apiUrl =  environment.apiBase + 'Auth';
   constructor(private http: HttpClient) { }
   
-  login(model: User): Observable<boolean> {
+  login(model: User): Observable<User> {
 
     return this.http.post<any>(this.apiUrl + '/Login',model).pipe(
       map((response) => {
@@ -45,5 +45,12 @@ export class AuthService {
         return false;
     }
     return true;
+  }
+  getCurrentRol():number{
+    if (localStorage.getItem('user')) {
+      const currentUser = JSON.parse(localStorage.getItem('user')!);
+      return currentUser.role;
+    }
+    return 0;
   }
 }

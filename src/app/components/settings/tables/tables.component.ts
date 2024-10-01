@@ -19,11 +19,12 @@ export class TablesComponent {
   }
 
   getTables(): void {
-    this.tablesServices.getItems().subscribe({
+    this.tablesServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.tables = data;
       },
       error: (e) => console.error(e)
     });
   }
+
 }

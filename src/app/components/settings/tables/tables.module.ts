@@ -9,6 +9,8 @@ import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DataViewModule } from 'primeng/dataview';
 import { TablesRoutingModule } from './table-routing.module';
@@ -28,7 +30,9 @@ import { TablesComponent } from './tables.component';
         IconFieldModule,
         InputIconModule,
         AutoCompleteModule,
-        DataViewModule
+        DataViewModule,
+        InputGroupModule,
+        InputGroupAddonModule
     ],
     declarations: [TablesComponent]
 })

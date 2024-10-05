@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Category } from '../../../models';
 import { CategoriesInterface } from '../../../interfaces';
-import {NgxImageCompressService} from 'ngx-image-compress';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-categories',
@@ -9,9 +9,14 @@ import {NgxImageCompressService} from 'ngx-image-compress';
   styleUrl: './categories.component.scss'
 })
 export class CategoriesComponent {
-  constructor(private categoriesServices: CategoriesInterface,private imageCompress: NgxImageCompressService){}
+  constructor(
+    private confirmationService: ConfirmationService, 
+    private categoriesServices: CategoriesInterface){}
 
-  categories?: Category[];
+  categories: Category[] =[];
+  categorie: Category = {};
+  visibleModal: boolean = false;
+  isEdit:boolean = false;
 
   ngOnInit(): void {
     this.getCategories();
@@ -26,20 +31,37 @@ export class CategoriesComponent {
     })
   }
 
-  imgResultBeforeCompression: string = '';
-  imgResultAfterCompression: string = '';
+  showModal(isEdit:boolean = false, item?:Category){
+    this.isEdit = isEdit;
+    if(isEdit)
+      this.categorie = item!;
+    else
+      this.categorie = new Category();
 
-  compressFile() {
-      this.imageCompress.uploadFile().then(({image, orientation}) => {
-          this.imgResultBeforeCompression = image;
-          console.log('Size in bytes of the uploaded image was:', this.imageCompress.byteCount(image));
-
-          this.imageCompress
-              .compressFile(image, orientation, 50, 50) // 50% ratio, 50% quality
-              .then(compressedImage => {
-                  this.imgResultAfterCompression = compressedImage;
-                  console.log('Size in bytes after compression is now:', this.imageCompress.byteCount(compressedImage));
-              });
+    this.visibleModal =  true;
+  }
+  confirmSave(){
+    if(this.isEdit){
+      this.categoriesServices.updateItem(this.categorie!.id!,this.categorie).subscribe({
+        next: (data) => this.getCategories(),
+        error: (e) => console.error(e)
       });
+    }
+    else{
+      this.categoriesServices.createItem(this.categorie).subscribe({
+        next: (data) => this.getCategories(),
+        error: (e) => console.error(e)
+      });
+    }
+    this.visibleModal = false;
+  }
+
+  confirmDeleted(item:Category) {
+    this.confirmationService.confirm({
+        header: 'Estas seguro de eliminar?',
+        message: 'Por favor de confirmar.',
+        accept: () => {
+        }
+    });
   }
 }

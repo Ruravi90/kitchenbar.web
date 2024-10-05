@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { TokenInterceptor } from './utilities/token.interceptor';
 
@@ -33,6 +34,8 @@ import { AuthInterface, CategoriesInterface, HubInterface, MealsInterface, Order
         { provide: UsersInterface, useClass: UsersService },
         { provide: HubInterface, useClass: OrderHubService },
         httpInterceptorProviders,
+        ConfirmationService,
+        MessageService,
         provideHttpClient(withInterceptorsFromDi())
     ] })
 export class AppModule{ 

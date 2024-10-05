@@ -74,7 +74,7 @@
             <p-dataView #dv [value]="items" emptyMessage="Sin ordenes en proceso">
                 <ng-template pTemplate="list" let-items>
                     <div class="grid grid-nogutter">
-                        <div class="col-12" *ngFor="let item of items; let first = first" [ngClass]="{ }">
+                        <div class="col-12" *ngFor="let item of items; let first = first">
                             <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first, 'item-cancel': item.isCancel}">
                                 <div class="col-fixed">
                                     <img *ngIf="item.isCancel" alt="dropdown icon" src="/assets/images/icon/ban.svg" style="width: 25px;">
@@ -90,10 +90,10 @@
                                     <div class=" text-900 mt-1">{{ (item.meal?.price * item.quantity) | currency}}</div>
                                 </div>
                                 <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button icon="pi pi-check" severity="success" [disabled]="item.statusOrderId != 3" (onClick)="changeStatusOrder($event,item)"></p-button>
+                                    <p-button icon="pi pi-check" severity="success" size="small" [disabled]="item.statusOrderId != 3" (onClick)="changeStatusOrder($event,item)"></p-button>
                                 </div>
                                 <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button icon="pi pi-ban" severity="danger" [disabled]="item.isCancel || item.statusOrderId >= 3" (onClick)="confirmCancel(item)"></p-button>
+                                    <p-button icon="pi pi-ban" severity="danger" size="small" [disabled]="item.isCancel || item.statusOrderId >= 3" (onClick)="confirmCancel(item)"></p-button>
                                 </div>
                             </div>
                         </div>

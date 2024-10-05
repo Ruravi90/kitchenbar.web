@@ -8,7 +8,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   selector: 'app-attendace',
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.scss',
-  providers: [ConfirmationService, MessageService]
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
 

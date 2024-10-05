@@ -5,6 +5,8 @@ export class Instance{
     updatedAt?: Date;
     deletedAt?: Date;
     name?: string;
+    name_client?: string;
+    name_kitchen?: string;
     identity?:string;
     licenseId?:number;
 }

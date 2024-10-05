@@ -1,4 +1,5 @@
 import { Base } from "./base.model";
+import { Instance } from "./instance.model";
 export class User extends Base{
     name?: string;
     phone_number?: string;
@@ -7,4 +8,5 @@ export class User extends Base{
     image?: string;
     password?: string;
     user_name?:string;
+    instance?: Instance;
 }

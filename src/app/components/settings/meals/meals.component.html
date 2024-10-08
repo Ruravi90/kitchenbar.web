@@ -1,39 +1,50 @@
-<p-card header="Alimentos"  class="">
-    <ng-template pTemplate="header">
-        <img alt="Card" src="../../../../assets/layout/images/restaurante.webp"  style="max-height: 15vh; object-fit:cover;"/>
-    </ng-template>
-    <div>
-        <p-inputGroup class="w-full">
-            <p-inputGroupAddon>
-                <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-            <input type="text" pInputText placeholder="Buscar/agregar" />
-            <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small" (click)="showModal()"></button>
-        </p-inputGroup>
+<div class="flex flex-wrap justify-content-center ">
+    <div class="w-full">
+        <p-card header="Alimentos"  class="">
+            <div>
+                <p-inputGroup class="w-full">
+                    <p-inputGroupAddon>
+                        <i class="pi pi-search"></i>
+                    </p-inputGroupAddon>
+                    <input type="text" pInputText placeholder="Buscar" />
+                    <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small"  pTooltip="Nuevo alimento/bebida"  (click)="showModal()"></button>
+                </p-inputGroup>
 
-        <p-dataView #dv [value]="items" [rows]="5" [paginator]="true" emptyMessage="Alimentos no registrados">
-            <ng-template pTemplate="list" let-items>
-                <div class="grid grid-nogutter">
-                    <div class="col-12" *ngFor="let item of items; let first = first" class="col-12">
-                        <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
-                            <div class="col">
-                                <div class="overflow-hidden text-overflow-ellipsis text-lg font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
-                            </div>
-                            <div class="col-fixed gap-1">
-                                <p-button icon="pi pi-pencil" size="small"  (click)="showModal(true, item)"/>
-                            </div>
-                            <div class="col-fixed gap-1">
-                                <p-button severity="danger" icon="pi pi-trash" size="small" (click)="confirmDeleted(item)"/>
+                <p-dataView #dv [value]="items" [rows]="5" [paginator]="true" emptyMessage="Alimentos no registrados">
+                    <ng-template pTemplate="list" let-items>
+                        <div class="grid grid-nogutter">
+                            <div class="col-12" *ngFor="let item of items; let first = first" class="col-12">
+                                <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
+                                    <div class="col">
+                                        <div class="overflow-hidden text-overflow-ellipsis text-lg font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button icon="pi pi-pencil" size="small" pTooltip="Editar" (click)="showModal(true, item)"/>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button severity="danger" icon="pi pi-trash" size="small"  pTooltip="Eliminar"  (click)="confirmDeleted(item)"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </ng-template>
-        </p-dataView>
+                    </ng-template>
+                </p-dataView>
+            </div>
+        </p-card>
     </div>
-</p-card>
+</div>
 <p-dialog header="{{isEdit?'Editar':'Nuevo'}} alimento/bebida" [modal]="true" [(visible)]="visibleModal" >
     <div class="formgrid grid gap-3 mb-3 mt-3">
+        <div class="field col-12">
+            <label for="role">Rol</label>
+            <p-dropdown 
+                id="role"
+                [style]="{'width':'100%'}"
+                [options]="categories" 
+                [(ngModel)]="selectedCategory" 
+                optionLabel="name" 
+                placeholder="Selecciona la categoria" />
+        </div>
         <div class="field col-12">
             <label for="tableName">Nombre de alimento / bebida</label>
             <input id="tableName" type="text" [(ngModel)]="meal.name" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">

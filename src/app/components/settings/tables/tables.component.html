@@ -1,37 +1,41 @@
-<p-card header="Mesas"  class="">
-    <ng-template pTemplate="header">
-        <img alt="Card" src="../../../../assets/layout/images/restaurante.webp"  style="max-height: 15vh; object-fit:cover;"/>
-    </ng-template>
-    <div>
-        <p-inputGroup class="w-full">
-            <p-inputGroupAddon>
-                <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-            <input type="text" pInputText placeholder="Buscar/agregar" />
-            <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small" (click)="showModal()"></button>
-        </p-inputGroup>
+<div class="flex flex-wrap justify-content-center ">
+    <div class="w-full">
+        <p-card header="Mesas"  class="">
+            <div>
+                <p-inputGroup class="w-full">
+                    <p-inputGroupAddon>
+                        <i class="pi pi-search"></i>
+                    </p-inputGroupAddon>
+                    <input type="text" pInputText placeholder="Buscar" />
+                    <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small"  pTooltip="Nueva mesa"  (click)="showModal()"></button>
+                </p-inputGroup>
 
-        <p-dataView #dv [value]="tables" [rows]="5" [paginator]="true" emptyMessage="Sin mesas registradas">
-            <ng-template pTemplate="list" let-items>
-                <div class="grid grid-nogutter p-4">
-                    <div class="col-12" *ngFor="let item of items; let first = first">
-                        <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
-                            <div class="col">
-                                <div class="overflow-hidden text-overflow-ellipsis text-md font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
-                            </div>
-                            <div class="col-fixed gap-1">
-                                <p-button icon="pi pi-pencil" size="small" (click)="showModal(true,item)"/>
-                            </div>
-                            <div class="col-fixed gap-1">
-                                <p-button severity="danger" icon="pi pi-trash" size="small" (click)="confirmDeleted(item)"/>
+                <p-dataView #dv [value]="tables" [rows]="5" [paginator]="true" emptyMessage="Sin mesas registradas">
+                    <ng-template pTemplate="list" let-items>
+                        <div class="grid grid-nogutter p-4">
+                            <div class="col-12" *ngFor="let item of items; let first = first">
+                                <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
+                                    <div class="col">
+                                        <div class="overflow-hidden text-overflow-ellipsis text-md font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button icon="pi pi-cloud-download" size="small" pTooltip="Descargar QR" (click)="showQRModal(item)"/>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button icon="pi pi-pencil" size="small" pTooltip="Editar" (click)="showModal(true,item)"/>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button severity="danger" icon="pi pi-trash" size="small"  pTooltip="Eliminar"  (click)="confirmDeleted(item)"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </ng-template>
-        </p-dataView>
+                    </ng-template>
+                </p-dataView>
+            </div>
+        </p-card>
     </div>
-</p-card>
+</div>
 
 <p-dialog header="{{isEdit?'Editar':'Nueva'}} mesa" [modal]="true" [(visible)]="visibleModal" >
     <div class="formgrid grid gap-3 mb-3 mt-3">
@@ -87,3 +91,33 @@
         </div>
     </ng-template>
 </p-confirmDialog>
+
+
+<p-dialog header="QR de mesa {{table.name}}" [modal]="true" [(visible)]="visibleQRModal" >
+    <div class="formgrid grid gap-3 mb-3 mt-3">
+        <qrcode
+        #parent
+        [elementType]="elementType"
+        [errorCorrectionLevel]="qrData.errorCorrectionLevel"
+        [qrdata]="qrData.qrdata"
+        [scale]="qrData.scale"
+        [width]="qrData.width"
+        [allowEmptyString]="true"
+        [className]="qrData.cssClass"
+        [colorDark]="qrData.colorDark"
+        [colorLight]="qrData.colorLight"
+        [margin]="qrData.margin"
+        [alt]="qrData.alt"
+        [ariaLabel]="qrData.ariaLabel"
+        [title]="qrData.title"
+        [imageSrc]="qrData.imageSrc"
+        [imageHeight]="qrData.imageHeight"
+        [imageWidth]="qrData.imageWidth"
+      ></qrcode>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="visibleQRModal = false" />
+        <p-button icon="pi pi-cloud-download" label="Descargar" (click)="saveQRAsImage(parent)" />
+    </div>
+</p-dialog>
+

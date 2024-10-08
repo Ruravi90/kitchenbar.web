@@ -1,16 +1,16 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Table, User } from '../models';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { User } from '../models';
 import { AuthInterface } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TablesService {
+export class BranchesService {
 
-  private apiUrl = environment.apiBase + 'tables';
+  private apiUrl = environment.apiBase + 'branches';
   private currentUser:User = new User();
   constructor(private http: HttpClient, private auth: AuthInterface) {
       this.currentUser = auth.getCurrentUser();
@@ -18,18 +18,11 @@ export class TablesService {
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
-  getItemsByInstance(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl+"/byInstance");
-  }
-  request(entity:Table): Observable<any[]> {
-    return this.http.post<any[]>(this.apiUrl+"/request",entity);
-  }
-
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
-  getByIdentity(identity: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/byIdentity/${identity}`);
+  getItemsByInstance(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/ByInstance");
   }
   createItem(item: any): Observable<any> {
     item.instanceId = this.currentUser.instanceId;

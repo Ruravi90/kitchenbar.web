@@ -9,23 +9,18 @@ import { AuthInterface, HubInterface } from '../interfaces';
 })
 export class AppMenuComponent implements OnInit {
 
-    model: any[] = [
-        {
-            label: 'Menu',
-            items: [
-               
-            ]
-        }];
+    model: any[] = [];
 
     constructor(private hub: HubInterface,public layoutService: LayoutService, private auth: AuthInterface) { }
 
     ngOnInit() {
         var role =this.auth.getCurrentRol();
+        var user =this.auth.getCurrentUser();
 
         if(role != 0){
             this.model.push(
                             {
-                                label: 'kitchen',
+                                label: user.instance!.name_kitchen,
                                 items: [
                                     { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/tables'] },
                                     { label: 'Ordenes', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/orders'] },
@@ -36,7 +31,7 @@ export class AppMenuComponent implements OnInit {
             if(role == 1){
                 this.model.push(
                     {
-                        label: 'Configuracion',
+                        label: 'Configuración',
                         items: [
                             { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/tables'] },
                             { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/categories'] },
@@ -46,6 +41,8 @@ export class AppMenuComponent implements OnInit {
                     }
                 );
             }
+
+            
         }
         
         else if( role == 0){
@@ -58,7 +55,18 @@ export class AppMenuComponent implements OnInit {
                     ]
                 }
             );
+            
         }
+
+        this.model.push(
+            {
+                label: 'Perfil',
+                items: [
+                    { label: 'Cerrar sesión',icon: 'pi pi-fw pi-lock', routerLink: ['/auth/loguin'] },
+                ]
+                
+            }
+        );
         
         this.hub.receiveOrderToKitchen().subscribe(x =>  {
             

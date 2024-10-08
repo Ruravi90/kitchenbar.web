@@ -61,6 +61,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        this.hideMenu();
         if(this.auth.getCurrentRol() != 0){
             this.hub.connect();
             await this.delay(1000);
@@ -79,7 +80,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     async delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+        return new Promise( resolve => setTimeout(resolve, ms) );
     }
 
     hideMenu() {

@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Order } from '../models';
+import { Order, User } from '../models';
+import { AuthInterface } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,21 @@ import { Order } from '../models';
 export class OrdersService {
 
   private apiUrl = environment.apiBase + 'orders';
-  constructor(private http: HttpClient) { }
+  private currentUser:User = new User();
+  constructor(private http: HttpClient, private auth: AuthInterface) {
+      this.currentUser = auth.getCurrentUser();
+   }
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
   getItemsByInstance(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl+"/byInstance");
   }
-  getItemsByTable(identity:string): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl+"/byTable/"+identity);
+  getItemsAllPerDay(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/perDay");
+  }
+  getItemsByTable(dinerId:number): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/byTable/"+dinerId);
   }
   getItemWithIncludes(id:number): Observable<Order> {
     return this.http.get<Order>(`${this.apiUrl}/${id}/WithIncludes`);
@@ -27,6 +34,7 @@ export class OrdersService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
   createItem(item: any): Observable<any> {
+    item.instanceId = this.currentUser.instanceId;
     return this.http.post<any>(this.apiUrl, item);
   }
   updateItem(id: number, item: any): Observable<any> {

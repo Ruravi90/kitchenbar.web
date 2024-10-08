@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { MealsInterface } from '../interfaces/meals.interface';
+import { AuthInterface } from '../interfaces';
+import { User } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,10 @@ import { MealsInterface } from '../interfaces/meals.interface';
 export class MealsService implements MealsInterface{
 
   private apiUrl = environment.apiBase + 'meals';
-  constructor(private http: HttpClient) { }
+  private currentUser:User = new User();
+  constructor(private http: HttpClient, private auth: AuthInterface) {
+      this.currentUser = auth.getCurrentUser();
+   }
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
@@ -24,6 +29,7 @@ export class MealsService implements MealsInterface{
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
   createItem(item: any): Observable<any> {
+    item.instanceId = this.currentUser.instanceId;
     return this.http.post<any>(this.apiUrl, item);
   }
   updateItem(id: number, item: any): Observable<any> {

@@ -1,38 +1,39 @@
-<p-card header="Categorias"  class="">
-    <ng-template pTemplate="header">
-        <img alt="Card" src="../../../../assets/layout/images/restaurante.webp"  style="max-height: 15vh; object-fit:cover;"/>
-    </ng-template>
-    <div>
-        <p-inputGroup class="w-full">
-            <p-inputGroupAddon>
-                <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-            <input type="text" pInputText placeholder="Buscar categoria" pTooltip="Escribe para buscar"/>
-            <button type="button" pButton icon="pi pi-plus" size="small" 
-            class="p-button-success" (click)="showModal()"></button>
-        </p-inputGroup>
+<div class="flex flex-wrap justify-content-center ">
+    <div class="w-full">
+        <p-card header="Categorias"  class="">
+            <div>
+                <p-inputGroup class="w-full">
+                    <p-inputGroupAddon>
+                        <i class="pi pi-search"></i>
+                    </p-inputGroupAddon>
+                    <input type="text" pInputText placeholder="Buscar categoria" pTooltip="Escribe para buscar"/>
+                    <button type="button" pButton icon="pi pi-plus" size="small" 
+                    class="p-button-success" (click)="showModal()"  pTooltip="Nueva categoria" ></button>
+                </p-inputGroup>
 
-        <p-dataView #dv [value]="categories" [rows]="5" [paginator]="true" emptyMessage="Sin categorias registradas">
-            <ng-template pTemplate="list" let-products>
-                <div class="grid grid-nogutter">
-                    <div class="col-12" *ngFor="let item of products; let first = first">
-                        <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
-                            <div class="col">
-                                <div class="overflow-hidden text-overflow-ellipsis text-lg font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
-                            </div>
-                            <div class="col-fixed gap-1">
-                                <p-button icon="pi pi-pencil" size="small" (click)="showModal(true,item)"/>
-                            </div>
-                            <div class="col-fixed gap-1">
-                                <p-button severity="danger" icon="pi pi-trash"  size="small" pTooltip="Eliminar" (click)="confirmDeleted(item)"/>
+                <p-dataView #dv [value]="categories" [rows]="5" [paginator]="true" emptyMessage="Sin categorias registradas">
+                    <ng-template pTemplate="list" let-products>
+                        <div class="grid grid-nogutter">
+                            <div class="col-12" *ngFor="let item of products; let first = first">
+                                <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
+                                    <div class="col">
+                                        <div class="overflow-hidden text-overflow-ellipsis text-lg font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button icon="pi pi-pencil" size="small"  pTooltip="Editar"  (click)="showModal(true,item)"/>
+                                    </div>
+                                    <div class="col-fixed gap-1">
+                                        <p-button severity="danger" icon="pi pi-trash"  size="small" pTooltip="Eliminar" (click)="confirmDeleted(item)"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </ng-template>
-        </p-dataView>
+                    </ng-template>
+                </p-dataView>
+            </div>
+        </p-card>
     </div>
-</p-card>
+</div>
 
 <p-dialog header="{{isEdit?'Editar':'Nueva'}} categoria" [modal]="true" [(visible)]="visibleModal" >
     <div class="formgrid grid gap-3 mb-3 mt-3">

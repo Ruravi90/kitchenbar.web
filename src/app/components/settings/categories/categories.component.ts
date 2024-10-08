@@ -61,6 +61,10 @@ export class CategoriesComponent {
         header: 'Estas seguro de eliminar?',
         message: 'Por favor de confirmar.',
         accept: () => {
+          this.categoriesServices.deleteItem(this.categorie!.id!).subscribe({
+            next: (data) => this.getCategories(),
+            error: (e) => console.error(e)
+          });
         }
     });
   }

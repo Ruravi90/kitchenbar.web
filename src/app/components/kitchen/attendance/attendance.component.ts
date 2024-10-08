@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Meal, Order, Table } from '../../../models';
-import { AuthInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface } from '../../../interfaces';
-import { ActivatedRoute } from '@angular/router';
+import { Diner, Meal, Order, Table } from '../../../models';
+import { AuthInterface, DinersInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface } from '../../../interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -18,11 +18,15 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   isRequestAttendace:boolean = false;
   isRequestCheck:boolean = false;
   table?:Table;
+  diner:Diner =  {
+    name_client : "Cliente anónimo"
+  };
   selectedItem?:Meal;
   suggestionsMeal:Meal[] =[];
   meals:Meal[] = [];
   tableIdentity : string = "";
   instanceIdentity : string = "";
+  showModalDiner:boolean = false;
 
   constructor(
     private confirmationService: ConfirmationService, 
@@ -30,8 +34,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     private _serviceAuth: AuthInterface,
     private _serviceTable: TablesInterface,
     private _serviceOrder: OrdersInterface,
+    private _serviceDiner: DinersInterface,
     private _serviceMeal: MealsInterface,
     private route: ActivatedRoute,
+    private router: Router,
     private hub: HubInterface){
     
     this.isLogin = _serviceAuth.checkLogin();
@@ -49,14 +55,17 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.order.statusOrderId = 1;
     this.tableIdentity = this.route.snapshot.paramMap.get('identity')!;
     this.getTable();
-    this.getOrders();
-
+    this.getDiner();
     await this.delay(1000);
 
+    this.getOrders();
+    
     if(this.isLogin)
       this.getMeals();
 
     this.hub.receiveOrderFromTable().subscribe(x =>  {
+      this.getDiner();
+      this.delay(1000);
       this.getOrders();
     });
   }
@@ -80,7 +89,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     });
   }
   getOrders(){
-    this._serviceOrder.getItemsByTable(this.tableIdentity).subscribe({
+    this._serviceOrder.getItemsByTable(this.diner.id!).subscribe({
       next: (data) => {
         console.log(data);
         this.items = data;
@@ -88,6 +97,18 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           if(!i.isCancel)
             this.totalOrder += (i.meal!.price * i.quantity!);
         });
+      },
+      error: (e) => console.error(e)
+    });
+  }
+  getDiner(){
+    this._serviceDiner.getItemsByTable(this.tableIdentity).subscribe({
+      next: (data) => {
+        if(data == null && this.isLogin){
+            this.showModalDiner = true;
+        }
+        else
+          this.diner = data;
       },
       error: (e) => console.error(e)
     });
@@ -142,10 +163,12 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   addOrder(){
     if(!this.selectedItem)
       return;
+    this.order.dinerId = this.diner.id;
     this._serviceOrder.createItem(this.order!).subscribe({
       next: (data) => {
         this.hub.sendOrder(this.order);
         this.order = {};
+        this.order.dinerId = this.diner.id;
         this.order.quantity = 1;
         this.selectedItem=undefined;
       },
@@ -184,6 +207,33 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             error: (e) => console.error(e)
           });
         }
+    });
+  }
+  confirmCloseTicket(){
+    this.confirmationService.confirm({
+      header: 'Estas seguro de cerrar la cuenta?',
+      message: 'Por favor de confirmar.',
+      accept: () => {
+        this._serviceDiner.closeTicket(this.diner.id!).subscribe({
+          next: (data) => {
+            this.router.navigate(['/kitchen/tables']);
+          },
+          error: (e) => {this.showModalDiner = true;}
+        });
+      }
+  });
+  }
+
+  saveDiner(){
+    if(this.table == null)
+      return;
+
+    this.diner.tableId = this.table.id;
+    this._serviceDiner.createItem(this.diner).subscribe({
+      next: (data) => {
+          this.showModalDiner = false;
+      },
+      error: (e) => {this.showModalDiner = true;}
     });
   }
 }

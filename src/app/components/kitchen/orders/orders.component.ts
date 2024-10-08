@@ -38,7 +38,7 @@ export class OrdersComponent implements OnInit{
   }
 
   retrieveOrders(): void {
-    this._serviceOrder.getItemsByInstance().subscribe({
+    this._serviceOrder.getItemsAllPerDay().subscribe({
       next: (data) => {
         this.items = data.filter((i) => i.isCancel == false && (i.statusOrderId ==1 || i.statusOrderId ==2));
       },

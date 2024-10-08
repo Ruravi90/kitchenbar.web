@@ -7,3 +7,5 @@ export * from "./users.service";
 export * from "./instances.service";
 export * from "./licenses.service";
 export * from "./hub.service";
+export * from "./diners.service";
+export * from "./branches.service";

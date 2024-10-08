@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { User } from '../models';
+import { AuthInterface } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,10 @@ import { Observable } from 'rxjs';
 export class CategoriesService {
 
   private apiUrl = environment.apiBase + 'categories';
-  constructor(private http: HttpClient) { }
+  private currentUser:User = new User();
+  constructor(private http: HttpClient, private auth: AuthInterface) {
+      this.currentUser = auth.getCurrentUser();
+   }
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
@@ -20,6 +25,7 @@ export class CategoriesService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
   createItem(item: any): Observable<any> {
+    item.instanceId = this.currentUser.instanceId;
     return this.http.post<any>(this.apiUrl, item);
   }
   updateItem(id: number, item: any): Observable<any> {

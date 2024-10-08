@@ -9,15 +9,15 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
         RouterModule.forRoot([
             {
                 path: '', component: AppLayoutComponent,
+                canActivate: [canActivateChild],
                 children: [
-                    { path: '',canActivate: [canActivateChild], loadChildren: () => import('./components/documentation/documentation.module').then(m => m.DocumentationModule) },
-                    { path: 'kitchen',canActivate: [canActivateChild], loadChildren: () => import('./components/kitchen/kitchen.module').then(m => m.KitchenModule) },
-                    { path: 'settings',canActivate: [canActivateChild], loadChildren: () => import('./components/settings/settings.module').then(m => m.SettingsModule) },
-                    { path: 'admin',canActivate: [canActivateChild], loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
-                    { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
+                    { path: '',loadChildren: () => import('./components/documentation/documentation.module').then(m => m.DocumentationModule) },
+                    { path: 'kitchen',loadChildren: () => import('./components/kitchen/kitchen.module').then(m => m.KitchenModule) },
+                    { path: 'settings',loadChildren: () => import('./components/settings/settings.module').then(m => m.SettingsModule) },
+                    { path: 'admin',loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
                 ]
-
             },
+            { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },

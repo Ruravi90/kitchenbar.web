@@ -21,6 +21,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputMaskModule } from 'primeng/inputmask';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   exports: [
@@ -45,7 +48,10 @@ import { DividerModule } from 'primeng/divider';
     ToastModule,
     DialogModule,
     TooltipModule,
-    DividerModule
+    DividerModule,
+    DropdownModule,
+    InputMaskModule,
+    QRCodeModule
   ]
 })
 export class SharedModule { }

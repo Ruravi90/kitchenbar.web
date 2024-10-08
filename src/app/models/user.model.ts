@@ -9,4 +9,6 @@ export class User extends Base{
     password?: string;
     user_name?:string;
     instance?: Instance;
+    role?:number;
+    branchId?:number;
 }

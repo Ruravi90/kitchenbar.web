@@ -2,7 +2,7 @@
     <div class="w-full">
         <p-card header="Mesas"  class="">
             <div>
-                <p-inputGroup class="w-full">
+                <p-inputGroup class="w-full mb-4">
                     <p-inputGroupAddon>
                         <i class="pi pi-search"></i>
                     </p-inputGroupAddon>
@@ -12,14 +12,14 @@
 
                 <p-dataView #dv [value]="tables" [rows]="5" [paginator]="true" emptyMessage="Sin mesas registradas">
                     <ng-template pTemplate="list" let-items>
-                        <div class="grid grid-nogutter p-4">
+                        <div class="grid grid-nogutter">
                             <div class="col-12" *ngFor="let item of items; let first = first">
                                 <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
                                     <div class="col">
                                         <div class="overflow-hidden text-overflow-ellipsis text-md font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
                                     </div>
                                     <div class="col-fixed gap-1">
-                                        <p-button icon="pi pi-cloud-download" size="small" pTooltip="Descargar QR" (click)="showQRModal(item)"/>
+                                        <p-button icon="pi pi-qrcode" severity="secondary" size="small" pTooltip="Descargar QR" (click)="showQRModal(item)"/>
                                     </div>
                                     <div class="col-fixed gap-1">
                                         <p-button icon="pi pi-pencil" size="small" pTooltip="Editar" (click)="showModal(true,item)"/>

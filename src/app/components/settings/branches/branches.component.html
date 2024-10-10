@@ -1,23 +1,23 @@
 <div class="flex flex-wrap justify-content-center ">
     <div class="w-full">
-        <p-card header="Categorias"  class="">
+        <p-card header="Sucursales"  class="">
             <div>
                 <p-inputGroup class="w-full mb-4">
                     <p-inputGroupAddon>
                         <i class="pi pi-search"></i>
                     </p-inputGroupAddon>
-                    <input type="text" pInputText placeholder="Buscar categoria" pTooltip="Escribe para buscar"/>
+                    <input type="text" pInputText placeholder="Buscar sucursal" pTooltip="Escribe para buscar"/>
                     <button type="button" pButton icon="pi pi-plus" size="small" 
-                    class="p-button-success" (click)="showModal()"  pTooltip="Nueva categoria" ></button>
+                    class="p-button-success" (click)="showModal()"  pTooltip="Nueva sucursal" ></button>
                 </p-inputGroup>
 
-                <p-dataView #dv [value]="categories" [rows]="5" [paginator]="true" emptyMessage="Sin categorias registradas">
+                <p-dataView #dv [value]="branches" [rows]="5" [paginator]="true" emptyMessage="Sin categorias registradas">
                     <ng-template pTemplate="list" let-products>
                         <div class="grid grid-nogutter">
                             <div class="col-12" *ngFor="let item of products; let first = first">
                                 <div class="grid p-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
                                     <div class="col">
-                                        <div class="overflow-hidden text-overflow-ellipsis text-lg font-medium text-900 mt-2" style="width:100px">{{ item.name }}</div>
+                                        <div class="overflow-hidden text-overflow-ellipsis text-lg font-medium text-900 mt-2" >{{ item.name }}</div>
                                     </div>
                                     <div class="col-fixed gap-1">
                                         <p-button icon="pi pi-pencil" size="small"  pTooltip="Editar"  (click)="showModal(true,item)"/>
@@ -35,11 +35,11 @@
     </div>
 </div>
 
-<p-dialog header="{{isEdit?'Editar':'Nueva'}} categoria" [modal]="true" [(visible)]="visibleModal" >
+<p-dialog header="{{isEdit?'Editar':'Nueva'}} sucursal" [modal]="true" [(visible)]="visibleModal" >
     <div class="formgrid grid gap-3 mb-3 mt-3">
         <div class="field col-12">
-            <label for="tableName">Nombre de la categoria</label>
-            <input id="tableName" type="text" [(ngModel)]="categorie.name" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+            <label for="tableName">Nombre de la sucursal</label>
+            <input id="tableName" type="text" [(ngModel)]="branch.name" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
     </div>
     <div class="flex justify-content-end gap-2">

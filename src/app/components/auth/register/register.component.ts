@@ -3,6 +3,7 @@ import { LayoutService } from '../../../layout/service/app.layout.service';
 import { User } from '../../../models';
 import { AuthService } from '../../../services';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-register',
@@ -20,7 +21,11 @@ export class RegisterComponent implements OnInit {
     user: User = new User();
     isBusy: Boolean = false;
     isAuthorized: Boolean | null = null;
-    constructor(private uS: AuthService,public layoutService:LayoutService, private router: Router) {
+    constructor(
+        private uS: AuthService,
+        private messageService: MessageService,
+        public layoutService:LayoutService, 
+        private router: Router) {
       localStorage.removeItem('user');
     }
   

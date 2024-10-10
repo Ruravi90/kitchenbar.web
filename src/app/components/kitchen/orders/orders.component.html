@@ -7,8 +7,8 @@
                         <div class="col-12 pb-2" *ngFor="let item of items; let first = first">
                             <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first}">
                                 <div class="col-fixed">
-                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" alt="dropdown icon" src="./assets/images/icon/process.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" alt="dropdown icon" src="./assets/images/icon/uniform.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" pTooltip="En proceso" alt="En proceso" src="./assets/images/icon/process.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" alt="Preparando" src="./assets/images/icon/uniform.svg" style="width: 25px;">
                                 </div>
                                 <div class="col-fixed gap-1">
                                     <div class="font-medium text-700 mt-2">{{ item.table?.name }}</div>

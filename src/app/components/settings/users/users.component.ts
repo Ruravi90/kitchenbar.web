@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Branch, User } from '../../../models';
 import { AuthInterface, BranchesInterface, UsersInterface } from '../../../interfaces';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 @Component({
@@ -12,6 +12,7 @@ import { ConfirmationService } from 'primeng/api';
 export class UsersComponent {
 
   constructor( private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private _serviceAuth: AuthInterface,
     private _serviceBranch: BranchesInterface,
     private usersServices: UsersInterface){}
@@ -46,7 +47,9 @@ export class UsersComponent {
       next: (data) => {
         this.items = data;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
   getBranches(): void {
@@ -54,7 +57,9 @@ export class UsersComponent {
       next: (data) => {
         this.branches = data;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 
@@ -82,13 +87,17 @@ export class UsersComponent {
     if(this.isEdit){
       this.usersServices.updateItem(this.user!.id!,this.user).subscribe({
         next: (data) => this.getUsers(),
-        error: (e) => console.error(e)
+        error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
       });
     }
     else{
       this.usersServices.createItem(this.user).subscribe({
         next: (data) => this.getUsers(),
-        error: (e) => console.error(e)
+        error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
       });
     }
     this.selectedRol = null;
@@ -103,7 +112,9 @@ export class UsersComponent {
         accept: () => {
           this.usersServices.deleteItem(this.user.id!).subscribe({
             next: (data) => this.getUsers(),
-            error: (e) => console.error(e)
+            error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
           });
         }
     });

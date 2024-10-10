@@ -10,7 +10,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrl: './attendance.component.scss',
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
-
+  skeleton :boolean = true;
   items:Order[] = [];
   order:Order = {};
   isLogin:boolean=false;
@@ -45,27 +45,29 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.order.quantity = 1;
+    this.order.statusOrderId = 1;
+    
+    await this.delay(1000);
+    this.tableIdentity = this.route.snapshot.paramMap.get('identity')!;
+    
     if(!this.isLogin){
       this.hub.connect();
       await this.delay(1000);
       this.hub.newUser().subscribe();
     }
-    
-    this.order.quantity = 1;
-    this.order.statusOrderId = 1;
-    this.tableIdentity = this.route.snapshot.paramMap.get('identity')!;
+
     this.getTable();
     this.getDiner();
-    await this.delay(1000);
 
-    this.getOrders();
-    
     if(this.isLogin)
       this.getMeals();
-
+    
     this.hub.receiveOrderFromTable().subscribe(x =>  {
-      this.getDiner();
-      this.delay(1000);
+      if(!"number".includes(typeof this.diner.id)){
+        this.getDiner();
+        this.delay(1000);
+      }
       this.getOrders();
     });
   }
@@ -76,29 +78,37 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
-  getTable(){
+  getTable(){ 
     this._serviceTable.getByIdentity(this.tableIdentity).subscribe({
       next: (data) => {
         console.log(data);
         this.table = data;
         this.instanceIdentity = data.instance.identity;
+        
         if(!this.isLogin)
           this.hub.joinGroupAnonymus(data.instance.identity);
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   getOrders(){
+    this.totalOrder =0;
     this._serviceOrder.getItemsByTable(this.diner.id!).subscribe({
       next: (data) => {
-        console.log(data);
         this.items = data;
         this.items.forEach(i=>{
           if(!i.isCancel)
             this.totalOrder += (i.meal!.price * i.quantity!);
         });
+        this.skeleton = false;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   getDiner(){
@@ -106,20 +116,28 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       next: (data) => {
         if(data == null && this.isLogin){
             this.showModalDiner = true;
+            this.skeleton = false;
         }
-        else
+        else{
           this.diner = data;
+          this.getOrders();
+        }
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   getMeals(){
-    this._serviceMeal.getByInstanceIdentity(this.table?.instance?.identity!).subscribe({
+    this._serviceMeal.getItemsByInstance().subscribe({
       next: (data) => {
-        console.log("suggestionsMeal", data);
         this.meals = data;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   requestAttendace(){
@@ -127,7 +145,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.table!.isRequestAttendace = !this.table!.isRequestAttendace;
     this._serviceTable.request(this.table!).subscribe({
       next:()=>{ this.hub.sendNotificationTables(this.table!)},
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   requestCheck(){
@@ -135,7 +156,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.table!.isRequestAttendace = false;
     this._serviceTable.request(this.table!).subscribe({
       next:()=>{ this.hub.sendNotificationTables(this.table!)},
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   focusSearchMeal(event:any){
@@ -172,7 +196,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         this.order.quantity = 1;
         this.selectedItem=undefined;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   cancelOrder(order:Order){
@@ -181,7 +208,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.hub.sendOrder(order);
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
   confirmCancel(order:Order) {
@@ -189,7 +219,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         header: 'Estas seguro de cancelar?',
         message: 'Por favor de confirmar.',
         accept: () => {
-            this.cancelOrder(order);
+          this.cancelOrder(order);
         }
     });
   }
@@ -204,7 +234,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             next: (data) => {
               this.hub.sendOrder(order);
             },
-            error: (e) => console.error(e)
+            error: (e) => {
+              console.log(e);
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
           });
         }
     });
@@ -218,12 +251,14 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           next: (data) => {
             this.router.navigate(['/kitchen/tables']);
           },
-          error: (e) => {this.showModalDiner = true;}
+          error: (e) => {
+            console.log(e);
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e });
+          }
         });
       }
   });
   }
-
   saveDiner(){
     if(this.table == null)
       return;
@@ -233,7 +268,11 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       next: (data) => {
           this.showModalDiner = false;
       },
-      error: (e) => {this.showModalDiner = true;}
+      error: (e) => {
+        this.showModalDiner = true;
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
 }

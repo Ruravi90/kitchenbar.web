@@ -23,6 +23,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputMaskModule } from 'primeng/inputmask';
+import { SkeletonModule } from 'primeng/skeleton';
 import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
@@ -51,7 +52,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     DividerModule,
     DropdownModule,
     InputMaskModule,
-    QRCodeModule
+    QRCodeModule,
+    SkeletonModule
   ]
 })
 export class SharedModule { }

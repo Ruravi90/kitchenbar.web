@@ -23,10 +23,18 @@
                                 </div>
                                 <div class="col-fixed gap-1" >
                                     <p-button 
+                                        icon="pi pi-qrcode"
+                                        severity="secondary"
+                                        [rounded]="true" [text]="true" [raised]="true"
+                                        (onClick)="showQRModal(item)">
+                                    </p-button>
+                                </div>
+                                <div class="col-fixed gap-1" >
+                                    <p-button 
                                         icon="pi pi-sign-in"
                                         routerLink="/kitchen/table/{{ item.identity}}"
                                         [rounded]="true" [text]="true" [raised]="true"
-                                        pTooltip="Ver detalles de la mesa">
+                                        pTooltip="Ir">
                                     </p-button>
                                 </div>
                             </div>
@@ -37,6 +45,33 @@
         </p-card>
     </div>
 </div>
+
+<p-dialog header="QR de mesa {{table?.name}}" [modal]="true" [(visible)]="visibleQRModal" >
+    <div class="formgrid grid gap-3 mb-3 mt-3">
+        <qrcode
+        #parent
+        [elementType]="elementType"
+        [errorCorrectionLevel]="qrData.errorCorrectionLevel"
+        [qrdata]="qrData.qrdata"
+        [scale]="qrData.scale"
+        [width]="qrData.width"
+        [allowEmptyString]="true"
+        [className]="qrData.cssClass"
+        [colorDark]="qrData.colorDark"
+        [colorLight]="qrData.colorLight"
+        [margin]="qrData.margin"
+        [alt]="qrData.alt"
+        [ariaLabel]="qrData.ariaLabel"
+        [title]="qrData.title"
+        [imageSrc]="qrData.imageSrc"
+        [imageHeight]="qrData.imageHeight"
+        [imageWidth]="qrData.imageWidth"
+      ></qrcode>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cerrar" severity="secondary" (click)="visibleQRModal = false" />
+    </div>
+</p-dialog>
 
 <p-toast position="top-center" [baseZIndex]="5000">
     <ng-template let-message pTemplate="headless" let-closeFn="closeFn">

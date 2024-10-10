@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Order } from '../../../models';
 import { HubInterface, OrdersInterface } from '../../../interfaces';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
@@ -17,6 +17,7 @@ export class OrdersComponent implements OnInit{
   
   constructor(
     private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private _serviceOrder: OrdersInterface, 
     private hub: HubInterface
   ){
@@ -42,7 +43,9 @@ export class OrdersComponent implements OnInit{
       next: (data) => {
         this.items = data.filter((i) => i.isCancel == false && (i.statusOrderId ==1 || i.statusOrderId ==2));
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 
@@ -57,7 +60,9 @@ export class OrdersComponent implements OnInit{
             next: (data) => {
               this.hub.sendOrder(order);
             },
-            error: (e) => console.error(e)
+            error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
           });
         }
     });

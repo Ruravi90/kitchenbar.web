@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { License, Table } from '../../../models';
 import { LicensesService } from '../../../services';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { LicensesService } from '../../../services';
 })
 export class LicensesComponent {
 
-  constructor(private licenseServices: LicensesService){}
+  constructor(private messageService: MessageService,private licenseServices: LicensesService){}
 
   items?: License[];
 
@@ -24,7 +25,9 @@ export class LicensesComponent {
         this.items = data;
         console.log(data);
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 }

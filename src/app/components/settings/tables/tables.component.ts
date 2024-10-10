@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Table } from '../../../models';
 import { TablesInterface } from '../../../interfaces';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { FixMeLater, QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
 
@@ -13,7 +13,10 @@ import { environment } from '../../../../environments/environment';
 })
 export class TablesComponent {
 
-  constructor( private confirmationService: ConfirmationService,private tablesServices: TablesInterface){
+  constructor( 
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private tablesServices: TablesInterface){
     this.elementType= "canvas" as QRCodeElementType;
   }
 
@@ -53,7 +56,9 @@ export class TablesComponent {
       next: (data) => {
         this.tables = data;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 
@@ -73,13 +78,17 @@ export class TablesComponent {
     if(this.isEdit){
       this.tablesServices.updateItem(this.table!.id!,this.table).subscribe({
         next: (data) => this.getTables(),
-        error: (e) => console.error(e)
+        error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
       });
     }
     else{
       this.tablesServices.createItem(this.table).subscribe({
         next: (data) => this.getTables(),
-        error: (e) => console.error(e)
+        error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
       });
     }
     this.visibleModal = false;
@@ -92,7 +101,9 @@ export class TablesComponent {
         accept: () => {
           this.tablesServices.deleteItem(item.id!).subscribe({
             next: (data) => this.getTables(),
-            error: (e) => console.error(e)
+            error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
           });
         }
     });

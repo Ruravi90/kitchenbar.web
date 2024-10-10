@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Meal, User } from '../../../models';
 import { CategoriesInterface, MealsInterface } from '../../../interfaces';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 @Component({
@@ -13,6 +13,7 @@ export class MealsComponent {
 
   constructor(
     private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private iMeal: MealsInterface,
     private categoriesServices: CategoriesInterface){}
 
@@ -37,7 +38,9 @@ export class MealsComponent {
       next: (data) => {
         this.items = data;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 
@@ -46,7 +49,9 @@ export class MealsComponent {
       next: (data) => {
         this.categories = data;
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 
@@ -67,13 +72,17 @@ export class MealsComponent {
     if(this.isEdit){
       this.iMeal.updateItem(this.meal!.id!,this.meal).subscribe({
         next: (data) => this.getMeals(),
-        error: (e) => console.error(e)
+        error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
       });
     }
     else{
       this.iMeal.createItem(this.meal).subscribe({
         next: (data) => this.getMeals(),
-        error: (e) => console.error(e)
+        error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
       });
     }
 
@@ -88,7 +97,9 @@ export class MealsComponent {
         accept: () => {
           this.iMeal.deleteItem(this.meal!.id!).subscribe({
             next: (data) => this.getMeals(),
-            error: (e) => console.error(e)
+            error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
           });
         }
     });

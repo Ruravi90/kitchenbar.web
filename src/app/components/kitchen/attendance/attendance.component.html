@@ -1,8 +1,56 @@
-<div class="flex flex-wrap justify-content-center ">
-    <div class="w-full">
+<div class="card w-full m-3" *ngIf="skeleton">
+    <p-skeleton styleClass="mb-2" />
+    <p-skeleton width="100%" styleClass="mb-2" />
+    <p-skeleton width="60%" styleClass="mb-2" />
+    <p-skeleton height="5rem" styleClass="mb-2" />
+
+    <div class="border-round border-1 surface-border p-4 surface-card">
+        <ul class="m-0 p-0 list-none">
+            <li class="mb-3">
+                <div class="flex">
+                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+                    <div style="flex: 1">
+                        <p-skeleton width="100%" styleClass="mb-2" />
+                        <p-skeleton width="75%" />
+                    </div>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="flex">
+                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+                    <div style="flex: 1">
+                        <p-skeleton width="100%" styleClass="mb-2" />
+                        <p-skeleton width="75%" />
+                    </div>
+                </div>
+            </li>
+            <li class="mb-3">
+                <div class="flex">
+                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+                    <div style="flex: 1">
+                        <p-skeleton width="100%" styleClass="mb-2" />
+                        <p-skeleton width="75%" />
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="flex">
+                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+                    <div style="flex: 1">
+                        <p-skeleton width="100%" styleClass="mb-2" />
+                        <p-skeleton width="75%" />
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="flex flex-wrap justify-content-center " *ngIf="!skeleton">
+    <div class="w-full" [ngClass]="{'p-3':!isLogin}">
         <p-card header="Mesa {{table?.name}} a nombre de {{diner.name_client}}" [style]="{'width':'100%'}">
-            <div class="formgroup-inline" *ngIf="isLogin">
-                <div class="field col-12 md:col-12 lg:col-9">
+            <div class="grid" *ngIf="isLogin">
+                <div class="col-12 md:col-9">
                     <p-autoComplete 
                         [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
                         [(ngModel)]="selectedItem" 
@@ -21,8 +69,9 @@
                         </ng-template>
                     </p-autoComplete>
                 </div>
-                <div class="field col-12 md:col-12 lg:col-2">
+                <div class="col-12 md:col-3">
                     <p-inputNumber 
+                        class="w-full"
                         [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
                         [(ngModel)]="order.quantity" 
                         placeholder="Cantidad"
@@ -36,51 +85,42 @@
                         decrementButtonIcon="pi pi-minus" />
                 </div>
             </div>
-            <div class="formgroup-inline" *ngIf="isLogin">
-                <div class="field col-12 md:col-12 lg:col-9">
-                    <textarea 
-                        [style]="{'width':'100%'}"
-                        rows="1"
-                        cols="30" 
-                        pInputTextarea 
-                        placeholder="Complementos u/o Observación"
-                        [autoResize]="true"
-                        [(ngModel)]="order.aditional" >
+            <div class="grid mb-3" *ngIf="isLogin" >
+                <div class="col-12 md:col-9">
+                    <textarea [style]="{'width':'100%'}" rows="1" cols="30" pInputTextarea 
+                    placeholder="Complementos u/o Observación"[autoResize]="true"
+                    [(ngModel)]="order.aditional" >
                     </textarea>
                 </div>
-                <div class="field col-12 md:col-12 lg:col-2">
-                    <button 
-                        [style]="{'width':'100%'}"
-                        pButton 
-                        pRipple 
-                        icon="pi pi-plus" 
-                        label="Agregar"
-                        (click)="addOrder()" >
+                <div class="col-12 md:col-3">
+                    <button
+                        pButton pRipple [style]="{'width':'100%'}"
+                        icon="pi pi-plus" label="Agregar" (click)="addOrder()" >
                     </button>
                 </div>
             </div>
-            <div class="formgroup-inline" *ngIf="!isLogin">
-                <div class="field col-12 md:col-12 lg:col-4" *ngIf="false">
+            <div class="grid mb-3" *ngIf="!isLogin">
+                <div class="col-12 md:col-4" *ngIf="false">
                     <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-list"/>
                 </div>
-                <div class="field col-12 md:col-12 lg:col-4">
+                <div class="col-12 md:col-6">
                     <p-button [style]="{'width':'100%'}" label="Asistencia" [raised]="true" icon="pi pi-bell" severity="info" [ngClass]="{'button-flash':(table?.isRequestAttendace)}" (click)="requestAttendace()" />
                 </div>
-                <div class="field col-12 md:col-12 lg:col-3">
+                <div class="col-12 md:col-6">
                     <p-button [style]="{'width':'100%'}" label="Cuenta" [raised]="true" icon="pi pi-check" [ngClass]="{'button-flash':(table?.isRequestCheck)}" (click)="requestCheck()" />
                 </div>
             </div>
             <p-dataView #dv [value]="items" [rows]="10" [paginator]="true" emptyMessage="Sin ordenes en proceso">
                 <ng-template pTemplate="list" let-items>
                     <div class="grid grid-nogutter">
-                        <div class="col-12 pb-2" *ngFor="let item of items; let first = first">
+                        <div class="col-12" *ngFor="let item of items; let first = first">
                             <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first, 'item-cancel': item.isCancel}">
                                 <div class="col-fixed">
                                     <img *ngIf="item.isCancel" alt="dropdown icon" src="/assets/images/icon/ban.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" alt="dropdown icon" src="./assets/images/icon/process.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" alt="dropdown icon" src="./assets/images/icon/uniform.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 3 && !item.isCancel" alt="dropdown icon" src="./assets/images/icon/delivery.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 4 && !item.isCancel" alt="dropdown icon" src="./assets/images/icon/meal.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" pTooltip="En proceso" alt="dropdown icon" src="./assets/images/icon/process.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" alt="dropdown icon" src="./assets/images/icon/uniform.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 3 && !item.isCancel" pTooltip="Enviado" alt="dropdown icon" src="./assets/images/icon/delivery.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 4 && !item.isCancel" pTooltip="Entregado" alt="dropdown icon" src="./assets/images/icon/meal.svg" style="width: 25px;">
                                 </div>
                                 <div class="col">
                                     <div class="text-900 mt-1">{{ item.quantity + " " + item.meal?.name}}</div>
@@ -89,14 +129,14 @@
                                     <div class=" text-900 mt-1">{{ (item.meal?.price * item.quantity) | currency}}</div>
                                 </div>
                                 <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button icon="pi pi-check" severity="success" size="small" [disabled]="item.statusOrderId != 3" (onClick)="changeStatusOrder($event,item)"></p-button>
+                                    <p-button pTooltip="Entregar" icon="pi pi-check" severity="success" size="small" [disabled]="item.statusOrderId != 3" (onClick)="changeStatusOrder($event,item)"></p-button>
                                 </div>
                                 <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button icon="pi pi-ban" severity="danger" size="small" [disabled]="item.isCancel || item.statusOrderId >= 3" (onClick)="confirmCancel(item)"></p-button>
+                                    <p-button pTooltip="Cancelar" icon="pi pi-ban" severity="danger" size="small" [disabled]="item.isCancel || item.statusOrderId >= 3" (onClick)="confirmCancel(item)"></p-button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 border-top-1 surface-border pt-2">
+                        <div class="col-12 border-top-1 surface-border pt-3">
                             <div class="grid">
                                 <div class="col">
                                     <div class="text-lg font-medium text-900 mt-1">Total: {{ totalOrder | currency}} MXN</div>
@@ -112,6 +152,7 @@
         </p-card>
     </div>
 </div>
+
 <p-toast />
 <p-confirmDialog #cd>
     <ng-template pTemplate="headless" let-message>
@@ -157,6 +198,7 @@
         </div>
     </div>
     <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" [routerLink]="'/kitchen/tables'" />
         <p-button label="Guardar" (click)="saveDiner()" />
     </div>
 </p-dialog>

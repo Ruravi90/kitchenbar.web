@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Instance, Table } from '../../../models';
 import { InstancesService } from '../../../services';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { InstancesService } from '../../../services';
 })
 export class InstancesComponent {
 
-  constructor(private instanceServices: InstancesService){}
+  constructor(private messageService: MessageService,private instanceServices: InstancesService){}
 
   items?: Instance[];
 
@@ -24,7 +25,9 @@ export class InstancesComponent {
         this.items = data;
         console.log(data);
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+            }
     });
   }
 }

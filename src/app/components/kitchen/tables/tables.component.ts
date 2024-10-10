@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Table } from '../../../models';
 import { HubInterface, TablesInterface } from '../../../interfaces';
 import { MessageService } from 'primeng/api';
+import { QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-tables',
@@ -14,10 +16,35 @@ export class TablesComponent {
   constructor(
     private messageService: MessageService,
     private tableServices: TablesInterface, 
-    private hub: HubInterface){}
+    private hub: HubInterface){
+      this.elementType= "canvas" as QRCodeElementType;
+    }
 
   tables?: Table[];
+  table?:Table;
   isBusyTableService: boolean = false;
+  visibleQRModal:boolean = false;
+  public qrData = {
+    allowEmptyString: true,
+    alt: "A custom alt attribute",
+    ariaLabel: `QR Code image with the following content...`,
+    colorDark: "#000000ff",
+    colorLight: "#ffffffff",
+    cssClass: "center",
+    elementType: "canvas" as QRCodeElementType,
+    errorCorrectionLevel: "M" as QRCodeErrorCorrectionLevel,
+    imageSrc: "./assets/layout/images/logo-dark.svg",
+    imageHeight: 75,
+    imageWidth: 150,
+    margin: 4,
+    qrdata: "",
+    scale: 1,
+    version: undefined,
+    title: "A custom title attribute",
+    width: 300,
+  }
+
+  public elementType: QRCodeElementType;
 
   ngOnInit(): void {
     this.retrieveTables();
@@ -51,8 +78,15 @@ export class TablesComponent {
         this.tables = data;
       },
       error: (e) => {
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
         this.isBusyTableService = false;
       }
     });
+  }
+
+  showQRModal(item:Table){
+    this.visibleQRModal = true;
+    this.table = item!;
+    this.qrData.qrdata = environment.baseUrl+item.identity;
   }
 }

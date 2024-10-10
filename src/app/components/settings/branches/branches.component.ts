@@ -1,60 +1,58 @@
 import { Component } from '@angular/core';
-import { Category } from '../../../models';
-import { CategoriesInterface } from '../../../interfaces';
+import { Branch, Category } from '../../../models';
+import { BranchesInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-categories',
-  templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss'
+  selector: 'app-branches',
+  templateUrl: './branches.component.html',
+  styleUrl: './branches.component.scss'
 })
-export class CategoriesComponent {
+export class BranchesComponent {
   constructor(
     private confirmationService: ConfirmationService, 
     private messageService: MessageService,
-    private categoriesServices: CategoriesInterface){}
+    private branchsServices: BranchesInterface){}
 
-  categories: Category[] =[];
-  categorie: Category = {};
+  branches: Branch[] =[];
+  branch: Branch = {};
   visibleModal: boolean = false;
   isEdit:boolean = false;
 
   ngOnInit(): void {
-    this.getCategories();
+    this.getbranches();
   }
-
-  getCategories(){
-    this.categoriesServices.getItemsByInstance().subscribe({
+  getbranches(){
+    this.branchsServices.getItemsByInstance().subscribe({
       next: (data) => {
-        this.categories = data;
+        this.branches = data;
       },
       error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
-            }
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     })
   }
-
-  showModal(isEdit:boolean = false, item?:Category){
+  showModal(isEdit:boolean = false, item?:Branch){
     this.isEdit = isEdit;
     if(isEdit)
-      this.categorie = item!;
+      this.branch = item!;
     else
-      this.categorie = new Category();
+      this.branch = new Branch();
 
     this.visibleModal =  true;
   }
   confirmSave(){
     if(this.isEdit){
-      this.categoriesServices.updateItem(this.categorie!.id!,this.categorie).subscribe({
-        next: (data) => this.getCategories(),
+      this.branchsServices.updateItem(this.branch!.id!,this.branch).subscribe({
+        next: (data) => this.getbranches(),
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
       });
     }
     else{
-      this.categoriesServices.createItem(this.categorie).subscribe({
-        next: (data) => this.getCategories(),
+      this.branchsServices.createItem(this.branch).subscribe({
+        next: (data) => this.getbranches(),
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -62,14 +60,13 @@ export class CategoriesComponent {
     }
     this.visibleModal = false;
   }
-
   confirmDeleted(item:Category) {
     this.confirmationService.confirm({
         header: 'Estas seguro de eliminar?',
         message: 'Por favor de confirmar.',
         accept: () => {
-          this.categoriesServices.deleteItem(this.categorie!.id!).subscribe({
-            next: (data) => this.getCategories(),
+          this.branchsServices.deleteItem(this.branch!.id!).subscribe({
+            next: (data) => this.getbranches(),
             error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }

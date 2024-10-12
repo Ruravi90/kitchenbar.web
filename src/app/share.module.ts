@@ -25,6 +25,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputMaskModule } from 'primeng/inputmask';
 import { SkeletonModule } from 'primeng/skeleton';
 import { QRCodeModule } from 'angularx-qrcode';
+import { StepperModule } from 'primeng/stepper';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   exports: [
@@ -53,7 +55,9 @@ import { QRCodeModule } from 'angularx-qrcode';
     DropdownModule,
     InputMaskModule,
     QRCodeModule,
-    SkeletonModule
+    SkeletonModule,
+    StepperModule,
+    ReactiveFormsModule
   ]
 })
 export class SharedModule { }

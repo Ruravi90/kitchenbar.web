@@ -34,7 +34,6 @@ export class OrdersService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
   createItem(item: any): Observable<any> {
-    item.instanceId = this.currentUser.instanceId;
     return this.http.post<any>(this.apiUrl, item);
   }
   updateItem(id: number, item: any): Observable<any> {

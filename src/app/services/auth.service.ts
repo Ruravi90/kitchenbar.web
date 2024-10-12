@@ -19,8 +19,22 @@ export class AuthService {
         // prepare the response to be handled, then return
         // we'll tidy up later
         // save in localStorage
-        localStorage.setItem('user', JSON.stringify(response.resp));
-        return response.resp;
+        localStorage.setItem('user', JSON.stringify(response));
+        return response;
+      })
+    );
+
+  }
+  register(model: User): Observable<User> {
+    model.instance!.correo = model.email;
+    model.user_name = `${model.user_name}@${model.instance?.name_kitchen}`;
+    return this.http.post<any>(this.apiUrl + '/Register',model).pipe(
+      map((response) => {
+        // prepare the response to be handled, then return
+        // we'll tidy up later
+        // save in localStorage
+        localStorage.setItem('user', JSON.stringify(response));
+        return response;
       })
     );
 

@@ -4,6 +4,7 @@ import { User } from '../../../models';
 import { AuthService } from '../../../services';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-login',
@@ -18,23 +19,59 @@ import { MessageService } from 'primeng/api';
     `]
 })
 export class LoginComponent implements OnInit {
+
+    formLogin: FormGroup = new FormGroup({
+        user_name: new FormControl(''),
+        password: new FormControl('')
+      });
+
     user: User = new User();
-    isBusy: Boolean = false;
+    submitted: Boolean = false;
     isAuthorized: Boolean | null = null;
     constructor(
         private uS: AuthService,
         public layoutService:LayoutService, 
         private messageService: MessageService,
+        private formBuilder: FormBuilder,
         private router: Router) {
       localStorage.removeItem('user');
     }
   
     ngOnInit() {
-      this.isBusy = false;
+      this.formLogin = this.formBuilder.group(
+        {
+          user_name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(6),
+              Validators.maxLength(20)
+            ]
+          ],
+          password: [
+            '',
+            [
+              Validators.required,
+            ]
+          ]
+        }
+      );
     }
-  
+
+    get f(): { [key: string]: AbstractControl } {
+        return this.formLogin.controls; 
+    }  
+    
     login() {
-        this.isBusy = true;
+        this.submitted = true;
+        if (this.formLogin.invalid) {
+            console.log(this.formLogin)
+            return;
+        }
+        
+        this.user.user_name = this.formLogin.controls['user_name'].value;
+        this.user.password = this.formLogin.controls['password'].value;
+        
         this.uS.login(this.user).subscribe({
             next: (resp) => {
             this.isAuthorized = true;
@@ -49,13 +86,10 @@ export class LoginComponent implements OnInit {
             else if(e.error.statusCode == 401)
                 this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "Usuario u/o Contraseña incorrectos" });
             else
-                this.messageService.add({ severity: 'danger', summary: 'Error', detail: e.error.messages });
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
           }
         });
-
-
-
-        this.isBusy = false;
+        this.submitted = false;
         this.isAuthorized = false;
     }
 

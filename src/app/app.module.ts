@@ -18,6 +18,7 @@ export const httpInterceptorProviders = [
 
 import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService, DinersService, BranchesService} from './services' 
 import { AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({ declarations: [AppComponent, NotfoundComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -25,6 +26,12 @@ import { AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface,
         BrowserAnimationsModule,
         AppRoutingModule,
         AppLayoutModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: !isDevMode(),
+          // Register the ServiceWorker as soon as the application is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        }),
       ], 
       providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },

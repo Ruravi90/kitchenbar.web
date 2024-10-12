@@ -120,6 +120,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         }
         else{
           this.diner = data;
+          this.order.dinerId = data.id;
           this.getOrders();
         }
       },
@@ -192,9 +193,9 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.hub.sendOrder(this.order);
         this.order = {};
-        this.order.dinerId = this.diner.id;
         this.order.quantity = 1;
         this.selectedItem=undefined;
+        this.getOrders();
       },
       error: (e) => {
         console.log(e);
@@ -253,7 +254,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           },
           error: (e) => {
             console.log(e);
-            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e });
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.message });
           }
         });
       }
@@ -266,7 +267,11 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.diner.tableId = this.table.id;
     this._serviceDiner.createItem(this.diner).subscribe({
       next: (data) => {
-          this.showModalDiner = false;
+        console.log("Diner --> ",data);
+        this.diner = data;
+        this.order = {};
+        this.order.quantity = 1;
+        this.showModalDiner = false;
       },
       error: (e) => {
         this.showModalDiner = true;

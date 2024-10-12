@@ -116,11 +116,11 @@
                         <div class="col-12" *ngFor="let item of items; let first = first">
                             <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first, 'item-cancel': item.isCancel}">
                                 <div class="col-fixed">
-                                    <img *ngIf="item.isCancel" alt="dropdown icon" src="/assets/images/icon/ban.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" pTooltip="En proceso" alt="dropdown icon" src="./assets/images/icon/process.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" alt="dropdown icon" src="./assets/images/icon/uniform.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 3 && !item.isCancel" pTooltip="Enviado" alt="dropdown icon" src="./assets/images/icon/delivery.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 4 && !item.isCancel" pTooltip="Entregado" alt="dropdown icon" src="./assets/images/icon/meal.svg" style="width: 25px;">
+                                    <img *ngIf="item.isCancel" src="./assets/images/icon/ban.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" pTooltip="En proceso" src="./assets/images/icon/process.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" src="./assets/images/icon/uniform.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 3 && !item.isCancel" pTooltip="Enviado" src="./assets/images/icon/delivery.svg" style="width: 25px;">
+                                    <img *ngIf="item.statusOrderId == 4 && !item.isCancel" pTooltip="Entregado" src="./assets/images/icon/meal.svg" style="width: 25px;">
                                 </div>
                                 <div class="col">
                                     <div class="text-900 mt-1">{{ item.quantity + " " + item.meal?.name}}</div>
@@ -142,7 +142,7 @@
                                     <div class="text-lg font-medium text-900 mt-1">Total: {{ totalOrder | currency}} MXN</div>
                                 </div>
                                 <div class="col-fixed">
-                                    <p-button severity="success"  *ngIf="isLogin" size="small" (onClick)="confirmCloseTicket()" >Cerrar cuenta</p-button>
+                                    <p-button severity="success"  *ngIf="isLogin" size="small" (onClick)="confirmCloseTicket()" >$ Cerrar cuenta $</p-button>
                                 </div>
                             </div>
                         </div>

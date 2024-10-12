@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../../../layout/service/app.layout.service';
-import { User } from '../../../models';
+import { Instance, User } from '../../../models';
 import { AuthService } from '../../../services';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { UsersInterface } from '../../../interfaces';
 
 @Component({
     selector: 'app-register',
@@ -23,6 +24,7 @@ export class RegisterComponent implements OnInit {
     isAuthorized: Boolean | null = null;
     constructor(
         private uS: AuthService,
+        private usersService:  UsersInterface,
         private messageService: MessageService,
         public layoutService:LayoutService, 
         private router: Router) {
@@ -31,13 +33,24 @@ export class RegisterComponent implements OnInit {
   
     ngOnInit() {
       this.isBusy = false;
+      this.user.instance = new Instance();
+    }
+
+    toLowerCase(){
+        this.user.instance!.name_kitchen = this.user.instance?.name_kitchen?.toLocaleLowerCase();
     }
   
-    login() {
+    register() {
         this.isBusy = true;
-        this.uS.login(this.user).subscribe(resp=>{
+       
+        this.uS.register(Object.assign({},this.user)).subscribe({
+            next: (resp) => {
             this.isAuthorized = true;
-           this.router.navigate(['/kitchen/tables']);
+            this.router.navigate(['/kitchen/tables']);
+          },
+          error: (e) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
+          }
         });
 
         this.isBusy = false;

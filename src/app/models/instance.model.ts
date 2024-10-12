@@ -6,6 +6,7 @@ export class Instance{
     deletedAt?: Date;
     name?: string;
     name_client?: string;
+    correo?:string;
     name_kitchen?: string;
     identity?:string;
     licenseId?:number;

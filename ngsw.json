@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1728774438942,
+  "timestamp": 1728775112119,
   "index": "https://Ruravi90.github.io/kitchenbar.web/index.html",
   "assetGroups": [
     {
@@ -60,6 +60,14 @@
         "ignoreVary": true
       },
       "urls": [
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-128x128.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-144x144.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-152x152.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-192x192.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-384x384.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-512x512.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-72x72.png",
+        "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-96x96.png",
         "https://Ruravi90.github.io/kitchenbar.web/assets/images/access/asset-access.svg",
         "https://Ruravi90.github.io/kitchenbar.web/assets/images/access/logo-orange.svg",
         "https://Ruravi90.github.io/kitchenbar.web/assets/images/error/asset-error.svg",
@@ -115,6 +123,14 @@
   ],
   "dataGroups": [],
   "hashTable": {
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-128x128.png": "0236e00c6da9fbbe9cdb726926daf3f7e8a1fd9e",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-144x144.png": "4fe621b3889785d091cc989716bff28a6cdc7cb7",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-152x152.png": "49c6d87632cf99f3b4d3a0faa7a85bbeb566ac5b",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-192x192.png": "a63bed92ba78c067dc2d3836ae6db3834775ff39",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-384x384.png": "660ef1b73bdd32a6aadeac71490ccf0eca035981",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-512x512.png": "51a4d27e46cd43579e7cec0b4f0ed54ad0681b63",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-72x72.png": "055b428ccc0101dfafd84aa84b383ecb0b899668",
+    "https://Ruravi90.github.io/kitchenbar.web/assets/icons/icon-96x96.png": "239710338377e84b88aaed21b076f63ed270cf96",
     "https://Ruravi90.github.io/kitchenbar.web/assets/images/access/asset-access.svg": "cec9f313bda0ece74948c9c32e29bdeade1e851a",
     "https://Ruravi90.github.io/kitchenbar.web/assets/images/access/logo-orange.svg": "6c8f1765b757b0cdd8ee361070f338e4cd56ecc1",
     "https://Ruravi90.github.io/kitchenbar.web/assets/images/error/asset-error.svg": "c9deaa5a5a9b2416e2d433726a51921577440a80",
@@ -188,7 +204,7 @@
     "https://Ruravi90.github.io/kitchenbar.web/chunk-UUS4ZWI4.js": "ae5942b55f026918024b1f2e2455ecb1e1e53a4f",
     "https://Ruravi90.github.io/kitchenbar.web/chunk-VE4MCLXL.js": "dd4f92bed0fe4519f8f35b6714f1f8063e06be27",
     "https://Ruravi90.github.io/kitchenbar.web/chunk-ZA3NG2VP.js": "f017c0b690640d7c7069909dd2e0c2d17d73db99",
-    "https://Ruravi90.github.io/kitchenbar.web/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "https://Ruravi90.github.io/kitchenbar.web/favicon.ico": "787efab69eedbe7c6790528d9742cd7a219ac7bb",
     "https://Ruravi90.github.io/kitchenbar.web/index.html": "918f5a009cbff8d8e0cd0e113e2ae344e28f82fc",
     "https://Ruravi90.github.io/kitchenbar.web/main-W6GL6FKU.js": "199db93b352bd8af8f9b3d7c682191062c3d33aa",
     "https://Ruravi90.github.io/kitchenbar.web/manifest.webmanifest": "6897e0e633b6c32b586a4e763a2826d432b8ce2e",

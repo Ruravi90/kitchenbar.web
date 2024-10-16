@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1729041247187,
+  "timestamp": 1729041564721,
   "index": "https://Ruravi90.github.io/kitchenbar.web/index.html",
   "assetGroups": [
     {
@@ -45,7 +45,7 @@
         "https://Ruravi90.github.io/kitchenbar.web/chunk-W2WBUC7Y.js",
         "https://Ruravi90.github.io/kitchenbar.web/favicon.ico",
         "https://Ruravi90.github.io/kitchenbar.web/index.html",
-        "https://Ruravi90.github.io/kitchenbar.web/main-4SMGBYH5.js",
+        "https://Ruravi90.github.io/kitchenbar.web/main-JQBY6N4D.js",
         "https://Ruravi90.github.io/kitchenbar.web/manifest.webmanifest",
         "https://Ruravi90.github.io/kitchenbar.web/polyfills-FFHMD2TL.js",
         "https://Ruravi90.github.io/kitchenbar.web/styles-3XF2JXE6.css"
@@ -205,8 +205,8 @@
     "https://Ruravi90.github.io/kitchenbar.web/chunk-VO7G42AR.js": "ae879796a6705527c45c4050176b2b98c7d9d53c",
     "https://Ruravi90.github.io/kitchenbar.web/chunk-W2WBUC7Y.js": "06399c9e0d445c6f773ea042617416b68deb7e8c",
     "https://Ruravi90.github.io/kitchenbar.web/favicon.ico": "787efab69eedbe7c6790528d9742cd7a219ac7bb",
-    "https://Ruravi90.github.io/kitchenbar.web/index.html": "1a5069215156da89018eb51cdfcc11705f660edc",
-    "https://Ruravi90.github.io/kitchenbar.web/main-4SMGBYH5.js": "3cdfd93a72cb5df61c2e7c3b30fec3faa1854bfd",
+    "https://Ruravi90.github.io/kitchenbar.web/index.html": "1f95b3bbde3d456a49185e2f257fccbf0bb6d6c3",
+    "https://Ruravi90.github.io/kitchenbar.web/main-JQBY6N4D.js": "68c991580f0b3488bf1b6ac53b0696c35b0a7603",
     "https://Ruravi90.github.io/kitchenbar.web/manifest.webmanifest": "6897e0e633b6c32b586a4e763a2826d432b8ce2e",
     "https://Ruravi90.github.io/kitchenbar.web/media/Inter-italic.var-YRHKCDAA.woff2": "9995712e0ca3cda14c7d6014abe0f979cf57ec53",
     "https://Ruravi90.github.io/kitchenbar.web/media/Inter-roman.var-5VGNBR6A.woff2": "d56a83c1e298702010cde038317713aaef23fe6c",

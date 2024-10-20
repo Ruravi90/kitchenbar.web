@@ -9,3 +9,4 @@ export * from "./licenses.service";
 export * from "./hub.service";
 export * from "./diners.service";
 export * from "./branches.service";
+export * from "./notifications.service";

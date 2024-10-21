@@ -15,6 +15,8 @@ export class OrderHubService {
         const currentUser = JSON.parse(localStorage.getItem('user')!);
         this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(`${environment.hubBase}`, {
+          skipNegotiation: true,
+          transport: signalR.HttpTransportType.WebSockets,
         //    accessTokenFactory: () => {
         //        let token = currentUser.token;
         //        return token ?? '';

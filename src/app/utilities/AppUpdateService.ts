@@ -1,8 +1,8 @@
 import { ApplicationRef, Injectable } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 
 import { concat, interval } from 'rxjs';
-import { first} from 'rxjs/operators';
+import { filter, first} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +20,23 @@ export class AppUpdateService {
 
     everySixHoursOnceAppIsStable$.subscribe(async () =>{
       try{
-        const updateFound =  await this.updates.checkForUpdate();
-        console.log(updateFound? 'A new version is available.':'Aready on the latest version');
+        this.updates.versionUpdates
+          .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
+          .subscribe(evt => {
+          if (this.promptUser(evt)) {
+            // Reload the page to update to the latest version.
+            document.location.reload();
+          }
+        });
       }
       catch(err){
         //console.error('Failed to check for updates:',err);
       }
     });
+  }
+
+  promptUser(evnt:any):boolean{
+    return confirm('Update: Nueva actualización.');
   }
 
 }

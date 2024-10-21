@@ -8,7 +8,6 @@
     "prebuild": "npm --no-git-tag-version version patch",
     "watch": "ng build --watch --configuration development",
     "start-pwa": "npm run build --aot && http-server -p 8080 -c-1 dist/kitchenbar.web --configuration development ",
-    "publish": "npm run build --aot && ng build --base-href 'https://Ruravi90.github.io/kitchenbar.web/' && npx angular-cli-ghpages --dir=dist/kitchenbar.web",
     "test": "ng test"
   },
   "private": true,

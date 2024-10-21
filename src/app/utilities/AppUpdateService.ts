@@ -24,7 +24,7 @@ export class AppUpdateService {
         console.log(updateFound? 'A new version is available.':'Aready on the latest version');
       }
       catch(err){
-        console.error('Failed to check for updates:',err);
+        //console.error('Failed to check for updates:',err);
       }
     });
   }

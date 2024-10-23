@@ -61,23 +61,28 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+      if(this.auth.getCurrentRol() != 0){
+          this.hub.connect();
+          await this.delay(1000);
+          this.hub.joinGroup();
+
+          this.hub.newUser().subscribe(x =>{
+            this.joined = true ;
+          });
+
+          this.hub.leftUser().subscribe(x =>{
+            this.joined = false;
+          });
+          this.hub.receiveOrderToKitchen().subscribe(x =>  {
+
+          });
+      }
+
+      if(!this.auth.checkLogin()){
+        await this.delay(2000);
         this.hideMenu();
-        if(this.auth.getCurrentRol() != 0){
-            this.hub.connect();
-            await this.delay(1000);
-            this.hub.joinGroup();
+      }
 
-            this.hub.newUser().subscribe(x =>{
-              this.joined = true ;
-            });
-
-            this.hub.leftUser().subscribe(x =>{
-              this.joined = false;
-            });
-            this.hub.receiveOrderToKitchen().subscribe(x =>  {
-
-            });
-        }
     }
 
     async delay(ms: number) {

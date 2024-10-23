@@ -15,9 +15,9 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
                     { path: 'kitchen',loadChildren: () => import('./components/kitchen/kitchen.module').then(m => m.KitchenModule) },
                     { path: 'settings',loadChildren: () => import('./components/settings/settings.module').then(m => m.SettingsModule) },
                     { path: 'admin',loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
+                    { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
                 ]
             },
-            { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },

@@ -44,6 +44,7 @@ jobs:
           port: 22
           script: |
             cd /var/www/kitchenbar.web
+            git restore .
             git pull
             git status
             npm run build --aot

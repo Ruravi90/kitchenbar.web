@@ -4,6 +4,7 @@ import { HubInterface, TablesInterface } from '../../../interfaces';
 import { MessageService } from 'primeng/api';
 import { QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tables',
@@ -15,8 +16,9 @@ export class TablesComponent {
 
   constructor(
     private messageService: MessageService,
-    private tableServices: TablesInterface, 
-    private hub: HubInterface){
+    private tableServices: TablesInterface,
+    private hub: HubInterface,
+    private router: Router){
       this.elementType= "canvas" as QRCodeElementType;
     }
 
@@ -66,6 +68,34 @@ export class TablesComponent {
   async delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }
+
+  requestAttendace(item:Table){
+    item.isRequestAttendace =false;
+    this.tableServices.request(item).subscribe({
+      next:()=>{
+        this.hub.sendNotificationTables(item);
+        this.router.navigate(["/kitchen/table/"+item.identity]);
+      },
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
+    });
+  }
+  requestCheck(item:Table){
+    item.isRequestCheck = false;
+    this.tableServices.request(item).subscribe({
+      next:()=>{
+        this.hub.sendNotificationTables(item);
+        this.router.navigate(["/kitchen/table/"+item.identity]);
+      },
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
+    });
+  }
+
 
   retrieveTables(): void {
     if(this.isBusyTableService)

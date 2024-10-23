@@ -5,5 +5,5 @@ export class Diner{
     correo?:string;
     phone_number?:string;
     tableId?:number;
-    isPay?:string;
+    isPay?:boolean;
 }

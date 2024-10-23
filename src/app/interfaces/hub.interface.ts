@@ -8,10 +8,10 @@ export abstract class HubInterface{
     abstract leaveGroup():void;
     abstract newUser(): Observable<string>;
     abstract leftUser(): Observable<string>;
-    abstract sendOrder(order:Order):void;
+    abstract sendOrder(object:any):void;
     abstract sendNotificationTables(table:Table): void;
-    abstract receiveOrderToKitchen(): Observable<Order>;
-    abstract receiveOrderFromTable(): Observable<Order>;
+    abstract receiveOrderToKitchen(): Observable<any>;
+    abstract receiveOrderFromTable(): Observable<any>;
     abstract notificationWarnTables(): Observable<Table>;
     abstract notificationDangerTables(): Observable<Table>;
 }

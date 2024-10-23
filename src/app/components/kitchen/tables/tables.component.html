@@ -14,15 +14,15 @@
                                     <div class="font-medium text-700 mt-2">{{ item.name }}</div>
                                 </div>
                                 <div class="col-fixed gap-1">
-                                    <button *ngIf="item.isBusy" pButton icon="pi pi-flag-fill" class="p-button-info"
+                                    <button *ngIf="item.isRequestAttendace" pButton icon="pi pi-flag-fill" class="p-button-info" (click)="requestAttendace(item)"
                                     [rounded]="true" [text]="!item.isRequestAttendace" [raised]="true"  pTooltip="{{item.isRequestAttendace?'Necesita asistencia':''}}" ></button>
                                 </div>
                                 <div class="col-fixed gap-1">
-                                    <button *ngIf="item.isBusy" pButton icon="pi pi-dollar" class="p-button-warning"
+                                    <button *ngIf="item.isRequestCheck" pButton icon="pi pi-dollar" class="p-button-warning" (click)="requestCheck(item)"
                                     [rounded]="true" [text]="!item.isRequestCheck" [raised]="true" pTooltip="{{item.isRequestCheck?'Solicito la cuenta':''}}" ></button>
                                 </div>
                                 <div class="col-fixed gap-1" >
-                                    <p-button 
+                                    <p-button
                                         icon="pi pi-qrcode"
                                         severity="secondary"
                                         [rounded]="true" [text]="true" [raised]="true"
@@ -30,7 +30,7 @@
                                     </p-button>
                                 </div>
                                 <div class="col-fixed gap-1" >
-                                    <p-button 
+                                    <p-button
                                         icon="pi pi-sign-in"
                                         routerLink="/kitchen/table/{{ item.identity}}"
                                         [rounded]="true" [text]="true" [raised]="true"

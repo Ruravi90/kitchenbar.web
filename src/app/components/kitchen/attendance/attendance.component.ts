@@ -17,6 +17,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   totalOrder:number = 0;
   isRequestAttendace:boolean = false;
   isRequestCheck:boolean = false;
+  isTableNotBusy:boolean = true;
   table?:Table;
   diner:Diner =  {
     name_client : "Cliente anónimo"
@@ -29,7 +30,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   showModalDiner:boolean = false;
 
   constructor(
-    private confirmationService: ConfirmationService, 
+    private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private _serviceAuth: AuthInterface,
     private _serviceTable: TablesInterface,
@@ -39,7 +40,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private hub: HubInterface){
-    
+
     this.isLogin = _serviceAuth.checkLogin();
 
   }
@@ -47,10 +48,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.order.quantity = 1;
     this.order.statusOrderId = 1;
-    
+
     await this.delay(1000);
     this.tableIdentity = this.route.snapshot.paramMap.get('identity')!;
-    
+
     if(!this.isLogin){
       this.hub.connect();
       await this.delay(1000);
@@ -62,13 +63,29 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
     if(this.isLogin)
       this.getMeals();
-    
+
     this.hub.receiveOrderFromTable().subscribe(x =>  {
       if(!"number".includes(typeof this.diner.id)){
         this.getDiner();
         this.delay(1000);
       }
-      this.getOrders();
+
+      if(x.id != this.diner.id)
+        return;
+
+      if(x.isPay)
+        this.getDiner();
+      else
+        this.getOrders();
+    });
+
+    this.hub.notificationWarnTables().subscribe(x =>  {
+      if(x.id == this.table!.id){
+        if(x.isRequestAttendace)
+          this.table!.isRequestAttendace = x.isRequestAttendace;
+        if(x.isRequestCheck)
+          this.table!.isRequestCheck = x.isRequestCheck;
+      }
     });
   }
   ngOnDestroy(): void {
@@ -78,13 +95,13 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
-  getTable(){ 
+  getTable(){
     this._serviceTable.getByIdentity(this.tableIdentity).subscribe({
       next: (data) => {
         console.log(data);
         this.table = data;
         this.instanceIdentity = data.instance.identity;
-        
+
         if(!this.isLogin)
           this.hub.joinGroupAnonymus(data.instance.identity);
       },
@@ -104,6 +121,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             this.totalOrder += (i.meal!.price * i.quantity!);
         });
         this.skeleton = false;
+        this.isTableNotBusy = false;
       },
       error: (e) => {
         console.log(e);
@@ -116,12 +134,20 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       next: (data) => {
         if(data == null && this.isLogin){
             this.showModalDiner = true;
+            this.isTableNotBusy = false;
             this.skeleton = false;
         }
         else{
-          this.diner = data;
-          this.order.dinerId = data.id;
-          this.getOrders();
+          if(data != null){
+            this.isTableNotBusy = false;
+            this.diner = data;
+            this.order.dinerId = data.id;
+            this.getOrders();
+          }
+          else{
+            this.isTableNotBusy = true;
+            this.skeleton = true;
+          }
         }
       },
       error: (e) => {
@@ -191,11 +217,11 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.order.dinerId = this.diner.id;
     this._serviceOrder.createItem(this.order!).subscribe({
       next: (data) => {
-        this.hub.sendOrder(this.order);
+        this.hub.sendOrder(this.diner);
         this.order = {};
         this.order.quantity = 1;
         this.selectedItem=undefined;
-        this.getOrders();
+        //this.getOrders();
       },
       error: (e) => {
         console.log(e);
@@ -207,7 +233,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     order.isCancel = true;
     this._serviceOrder.updateItem(order.id!,order).subscribe({
       next: (data) => {
-        this.hub.sendOrder(order);
+        this.hub.sendOrder(this.diner);
       },
       error: (e) => {
         console.log(e);
@@ -233,7 +259,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           order.statusOrderId = 4;
           this._serviceOrder.updateItem(order.id!,order).subscribe({
             next: (data) => {
-              this.hub.sendOrder(order);
+              this.hub.sendOrder(this.diner);
             },
             error: (e) => {
               console.log(e);
@@ -250,6 +276,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       accept: () => {
         this._serviceDiner.closeTicket(this.diner.id!).subscribe({
           next: (data) => {
+            this.hub.sendOrder(this.diner);
             this.router.navigate(['/kitchen/tables']);
           },
           error: (e) => {
@@ -272,6 +299,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         this.order = {};
         this.order.quantity = 1;
         this.showModalDiner = false;
+        this.hub.sendOrder(this.diner);
       },
       error: (e) => {
         this.showModalDiner = true;

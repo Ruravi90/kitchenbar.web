@@ -15,8 +15,6 @@ export class OrderHubService {
         const currentUser = JSON.parse(localStorage.getItem('user')!);
         this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(`${environment.hubBase}`, {
-          skipNegotiation: true,
-          transport: signalR.HttpTransportType.WebSockets,
         //    accessTokenFactory: () => {
         //        let token = currentUser.token;
         //        return token ?? '';
@@ -58,29 +56,30 @@ export class OrderHubService {
             });
         });
     }
-    sendOrder(order:Order) {
+    sendOrder(object:any) {
         const currentUser = JSON.parse(localStorage.getItem('user')!);
-        this.hubConnection?.invoke('SendOrder',currentUser.instance.identity,currentUser.user_name);
+        this.hubConnection?.invoke('SendOrder',currentUser.instance.identity,object);
     }
 
-    receiveOrderToKitchen(): Observable<Order> {
+    receiveOrderToKitchen(): Observable<any> {
         return new Observable<Order>((observer) => {
-            this.hubConnection?.on('ReceiveOrderToKitchen', (order: Order) => {
-                console.log("ReceiveOrderToKitchen",order)
-                observer.next(order);
+            this.hubConnection?.on('ReceiveOrderToKitchen', result => {
+                console.log("ReceiveOrderToKitchen",result)
+                observer.next(result);
             });
         });
     }
-    receiveOrderFromTable(): Observable<Order> {
+    receiveOrderFromTable(): Observable<any> {
         return new Observable<Order>((observer) => {
-            this.hubConnection?.on('ReceiveOrderFromTable', (order: Order) => {
-                console.log("ReceiveOrderFromTable",order)
-                observer.next(order);
+            this.hubConnection?.on('ReceiveOrderFromTable', result => {
+                console.log("ReceiveOrderFromTable",result)
+                observer.next(result);
             });
         });
     }
     sendNotificationTables(table:Table): void {
-        this.hubConnection?.invoke('SendNotificacionTables',table.instance?.identity,table);
+      const currentUser = JSON.parse(localStorage.getItem('user')!);
+      this.hubConnection?.invoke('SendNotificacionTables',currentUser.instance.identity,table);
     }
     notificationWarnTables(): Observable<Table> {
         return new Observable<Table>((observer) => {

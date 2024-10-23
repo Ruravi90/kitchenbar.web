@@ -25,39 +25,39 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     public joined = false;
 
     constructor(private auth:AuthInterface, private hub: HubInterface,public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
-        this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
-            if (!this.menuOutsideClickListener) {
-                this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
-                    const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target) 
-                        || this.appTopbar.menuButton.nativeElement.isSameNode(event.target) || this.appTopbar.menuButton.nativeElement.contains(event.target));
-                    
-                    if (isOutsideClicked) {
-                        this.hideMenu();
-                    }
-                });
-            }
+      this.hideMenu();
+      this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
+          if (!this.menuOutsideClickListener) {
+              this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
+                  const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target)
+                      || this.appTopbar.menuButton.nativeElement.isSameNode(event.target) || this.appTopbar.menuButton.nativeElement.contains(event.target));
 
-            if (!this.profileMenuOutsideClickListener) {
-                this.profileMenuOutsideClickListener = this.renderer.listen('document', 'click', event => {
-                    const isOutsideClicked = !(this.appTopbar.menu.nativeElement.isSameNode(event.target) || this.appTopbar.menu.nativeElement.contains(event.target)
-                        || this.appTopbar.topbarMenuButton.nativeElement.isSameNode(event.target) || this.appTopbar.topbarMenuButton.nativeElement.contains(event.target));
+                  if (isOutsideClicked) {
+                      this.hideMenu();
+                  }
+              });
+          }
 
-                    if (isOutsideClicked) {
-                        this.hideProfileMenu();
-                    }
-                });
-            }
+          if (!this.profileMenuOutsideClickListener) {
+              this.profileMenuOutsideClickListener = this.renderer.listen('document', 'click', event => {
+                  const isOutsideClicked = !(this.appTopbar.menu.nativeElement.isSameNode(event.target) || this.appTopbar.menu.nativeElement.contains(event.target)
+                      || this.appTopbar.topbarMenuButton.nativeElement.isSameNode(event.target) || this.appTopbar.topbarMenuButton.nativeElement.contains(event.target));
 
-            if (this.layoutService.state.staticMenuMobileActive) {
-                this.blockBodyScroll();
-            }
-        });
+                  if (isOutsideClicked) {
+                      this.hideProfileMenu();
+                  }
+              });
+          }
 
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(() => {
-                this.hideMenu();
-                this.hideProfileMenu();
-            });
+          if (this.layoutService.state.staticMenuMobileActive) {
+              this.blockBodyScroll();
+          }
+      });
+
+      this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+          this.hideMenu();
+          this.hideProfileMenu();
+      });
     }
 
     async ngOnInit() {
@@ -66,15 +66,16 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
             this.hub.connect();
             await this.delay(1000);
             this.hub.joinGroup();
-        
+
             this.hub.newUser().subscribe(x =>{
-            this.joined = true ;
+              this.joined = true ;
             });
+
             this.hub.leftUser().subscribe(x =>{
-            this.joined = false;
+              this.joined = false;
             });
             this.hub.receiveOrderToKitchen().subscribe(x =>  {
-    
+
             });
         }
     }

@@ -26,6 +26,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
     constructor(private auth:AuthInterface, private hub: HubInterface,public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
       this.hideMenu();
+      this.layoutService.onMenuToggle();
       this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
           if (!this.menuOutsideClickListener) {
               this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -77,12 +78,6 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
           });
       }
-
-      if(!this.auth.checkLogin()){
-        await this.delay(2000);
-        this.hideMenu();
-      }
-
     }
 
     async delay(ms: number) {

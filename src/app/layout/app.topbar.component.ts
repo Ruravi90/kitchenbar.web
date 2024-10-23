@@ -21,8 +21,8 @@ export class AppTopBarComponent  implements OnInit{
     constructor(
         private _serviceAuth: AuthInterface,
         public layoutService: LayoutService
-    ) { 
-        
+    ) {
+
     }
 
     async ngOnInit() {

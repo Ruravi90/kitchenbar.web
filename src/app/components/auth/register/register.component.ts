@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../../../layout/service/app.layout.service';
-import { Instance, User } from '../../../models';
+import { Branch, Instance, User } from '../../../models';
 import { AuthService } from '../../../services';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -20,29 +20,40 @@ import { UsersInterface } from '../../../interfaces';
 })
 export class RegisterComponent implements OnInit {
     user: User = new User();
+    branch: Branch = new Branch();
     isBusy: Boolean = false;
     isAuthorized: Boolean | null = null;
     constructor(
         private uS: AuthService,
         private usersService:  UsersInterface,
         private messageService: MessageService,
-        public layoutService:LayoutService, 
+        public layoutService:LayoutService,
         private router: Router) {
       localStorage.removeItem('user');
     }
-  
+
     ngOnInit() {
       this.isBusy = false;
       this.user.instance = new Instance();
+      this.user.instance.branches = [];
     }
 
     toLowerCase(){
         this.user.instance!.name_kitchen = this.user.instance?.name_kitchen?.toLocaleLowerCase();
     }
-  
+
+    addBranche(){
+      this.user.instance!.branches?.push(this.branch);
+      this.branch = new Branch();
+    }
+
+    deleteBranche(index: number){
+      this.user.instance!.branches?.splice(index,1);
+    }
+
     register() {
         this.isBusy = true;
-       
+
         this.uS.register(Object.assign({},this.user)).subscribe({
             next: (resp) => {
             this.isAuthorized = true;

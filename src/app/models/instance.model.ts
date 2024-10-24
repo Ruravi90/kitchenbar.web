@@ -1,4 +1,5 @@
 import { Base } from "./base.model";
+import { Branch } from "./branch.model";
 export class Instance{
     id?: number;
     createdAt?: Date;
@@ -10,4 +11,5 @@ export class Instance{
     name_kitchen?: string;
     identity?:string;
     licenseId?:number;
+    branches?:Branch[];
 }

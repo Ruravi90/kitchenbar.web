@@ -24,8 +24,8 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/tables'] },
                     { label: 'Ordenes', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/orders'] },
                 ]
-            }); 
-        
+            });
+
             if(role == 1){
                 this.model.push({
                     label: 'Configuración',
@@ -50,14 +50,15 @@ export class AppMenuComponent implements OnInit {
         }
 
         this.model.push({
-            label: 'Perfil',
+            label: 'Sesión',
             items: [
-                { label: 'Cerrar sesión',icon: 'pi pi-fw pi-lock', routerLink: ['/auth/loguin'] },
+              { label: 'Mi cuenta',icon: 'pi pi-fw pi-user', routerLink: ['/settings/account'] },
+              { label: 'Cerrar sesión',icon: 'pi pi-fw pi-lock', routerLink: ['/auth/loguin'] },
             ]
         });
-        
+
         this.hub.receiveOrderToKitchen().subscribe(x =>  {
-            
+
         });
     }
 }

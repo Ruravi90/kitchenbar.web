@@ -25,8 +25,11 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     public joined = false;
 
     constructor(private auth:AuthInterface, private hub: HubInterface,public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
-      this.hideMenu();
-      this.layoutService.onMenuToggle();
+      if(!this.auth.checkLogin()){// se oculta el menu para usuarios que no estan registrados y son comenzales
+        this.hideMenu();
+        this.layoutService.onMenuToggle();
+      }
+
       this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
           if (!this.menuOutsideClickListener) {
               this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {

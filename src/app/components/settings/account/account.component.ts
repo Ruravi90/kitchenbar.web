@@ -88,7 +88,6 @@ export class AccountComponent {
     if (this.swPush.isEnabled && Notification.permission == 'granted') {
 
       this.swPush.notificationClicks.subscribe((data) => {
-
         console.log(data);
       })
 

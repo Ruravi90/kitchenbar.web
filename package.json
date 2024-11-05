@@ -1,13 +1,13 @@
 {
   "name": "kitchenbar.web",
-  "version": "0.1.14",
+  "version": "0.1.36",
   "scripts": {
     "ng": "ng",
     "start": "npx nx run kitchenbar.web:serve:development",
-    "build": "nx build --aot --base-href 'http://kitchenbar.ruravi.com' ",
+    "build": "nx run kitchenbar.web:build:production --base-href='http://kitchenbar.ruravi.com'",
     "prebuild": "npm --no-git-tag-version version patch",
-    "watch": "nx build --watch --configuration development",
-    "start-pwa": "npm run build --aot && http-server -p 8080 -c-1 dist/kitchenbar.web --configuration development ",
+    "watch": "nx run kitchenbar.web:build:development --watch",
+    "start-pwa": "nx run kitchenbar.web:build:development && http-server -p 8080 -c-1 dist/kitchenbar.web",
     "test": "nx test"
   },
   "private": true,

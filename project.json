@@ -13,10 +13,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:application",
       "options": {
-        "outputPath": {
-          "base": "dist/kitchenbar.web",
-          "browser": ""
-        },
+        "outputPath": "dist/kitchenbar.web",
         "index": "src/index.html",
         "browser": "src/main.ts",
         "polyfills": [

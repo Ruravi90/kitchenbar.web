@@ -21,6 +21,12 @@ export class CategoriesService {
   getItemsByInstance(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl+"/ByInstance");
   }
+  getItemsByInstanceId(instanceId: number): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/ByInstanceId/"+instanceId);
+  }
+  getPublic(identity: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/public/${identity}`);
+  }
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }

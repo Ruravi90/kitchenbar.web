@@ -48,6 +48,14 @@
 
 <div class="flex flex-wrap justify-content-center " *ngIf="!skeleton">
     <div class="w-full" [ngClass]="{'p-3':!isLogin}">
+        <div class="flex overflow-x-auto gap-2 mb-3" *ngIf="isLogin && diners.length > 0">
+            <button pButton *ngFor="let d of diners" 
+                    [label]="d.name_client!" 
+                    [class.p-button-outlined]="d.id !== diner.id"
+                    (click)="changeDiner(d)"
+                    class="white-space-nowrap"></button>
+            <button pButton icon="pi pi-plus" (click)="openNewDinerModal()" class="p-button-rounded p-button-text"></button>
+        </div>
         <p-card header="Mesa {{table?.name}} a nombre de {{diner.name_client}}" [style]="{'width':'100%'}">
             <div class="grid" *ngIf="isLogin">
                 <div class="col-12 md:col-9">
@@ -100,8 +108,8 @@
                 </div>
             </div>
             <div class="grid mb-3" *ngIf="!isLogin">
-                <div class="col-12 md:col-4" *ngIf="false">
-                    <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-list"/>
+                <div class="col-12 md:col-4">
+                    <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-list" [routerLink]="['/menu', instanceIdentity]" [queryParams]="{tableId: table?.id, dinerId: diner?.id}"/>
                 </div>
                 <div class="col-12 md:col-6">
                     <p-button [style]="{'width':'100%'}" label="Asistencia" [raised]="true" icon="pi pi-bell" severity="info" [ngClass]="{'button-flash':(table?.isRequestAttendace)}" (click)="requestAttendace()" />
@@ -185,7 +193,7 @@
     <div class="formgrid grid gap-3 mb-3 mt-3">
         <div class="field col-12">
             <label for="name">Nombre del cliente</label>
-            <input pInputText id="name" type="text" [(ngModel)]="diner.name_client" class="w-full">
+            <input pInputText id="name" type="text" [(ngModel)]="dinerForm.name_client" class="w-full">
         </div>
         <div class="field col-12">
             <label for="phone">Telefono del cliente</label>
@@ -193,7 +201,7 @@
             id="phone"
             [style]="{'width':'100%'}"
             mask="99-9999-9999"
-            [(ngModel)]="diner.phone_number"
+            [(ngModel)]="dinerForm.phone_number"
             placeholder="99-9999-9999" />
         </div>
     </div>

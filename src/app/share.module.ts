@@ -28,6 +28,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { StepperModule } from 'primeng/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { ChipModule } from 'primeng/chip';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     SkeletonModule,
     StepperModule,
     ReactiveFormsModule,
-    InputSwitchModule
+    InputSwitchModule,
+    ChipModule
   ]
 })
 export class SharedModule { }

@@ -19,6 +19,8 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   isRequestCheck:boolean = false;
   isTableNotBusy:boolean = true;
   table?:Table;
+  diners: Diner[] = [];
+  dinerForm: Diner = {};
   diner:Diner =  {
     name_client : "Cliente anónimo"
   };
@@ -65,18 +67,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       this.getMeals();
 
     this.hub.receiveOrderFromTable().subscribe(x =>  {
-      if(!"number".includes(typeof this.diner.id)){
-        this.getDiner();
-        this.delay(1000);
-      }
-
-      if(x.id != this.diner.id)
-        return;
-
-      if(x.isPay)
-        this.getDiner();
-      else
-        this.getOrders();
+      this.getDiner();
     });
 
     this.hub.notificationWarnTables().subscribe(x =>  {
@@ -131,22 +122,36 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   }
   getDiner(){
     this._serviceDiner.getItemsByTable(this.tableIdentity).subscribe({
-      next: (data) => {
-        if(data == null && this.isLogin){
+      next: (data: any) => {
+        if((data == null || data.length == 0) && this.isLogin){
             this.showModalDiner = true;
             this.isTableNotBusy = false;
             this.skeleton = false;
+            this.diners = [];
         }
         else{
-          if(data != null){
+          if(data != null && data.length > 0){
             this.isTableNotBusy = false;
-            this.diner = data;
-            this.order.dinerId = data.id;
+            this.diners = data;
+            
+            if (this.diner && this.diner.id) {
+                const found = this.diners.find(d => d.id === this.diner.id);
+                if (found) {
+                    this.diner = found;
+                } else {
+                    this.diner = this.diners[0];
+                }
+            } else {
+                this.diner = this.diners[0];
+            }
+
+            this.order.dinerId = this.diner.id;
             this.getOrders();
           }
           else{
             this.isTableNotBusy = true;
             this.skeleton = true;
+            this.diners = [];
           }
         }
       },
@@ -221,7 +226,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         this.order = {};
         this.order.quantity = 1;
         this.selectedItem=undefined;
-        //this.getOrders();
+        this.getOrders();
       },
       error: (e) => {
         console.log(e);
@@ -277,7 +282,8 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         this._serviceDiner.closeTicket(this.diner.id!).subscribe({
           next: (data) => {
             this.hub.sendOrder(this.diner);
-            this.router.navigate(['/kitchen/tables']);
+            this.getDiner();
+            //this.router.navigate(['/kitchen/tables']);
           },
           error: (e) => {
             console.log(e);
@@ -291,15 +297,17 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     if(this.table == null)
       return;
 
-    this.diner.tableId = this.table.id;
-    this._serviceDiner.createItem(this.diner).subscribe({
+    this.dinerForm.tableId = this.table.id;
+    this._serviceDiner.createItem(this.dinerForm).subscribe({
       next: (data) => {
         console.log("Diner --> ",data);
         this.diner = data;
         this.order = {};
         this.order.quantity = 1;
         this.showModalDiner = false;
+        this.dinerForm = {};
         this.hub.sendOrder(this.diner);
+        this.getDiner();
       },
       error: (e) => {
         this.showModalDiner = true;
@@ -307,5 +315,16 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
       }
     });
+  }
+
+  changeDiner(diner: Diner) {
+    this.diner = diner;
+    this.order.dinerId = diner.id;
+    this.getOrders();
+  }
+
+  openNewDinerModal() {
+    this.dinerForm = {};
+    this.showModalDiner = true;
   }
 }

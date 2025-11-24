@@ -19,6 +19,7 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
             },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
+            { path: 'menu', loadChildren: () => import('./components/menu/menu.module').then(m => m.MenuModule) },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/auth/login' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })

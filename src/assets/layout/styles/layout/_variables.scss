@@ -63,4 +63,8 @@ $transitionDuration:.2s;        /* transition duration of layout elements e.g. s
   --check: #ff5400;
   --check-focus: #ff6000;
   --check-highlight: #ff4800;
+
+  $status-new: #ff6347; // Rojo para nuevos pedidos
+  $status-in-progress: #ffd700; // Amarillo para en preparación
+  $status-ready: #32cd32; // Verde para listos
 }

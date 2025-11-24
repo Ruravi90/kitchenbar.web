@@ -22,8 +22,8 @@ export class DinersService implements DinersInterface{
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
-  getItemsByTable(identity:string): Observable<any> {
-    return this.http.get<any>(this.apiUrl+"/byTable/"+identity);
+  getItemsByTable(identity:string): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl+"/byTable/"+identity);
   }
   createItem(item: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, item);

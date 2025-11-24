@@ -11,7 +11,7 @@
                                     <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" alt="Preparando" src="./assets/images/icon/uniform.svg" style="width: 25px;">
                                 </div>
                                 <div class="col-fixed gap-1">
-                                    <div class="font-medium text-700 mt-2">{{ item.table?.name }}</div>
+                                    <p-chip [label]="item.table?.name"></p-chip>
                                 </div>
                                 <div class="col gap-2">
                                     <div class="text-lg font-medium text-900 mt-2">{{ item.quantity + " " + item.meal?.name }}</div>

@@ -1,218 +1,357 @@
 <div class="card w-full m-3" *ngIf="skeleton">
-    <p-skeleton styleClass="mb-2" />
-    <p-skeleton width="100%" styleClass="mb-2" />
-    <p-skeleton width="60%" styleClass="mb-2" />
-    <p-skeleton height="5rem" styleClass="mb-2" />
+  <p-skeleton styleClass="mb-2" />
+  <p-skeleton width="100%" styleClass="mb-2" />
+  <p-skeleton width="60%" styleClass="mb-2" />
+  <p-skeleton height="5rem" styleClass="mb-2" />
 
-    <div class="border-round border-1 surface-border p-4 surface-card">
-        <ul class="m-0 p-0 list-none">
-            <li class="mb-3">
-                <div class="flex">
-                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
-                    <div style="flex: 1">
-                        <p-skeleton width="100%" styleClass="mb-2" />
-                        <p-skeleton width="75%" />
-                    </div>
-                </div>
-            </li>
-            <li class="mb-3">
-                <div class="flex">
-                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
-                    <div style="flex: 1">
-                        <p-skeleton width="100%" styleClass="mb-2" />
-                        <p-skeleton width="75%" />
-                    </div>
-                </div>
-            </li>
-            <li class="mb-3">
-                <div class="flex">
-                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
-                    <div style="flex: 1">
-                        <p-skeleton width="100%" styleClass="mb-2" />
-                        <p-skeleton width="75%" />
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="flex">
-                    <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
-                    <div style="flex: 1">
-                        <p-skeleton width="100%" styleClass="mb-2" />
-                        <p-skeleton width="75%" />
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
+  <div class="border-round border-1 surface-border p-4 surface-card">
+    <ul class="m-0 p-0 list-none">
+      <li class="mb-3">
+        <div class="flex">
+          <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+          <div style="flex: 1">
+            <p-skeleton width="100%" styleClass="mb-2" />
+            <p-skeleton width="75%" />
+          </div>
+        </div>
+      </li>
+      <li class="mb-3">
+        <div class="flex">
+          <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+          <div style="flex: 1">
+            <p-skeleton width="100%" styleClass="mb-2" />
+            <p-skeleton width="75%" />
+          </div>
+        </div>
+      </li>
+      <li class="mb-3">
+        <div class="flex">
+          <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+          <div style="flex: 1">
+            <p-skeleton width="100%" styleClass="mb-2" />
+            <p-skeleton width="75%" />
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="flex">
+          <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+          <div style="flex: 1">
+            <p-skeleton width="100%" styleClass="mb-2" />
+            <p-skeleton width="75%" />
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 
-<div class="flex flex-wrap justify-content-center " *ngIf="!skeleton">
-    <div class="w-full" [ngClass]="{'p-3':!isLogin}">
-        <div class="flex overflow-x-auto gap-2 mb-3" *ngIf="isLogin && diners.length > 0">
-            <button pButton *ngFor="let d of diners" 
-                    [label]="d.name_client!" 
-                    [class.p-button-outlined]="d.id !== diner.id"
-                    (click)="changeDiner(d)"
-                    class="white-space-nowrap"></button>
-            <button pButton icon="pi pi-plus" (click)="openNewDinerModal()" class="p-button-rounded p-button-text"></button>
-        </div>
-        <p-card header="Mesa {{table?.name}} a nombre de {{diner.name_client}}" [style]="{'width':'100%'}">
-            <div class="grid" *ngIf="isLogin">
-                <div class="col-12 md:col-9">
-                    <p-autoComplete
-                        [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
-                        [(ngModel)]="selectedItem"
-                        [suggestions]="suggestionsMeal!"
-                        (onFocus)="focusSearchMeal($event)"
-                        (completeMethod)="searchMeal($event)"
-                        (onSelect)="completeSelectMeal($event)"
-                        placeholder="Buscar alimento(s) o bebida(s)"
-                        [dropdown]="true"
-                        optionLabel="name">
-                        <ng-template let-item pTemplate="item">
-                            <div class="grid">
-                                <div class="col">{{ item.name }}</div>
-                                <div class="col-fixed">{{ item.price | currency }}</div>
-                            </div>
-                        </ng-template>
-                    </p-autoComplete>
-                </div>
-                <div class="col-12 md:col-3">
-                    <p-inputNumber
-                        class="w-full"
-                        [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
-                        [(ngModel)]="order.quantity"
-                        placeholder="Cantidad"
-                        [showButtons]="true"
-                        buttonLayout="horizontal"
-                        spinnerMode="horizontal"
-                        [step]="1"
-                        [min]="1"
-                        [max]="100"
-                        incrementButtonIcon="pi pi-plus"
-                        decrementButtonIcon="pi pi-minus" />
-                </div>
-            </div>
-            <div class="grid mb-3" *ngIf="isLogin" >
-                <div class="col-12 md:col-9">
-                    <textarea [style]="{'width':'100%'}" rows="1" cols="30" pInputTextarea
-                    placeholder="Complementos u/o Observación"[autoResize]="true"
-                    [(ngModel)]="order.aditional" >
-                    </textarea>
-                </div>
-                <div class="col-12 md:col-3">
-                    <button
-                        pButton pRipple [style]="{'width':'100%'}"
-                        icon="pi pi-plus" label="Agregar" (click)="addOrder()" >
-                    </button>
-                </div>
-            </div>
-            <div class="grid mb-3" *ngIf="!isLogin">
-                <div class="col-12 md:col-4">
-                    <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-list" [routerLink]="['/menu', instanceIdentity]" [queryParams]="{tableId: table?.id, dinerId: diner?.id}"/>
-                </div>
-                <div class="col-12 md:col-6">
-                    <p-button [style]="{'width':'100%'}" label="Asistencia" [raised]="true" icon="pi pi-bell" severity="info" [ngClass]="{'button-flash':(table?.isRequestAttendace)}" (click)="requestAttendace()" />
-                </div>
-                <div class="col-12 md:col-6">
-                    <p-button [style]="{'width':'100%'}" label="Cuenta" [raised]="true" icon="pi pi-check" [ngClass]="{'button-flash':(table?.isRequestCheck)}" (click)="requestCheck()" />
-                </div>
-            </div>
-            <p-dataView #dv [value]="items" [rows]="10" [paginator]="true" emptyMessage="Sin ordenes en proceso">
-                <ng-template pTemplate="list" let-items>
-                    <div class="grid grid-nogutter">
-                        <div class="col-12" *ngFor="let item of items; let first = first">
-                            <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first, 'item-cancel': item.isCancel}">
-                                <div class="col-fixed">
-                                    <img *ngIf="item.isCancel" src="./assets/images/icon/ban.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" pTooltip="En proceso" src="./assets/images/icon/process.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" src="./assets/images/icon/uniform.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 3 && !item.isCancel" pTooltip="Enviado" src="./assets/images/icon/delivery.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 4 && !item.isCancel" pTooltip="Entregado" src="./assets/images/icon/meal.svg" style="width: 25px;">
-                                </div>
-                                <div class="col">
-                                    <div class="text-900 mt-1">{{ item.quantity + " " + item.meal?.name}}</div>
-                                </div>
-                                <div class="col-fixed gap-1" >
-                                    <div class=" text-900 mt-1">{{ (item.meal?.price * item.quantity) | currency}}</div>
-                                </div>
-                                <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button pTooltip="Entregar" icon="pi pi-check" severity="success" size="small" [disabled]="item.statusOrderId != 3" (onClick)="changeStatusOrder($event,item)"></p-button>
-                                </div>
-                                <div class="col-fixed gap-1" *ngIf="isLogin">
-                                    <p-button pTooltip="Cancelar" icon="pi pi-ban" severity="danger" size="small" [disabled]="item.isCancel || item.statusOrderId >= 3" (onClick)="confirmCancel(item)"></p-button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 border-top-1 surface-border pt-3">
-                            <div class="grid">
-                                <div class="col">
-                                    <div class="text-lg font-medium text-900 mt-1">Total: {{ totalOrder | currency}} MXN</div>
-                                </div>
-                                <div class="col-fixed">
-                                    <p-button severity="success"  *ngIf="isLogin" size="small" (onClick)="confirmCloseTicket()" >$ Cerrar cuenta $</p-button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-            </p-dataView>
-        </p-card>
+<div class="flex flex-wrap justify-content-center" *ngIf="!skeleton">
+  <div class="w-full" [ngClass]="{ 'p-3': !isLogin }">
+    <div
+      class="flex overflow-x-auto gap-2 mb-3"
+      *ngIf="isLogin && diners.length > 0"
+    >
+      <button
+        pButton
+        *ngFor="let d of diners"
+        [label]="d.name_client!"
+        [class.p-button-outlined]="d.id !== diner.id"
+        (click)="changeDiner(d)"
+        class="white-space-nowrap"
+      ></button>
+      <button
+        pButton
+        icon="pi pi-plus"
+        (click)="openNewDinerModal()"
+        class="p-button-rounded p-button-text"
+      ></button>
     </div>
+    <p-card
+      header="Mesa {{ table?.name }} a nombre de {{ diner.name_client }}"
+      [style]="{ width: '100%' }"
+    >
+      <div class="grid" *ngIf="isLogin">
+        <div class="col-12 md:col-9">
+          <p-autoComplete
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [(ngModel)]="selectedItem"
+            [suggestions]="suggestionsMeal!"
+            (onFocus)="focusSearchMeal($event)"
+            (completeMethod)="searchMeal($event)"
+            (onSelect)="completeSelectMeal($event)"
+            placeholder="Buscar alimento(s) o bebida(s)"
+            [dropdown]="true"
+            optionLabel="name"
+          >
+            <ng-template let-item pTemplate="item">
+              <div class="grid">
+                <div class="col">{{ item.name }}</div>
+                <div class="col-fixed">{{ item.price | currency }}</div>
+              </div>
+            </ng-template>
+          </p-autoComplete>
+        </div>
+        <div class="col-12 md:col-3">
+          <p-inputNumber
+            class="w-full"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [(ngModel)]="order.quantity"
+            placeholder="Cantidad"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            spinnerMode="horizontal"
+            [step]="1"
+            [min]="1"
+            [max]="100"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+          />
+        </div>
+      </div>
+      <div class="grid mb-3" *ngIf="isLogin">
+        <div class="col-12 md:col-9">
+          <textarea
+            [style]="{ width: '100%' }"
+            rows="1"
+            cols="30"
+            pInputTextarea
+            placeholder="Complementos u/o Observación"
+            [autoResize]="true"
+            [(ngModel)]="order.aditional"
+          >
+          </textarea>
+        </div>
+        <div class="col-12 md:col-3">
+          <button
+            pButton
+            pRipple
+            [style]="{ width: '100%' }"
+            icon="pi pi-plus"
+            label="Agregar"
+            (click)="addOrder()"
+          ></button>
+        </div>
+      </div>
+      <div class="grid mb-3" *ngIf="!isLogin">
+        <div class="col-12 md:col-4">
+          <p-button
+            [style]="{ width: '100%' }"
+            label="Menu"
+            [raised]="true"
+            icon="pi pi-list"
+            [routerLink]="['/menu', instanceIdentity]"
+            [queryParams]="{ tableId: table?.id, dinerId: diner?.id }"
+          />
+        </div>
+        <div class="col-12 md:col-6">
+          <p-button
+            [style]="{ width: '100%' }"
+            label="Asistencia"
+            [raised]="true"
+            icon="pi pi-bell"
+            severity="info"
+            [ngClass]="{ 'button-flash': table?.isRequestAttendace }"
+            (click)="requestAttendace()"
+          />
+        </div>
+        <div class="col-12 md:col-6">
+          <p-button
+            [style]="{ width: '100%' }"
+            label="Cuenta"
+            [raised]="true"
+            icon="pi pi-check"
+            [ngClass]="{ 'button-flash': table?.isRequestCheck }"
+            (click)="requestCheck()"
+          />
+        </div>
+      </div>
+      <p-dataView
+        #dv
+        [value]="items"
+        [rows]="10"
+        [paginator]="true"
+        emptyMessage="Sin ordenes en proceso"
+      >
+        <ng-template pTemplate="list" let-items>
+          <div class="grid grid-nogutter">
+            <div class="col-12" *ngFor="let item of items; let first = first">
+              <div
+                class="grid"
+                [ngClass]="{
+                  'border-top-1 surface-border': !first,
+                  'item-cancel': item.isCancel
+                }"
+              >
+                <div class="col-fixed">
+                  <img
+                    *ngIf="item.isCancel"
+                    src="./assets/images/icon/ban.svg"
+                    style="width: 25px"
+                  />
+                  <img
+                    *ngIf="item.statusOrderId == 1 && !item.isCancel"
+                    pTooltip="En proceso"
+                    src="./assets/images/icon/process.svg"
+                    style="width: 25px"
+                  />
+                  <img
+                    *ngIf="item.statusOrderId == 2 && !item.isCancel"
+                    pTooltip="Preparando"
+                    src="./assets/images/icon/uniform.svg"
+                    style="width: 25px"
+                  />
+                  <img
+                    *ngIf="item.statusOrderId == 3 && !item.isCancel"
+                    pTooltip="Enviado"
+                    src="./assets/images/icon/delivery.svg"
+                    style="width: 25px"
+                  />
+                  <img
+                    *ngIf="item.statusOrderId == 4 && !item.isCancel"
+                    pTooltip="Entregado"
+                    src="./assets/images/icon/meal.svg"
+                    style="width: 25px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="text-900 mt-1">
+                    {{ (item.quantity || 0) + " " + (item.meal?.name || "") }}
+                  </div>
+                </div>
+                <div class="col-fixed gap-1">
+                  <div class="text-900 mt-1">
+                    {{
+                      (item.meal?.price || 0) * (item.quantity || 0) | currency
+                    }}
+                  </div>
+                </div>
+                <div class="col-fixed gap-1" *ngIf="isLogin">
+                  <p-button
+                    pTooltip="Entregar"
+                    icon="pi pi-check"
+                    severity="success"
+                    size="small"
+                    [disabled]="item.statusOrderId != 3"
+                    (onClick)="changeStatusOrder($event, item)"
+                  ></p-button>
+                </div>
+                <div class="col-fixed gap-1" *ngIf="isLogin">
+                  <p-button
+                    pTooltip="Cancelar"
+                    icon="pi pi-ban"
+                    severity="danger"
+                    size="small"
+                    [disabled]="item.isCancel || item.statusOrderId >= 3"
+                    (onClick)="confirmCancel(item)"
+                  ></p-button>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 border-top-1 surface-border pt-3">
+              <div class="grid">
+                <div class="col">
+                  <div class="text-lg font-medium text-900 mt-1">
+                    Total: {{ totalOrder | currency }} MXN
+                  </div>
+                </div>
+                <div class="col-fixed">
+                  <p-button
+                    severity="success"
+                    *ngIf="isLogin"
+                    size="small"
+                    (onClick)="confirmCloseTicket()"
+                    >$ Cerrar cuenta $</p-button
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </p-card>
+  </div>
 </div>
 
 <p-toast />
 <p-confirmDialog #cd>
-    <ng-template pTemplate="headless" let-message>
-        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
-            <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
-                <i class="pi pi-question text-5xl"></i>
-            </div>
-            <span class="font-bold text-2xl block mb-2 mt-4">
-                {{ message.header }}
-            </span>
-            <p class="mb-0">{{ message.message }}</p>
-            <div class="flex align-items-center gap-2 mt-4">
-                <button
-                    pButton
-                    label="Si"
-                    (click)="cd.accept()"
-                    class="w-8rem">
-                </button>
-                <button
-                    pButton
-                    label="No"
-                    (click)="cd.reject()"
-                    class="p-button-outlined w-8rem ">
-                </button>
-            </div>
-        </div>
-    </ng-template>
+  <ng-template pTemplate="headless" let-message>
+    <div
+      class="flex flex-column align-items-center p-5 surface-overlay border-round"
+    >
+      <div
+        class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem"
+      >
+        <i class="pi pi-question text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4">
+        {{ message.header }}
+      </span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button
+          pButton
+          label="Si"
+          (click)="cd.accept()"
+          class="w-8rem"
+        ></button>
+        <button
+          pButton
+          label="No"
+          (click)="cd.reject()"
+          class="p-button-outlined w-8rem"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
 </p-confirmDialog>
-<p-dialog header="Cliente" [modal]="true" [(visible)]="showModalDiner" closable="false" >
-    <div class="formgrid grid gap-3 mb-3 mt-3">
-        <div class="field col-12">
-            <label for="name">Nombre del cliente</label>
-            <input pInputText id="name" type="text" [(ngModel)]="dinerForm.name_client" class="w-full">
-        </div>
-        <div class="field col-12">
-            <label for="phone">Telefono del cliente</label>
-            <p-inputMask
-            id="phone"
-            [style]="{'width':'100%'}"
-            mask="99-9999-9999"
-            [(ngModel)]="dinerForm.phone_number"
-            placeholder="99-9999-9999" />
-        </div>
+<p-dialog
+  header="Cliente"
+  [modal]="true"
+  [(visible)]="showModalDiner"
+  closable="false"
+>
+  <div class="formgrid grid gap-3 mb-3 mt-3">
+    <div class="field col-12">
+      <label for="name">Nombre del cliente</label>
+      <input
+        pInputText
+        id="name"
+        type="text"
+        [(ngModel)]="dinerForm.name_client"
+        class="w-full"
+      />
     </div>
-    <div class="flex justify-content-end gap-2">
-        <p-button label="Cancelar" severity="secondary" [routerLink]="'/kitchen/tables'" />
-        <p-button label="Guardar" (click)="saveDiner()" />
+    <div class="field col-12">
+      <label for="phone">Telefono del cliente</label>
+      <p-inputMask
+        id="phone"
+        [style]="{ width: '100%' }"
+        mask="99-9999-9999"
+        [(ngModel)]="dinerForm.phone_number"
+        placeholder="99-9999-9999"
+      />
     </div>
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      [routerLink]="'/kitchen/tables'"
+    />
+    <p-button label="Guardar" (click)="saveDiner()" />
+  </div>
 </p-dialog>
 
-<p-dialog header="Mesa en espera" [modal]="true" [(visible)]="isTableNotBusy" closable="false" >
-  <div class="flex flex-wrap justify-content-center " >
+<p-dialog
+  header="Mesa en espera"
+  [modal]="true"
+  [(visible)]="isTableNotBusy"
+  closable="false"
+>
+  <div class="flex flex-wrap justify-content-center">
     <i class="pi pi-spin pi-spinner" style="font-size: 4rem"></i>
   </div>
 </p-dialog>

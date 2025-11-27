@@ -168,4 +168,17 @@ export class MenuComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al enviar la orden.' });
     });
   }
+
+  onRate(meal: any, event: any) {
+    this.mealsService.rate(meal.id, event.value).subscribe({
+      next: (response) => {
+        meal.rating = response.rating;
+        meal.ratingCount = response.ratingCount;
+        this.messageService.add({ severity: 'success', summary: 'Gracias', detail: 'Tu calificación ha sido guardada.' });
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar tu calificación.' });
+      }
+    });
+  }
 }

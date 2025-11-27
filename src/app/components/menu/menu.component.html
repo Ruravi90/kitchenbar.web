@@ -25,7 +25,11 @@
                 <h3 class="text-xl font-medium text-900 m-0">{{ meal.name }}</h3>
                 <span class="text-lg font-semibold text-primary">{{ "$" + meal.price }}</span>
               </div>
-              <p class="text-700 m-0 line-height-3 text-sm md:text-base">{{ meal.description }}</p>
+              <p class="text-700 m-0 line-height-3 text-sm md:text-base mb-2">{{ meal.description }}</p>
+              <div class="flex align-items-center gap-2" (click)="$event.stopPropagation()">
+                <p-rating [(ngModel)]="meal.rating" [cancel]="false" (onRate)="onRate(meal, $event)"></p-rating>
+                <span class="text-sm text-600">({{ meal.ratingCount || 0 }})</span>
+              </div>
             </div>
             
             <button 

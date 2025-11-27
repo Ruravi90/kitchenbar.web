@@ -329,6 +329,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       this.router.navigate(['/menu', this.instanceIdentity], {
         queryParams: {
           tableId: this.table?.id,
+          tableIdentity: this.tableIdentity,
           dinerId: this.diner?.id
         }
       });

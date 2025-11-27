@@ -107,6 +107,11 @@
                     </button>
                 </div>
             </div>
+             <div class="grid mb-3" *ngIf="!isLogin">
+                <div class="col-12">
+                    <p-button [style]="{'width':'100%'}" label="Menu" [raised]="true" icon="pi pi-check" (click)="goToMenu()" />
+                </div>
+            </div>
             <div class="grid mb-3" *ngIf="!isLogin">
                 <div class="col-12 md:col-6">
                     <p-button [style]="{'width':'100%'}" label="Asistencia" [raised]="true" icon="pi pi-bell" severity="info" [ngClass]="{'button-flash':(table?.isRequestAttendace)}" (click)="requestAttendace()" />

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesInterface, MealsInterface, OrdersInterface } from '../../interfaces';
 import { MessageService } from 'primeng/api';
 
@@ -29,6 +29,8 @@ export class MenuComponent implements OnInit {
 
   tableId?: number;
   dinerId?: number;
+  identity?: string;
+  tableIdentity?: string;
 
   groupedMeals: { category: any, meals: any[] }[] = [];
 
@@ -37,13 +39,15 @@ export class MenuComponent implements OnInit {
     private mealsService: MealsInterface,
     private ordersService: OrdersInterface,
     private messageService: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const identity = params['identity'];
       if (identity) {
+        this.identity = identity;
         this.loadData(identity);
       } else {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No restaurant identity provided.' });
@@ -53,12 +57,19 @@ export class MenuComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.tableId = params['tableId'] ? +params['tableId'] : undefined;
       this.dinerId = params['dinerId'] ? +params['dinerId'] : undefined;
+      this.tableIdentity = params['tableIdentity'] ? params['tableIdentity'] : undefined;
     });
     
     this.sortOptions = [
       { label: 'Precio: Mayor a Menor', value: '!price' },
       { label: 'Precio: Menor a Mayor', value: 'price' }
     ];
+  }
+
+  goBack() {
+    if (this.tableIdentity) {
+      this.router.navigate(['/client', this.tableIdentity]);
+    }
   }
 
   loadData(identity: string) {

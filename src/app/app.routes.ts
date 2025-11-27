@@ -15,11 +15,11 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
                     { path: 'settings',canActivate: [canActivateChild],loadChildren: () => import('./components/settings/settings.module').then(m => m.SettingsModule) },
                     { path: 'admin',canActivate: [canActivateChild],loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
                     { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
+                    { path: 'menu/:identity', loadChildren: () => import('../app/components/menu/menu.module').then(m => m.MenuModule) },
                 ]
             },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
-            { path: 'menu', loadChildren: () => import('./components/menu/menu.module').then(m => m.MenuModule) },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/auth/login' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })

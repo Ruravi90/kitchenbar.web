@@ -9,4 +9,5 @@ export abstract class MealsInterface{
     abstract createItem(item: any): Observable<any>;
     abstract updateItem(id: number, item: any): Observable<any> ;
     abstract deleteItem(id: number): Observable<any>;
+    abstract rate(id: number, rating: number): Observable<any>;
 }

@@ -1,130 +1,170 @@
-<div class="card">
-  <p-dataView
-    #dv
-    [value]="filteredMeals"
-    [layout]="'grid'"
-    [sortField]="sortField"
-    [sortOrder]="sortOrder"
+<div class="menu-container fade-in">
+  <!-- Category Navigation -->
+  <div
+    class="category-nav sticky top-0 z-5 surface-0 py-3 px-3 shadow-1 mb-4 flex gap-2 overflow-x-auto"
   >
-    <ng-template pTemplate="header">
-      <div
-        class="flex flex-column md:flex-row md:justify-content-between gap-2"
+    <button
+      pButton
+      class="p-button-rounded p-button-text white-space-nowrap flex-shrink-0"
+      [class.p-button-outlined]="selectedCategory?.id !== cat.id"
+      [class.font-bold]="selectedCategory?.id === cat.id"
+      *ngFor="let cat of categoryOptions"
+      (click)="onCategoryChange(cat)"
+      [label]="cat.name"
+    ></button>
+  </div>
+
+  <!-- Menu List -->
+  <div class="menu-list px-3 md:px-5 pb-8">
+    <div *ngFor="let group of groupedMeals" class="mb-6">
+      <h2
+        class="text-3xl font-serif text-900 mb-4 border-bottom-1 surface-border pb-2"
       >
-        <p-dropdown
-          [options]="sortOptions"
-          placeholder="Sort by Price"
-          (onChange)="onSortChange($event)"
-          styleClass="mb-2 md:mb-0"
-        ></p-dropdown>
+        {{ group.category.name }}
+      </h2>
 
-        <p-dropdown
-          [options]="categoryOptions"
-          [(ngModel)]="selectedCategory"
-          optionLabel="name"
-          (onChange)="onCategoryChange($event.value)"
-          placeholder="Seleccionar Categoría"
-          styleClass="w-full md:w-auto"
-        ></p-dropdown>
-      </div>
-    </ng-template>
-
-    <ng-template let-meals pTemplate="gridItem">
       <div class="grid grid-nogutter">
-        <div class="col-12 sm:col-6 lg:col-4 xl:col-3 p-2" *ngFor="let meal of meals">
-          <div class="p-4 border-1 surface-border surface-card border-round h-full">
-            <div
-              class="flex flex-wrap align-items-center justify-content-between gap-2"
-            >
-              <span class="flex align-items-center gap-2">
-                <i class="pi pi-tag"></i>
-                <span class="font-semibold">{{ getNameCategory(meal.categoryId) }}</span>
-              </span>
-            </div>
-            <div class="flex flex-column align-items-center gap-3 py-5">
-              <div class="text-2xl font-bold">{{ meal.name }}</div>
-              <div class="text-700">{{ meal.description }}</div>
-            </div>
-            <div class="flex align-items-center justify-content-between">
-              <span class="text-2xl font-semibold">{{ "$" + meal.price }}</span>
-              <div class="flex gap-2">
-                <button
-                  pButton
-                  icon="pi pi-eye"
-                  class="p-button-rounded p-button-secondary p-button-outlined"
-                  (click)="showDetails(meal)"
-                ></button>
-                <button
-                  pButton
-                  icon="pi pi-shopping-cart"
-                  class="p-button-rounded"
-                  [disabled]="meal.inventoryStatus === 'OUTOFSTOCK'"
-                  (click)="addToCart(meal)"
-                ></button>
+        <div *ngFor="let meal of group.meals" class="col-12 mb-4 meal-item">
+          <div class="flex justify-content-between align-items-start gap-3">
+            <div class="flex-1 cursor-pointer" (click)="showDetails(meal)">
+              <div class="flex align-items-baseline gap-2 mb-1">
+                <h3 class="text-xl font-medium text-900 m-0">
+                  {{ meal.name }}
+                </h3>
+                <span class="text-lg font-semibold text-primary">{{
+                  "$" + meal.price
+                }}</span>
+              </div>
+              <p class="text-700 m-0 line-height-3 text-sm md:text-base mb-2">
+                {{ meal.description }}
+              </p>
+              <div
+                class="flex align-items-center gap-2"
+                (click)="$event.stopPropagation()"
+              >
+                <p-rating
+                  [(ngModel)]="meal.rating"
+                  [cancel]="false"
+                  (onRate)="onRate(meal, $event)"
+                ></p-rating>
+                <span class="text-sm text-600"
+                  >({{ meal.ratingCount || 0 }})</span
+                >
               </div>
             </div>
+
+            <button
+              pButton
+              icon="pi pi-plus"
+              class="p-button-rounded p-button-text p-button-sm flex-shrink-0"
+              [disabled]="meal.inventoryStatus === 'OUTOFSTOCK'"
+              (click)="addToCart(meal)"
+            ></button>
           </div>
         </div>
       </div>
-    </ng-template>
-  </p-dataView>
+    </div>
+
+    <div *ngIf="groupedMeals.length === 0" class="text-center p-5 text-700">
+      No se encontraron platillos.
+    </div>
+  </div>
 </div>
 
-<button pButton icon="pi pi-shopping-cart" label="Cart ({{cart.length}})" class="fixed bottom-0 right-0 m-4 z-5 shadow-4" (click)="cartVisible = true" *ngIf="cart.length > 0"></button>
-
-<p-dialog [(visible)]="cartVisible" [style]="{width: '450px'}" header="Your Order" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div *ngIf="cart.length === 0" class="text-center">Your cart is empty.</div>
-        <div *ngFor="let item of cart; let i = index" class="flex align-items-center justify-content-between mb-3 border-bottom-1 surface-border pb-2">
-            <div>
-                <div class="font-bold">{{ item.name }}</div>
-                <div class="text-sm text-600">{{ '$' + item.price }}</div>
-            </div>
-            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="removeFromCart(i)"></button>
-        </div>
-        <div class="flex justify-content-between font-bold text-xl mt-4" *ngIf="cart.length > 0">
-            <span>Total:</span>
-            <span>{{ '$' + cartTotal }}</span>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <button pButton label="Close" icon="pi pi-times" class="p-button-text" (click)="cartVisible = false"></button>
-        <button pButton label="Place Order" icon="pi pi-check" [disabled]="cart.length === 0" (click)="placeOrder()"></button>
-    </ng-template>
-</p-dialog>
+<button pButton icon="pi pi-arrow-left" class="fixed bottom-0 left-0 m-4 z-5 shadow-4 p-button-rounded p-button-secondary" (click)="goBack()" *ngIf="tableId"></button>
+<button
+  pButton
+  icon="pi pi-shopping-cart"
+  label="Carrito ({{ cart.length }})"
+  class="fixed bottom-0 right-0 m-4 z-5 shadow-4"
+  (click)="cartVisible = true"
+  *ngIf="cart.length > 0"
+></button>
 
 <p-dialog
-  [(visible)]="displayDetails"
+  [(visible)]="cartVisible"
   [style]="{ width: '450px' }"
-  header="Meal Details"
+  header="Tu Orden"
   [modal]="true"
   styleClass="p-fluid"
 >
   <ng-template pTemplate="content">
-    <div class="flex flex-column align-items-center" *ngIf="selectedMeal">
-      <img
-        [src]="
-          selectedMeal.image ||
-          'https://primefaces.org/cdn/primeng/images/demo/product/bamboo-watch.jpg'
-        "
-        [alt]="selectedMeal.name"
-        class="w-full mb-3 border-round"
-      />
-      <div class="text-2xl font-bold mb-2">{{ selectedMeal.name }}</div>
-      <div class="text-xl mb-3">{{ "$" + selectedMeal.price }}</div>
-      <p>{{ selectedMeal.description }}</p>
+    <div *ngIf="cart.length === 0" class="text-center">
+      Tu carrito está vacío.
+    </div>
+    <div
+      *ngFor="let item of cart; let i = index"
+      class="flex align-items-center justify-content-between mb-3 border-bottom-1 surface-border pb-2"
+    >
+      <div>
+        <div class="font-bold">{{ item.name }}</div>
+        <div class="text-sm text-600">{{ "$" + item.price }}</div>
+      </div>
+      <button
+        pButton
+        icon="pi pi-trash"
+        class="p-button-rounded p-button-danger p-button-text"
+        (click)="removeFromCart(i)"
+      ></button>
+    </div>
+    <div
+      class="flex justify-content-between font-bold text-xl mt-4"
+      *ngIf="cart.length > 0"
+    >
+      <span>Total:</span>
+      <span>{{ "$" + cartTotal }}</span>
     </div>
   </ng-template>
   <ng-template pTemplate="footer">
     <button
       pButton
-      label="Close"
+      label="Cerrar"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="cartVisible = false"
+    ></button>
+    <button
+      pButton
+      label="Ordenar"
+      icon="pi pi-check"
+      [disabled]="cart.length === 0"
+      (click)="placeOrder()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="displayDetails"
+  [style]="{ width: '450px' }"
+  header="Detalles del Platillo"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="flex flex-column align-items-center p-4" *ngIf="selectedMeal">
+      <div class="text-4xl font-serif font-bold mb-3 text-center text-900">
+        {{ selectedMeal.name }}
+      </div>
+      <div class="w-3rem border-bottom-1 surface-border mb-4"></div>
+      <p class="text-xl text-700 text-center line-height-3 mb-5 max-w-30rem">
+        {{ selectedMeal.description }}
+      </p>
+      <div class="text-3xl font-medium text-primary">
+        {{ "$" + selectedMeal.price }}
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cerrar"
       icon="pi pi-times"
       class="p-button-text"
       (click)="displayDetails = false"
     ></button>
     <button
       pButton
-      label="Add to Cart"
+      label="Agregar al Carrito"
       icon="pi pi-check"
       class="p-button-text"
       (click)="addToCart(selectedMeal); displayDetails = false"

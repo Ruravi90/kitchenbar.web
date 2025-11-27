@@ -25,6 +25,9 @@ export class MealsService implements MealsInterface{
   getPublic(identity: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/public/${identity}`);
   }
+  rate(id: number, rating: number): Observable<any> {
+    return this.http.post<any>(this.apiUrl + '/' + id + '/rate', rating);
+  }
   getItem(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }

@@ -60,6 +60,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       this.hub.newUser().subscribe();
     }
 
+    await this.delay(1000);
     this.getTable();
     this.getDiner();
 
@@ -321,6 +322,18 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.diner = diner;
     this.order.dinerId = diner.id;
     this.getOrders();
+  }
+
+  goToMenu() {
+    if (this.instanceIdentity) {
+      this.router.navigate(['/menu', this.instanceIdentity], {
+        queryParams: {
+          tableId: this.table?.id,
+          tableIdentity: this.tableIdentity,
+          dinerId: this.diner?.id
+        }
+      });
+    }
   }
 
   openNewDinerModal() {

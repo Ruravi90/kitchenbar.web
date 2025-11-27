@@ -1,5 +1,5 @@
 export const environment = {
-  version: require('../../package.json').version + '-dev',
+    version: require('../../package.json').version + '-dev',
     production: false,
     baseUrl: 'https://localhost:4200/client/',
     apiBase: 'https://localhost:5001/api/',

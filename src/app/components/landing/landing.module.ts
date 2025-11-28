@@ -6,6 +6,7 @@ import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { LandingComponent } from './landing.component';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @NgModule({
     imports: [
@@ -16,6 +17,6 @@ import { LandingComponent } from './landing.component';
         PanelModule,
         ButtonModule
     ],
-    declarations: [LandingComponent]
+    declarations: [LandingComponent, TranslatePipe]
 })
 export class LandingModule { }

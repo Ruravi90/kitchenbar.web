@@ -31,7 +31,7 @@ export class AppMenuComponent implements OnInit {
                     label: 'Configuración',
                     items: [
                         { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/tables'] },
-                        { label: 'Categorias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/categories'] },
+                        { label: 'Categorías', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/categories'] },
                         { label: 'Alimentos', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/meals'] },
                         { label: 'Sucursales', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/branches'] },
                         { label: 'Usuarios', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/users'] },
@@ -41,9 +41,9 @@ export class AppMenuComponent implements OnInit {
         }
         else if( role == 0){
             this.model.push({
-                label: 'Administracion',
+                label: 'Administración',
                 items: [
-                    { label: 'Licensias', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/licenses'] },
+                    { label: 'Licencias', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/licenses'] },
                     { label: 'Instancias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/admin/instances'] },
                 ]
             });
@@ -53,7 +53,7 @@ export class AppMenuComponent implements OnInit {
             label: 'Sesión',
             items: [
               { label: 'Mi cuenta',icon: 'pi pi-fw pi-user', routerLink: ['/settings/account'] },
-              { label: 'Cerrar sesión',icon: 'pi pi-fw pi-lock', routerLink: ['/auth/loguin'] },
+              { label: 'Cerrar sesión',icon: 'pi pi-fw pi-lock', routerLink: ['/auth/login'] },
             ]
         });
 

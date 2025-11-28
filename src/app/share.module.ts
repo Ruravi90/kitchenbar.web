@@ -29,6 +29,7 @@ import { StepperModule } from 'primeng/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ChipModule } from 'primeng/chip';
+import { AvatarModule } from 'primeng/avatar';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { ChipModule } from 'primeng/chip';
     StepperModule,
     ReactiveFormsModule,
     InputSwitchModule,
-    ChipModule
+    ChipModule,
+    AvatarModule
   ]
 })
 export class SharedModule { }

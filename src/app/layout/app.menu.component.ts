@@ -37,6 +37,13 @@ export class AppMenuComponent implements OnInit {
                         { label: 'Usuarios', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/users'] },
                     ]
                 });
+                this.model.push({
+                    label: 'Inventario',
+                    items: [
+                        { label: 'Gestionar', icon: 'pi pi-fw pi-check-square', routerLink: ['/inventory'] },
+                        { label: 'Predecir', icon: 'pi pi-fw pi-bookmark', routerLink: ['/inventory-prediction'] },
+                    ]
+                });
             }
         }
         else if( role == 0){

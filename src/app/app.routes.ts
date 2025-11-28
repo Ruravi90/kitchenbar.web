@@ -16,6 +16,8 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
                     { path: 'admin',canActivate: [canActivateChild],loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
                     { path: 'client/:identity', loadChildren: () => import('../app/components/kitchen/attendance/attendance.module').then(m => m.AttendaceModule) },
                     { path: 'menu/:identity', loadChildren: () => import('../app/components/menu/menu.module').then(m => m.MenuModule) },
+                    { path: 'inventory-prediction', loadComponent: () => import('./components/inventory-prediction/inventory-prediction.component').then(m => m.InventoryPredictionComponent) },
+                    { path: 'inventory', loadComponent: () => import('./components/inventory/inventory.component').then(m => m.InventoryComponent) },
                 ]
             },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },

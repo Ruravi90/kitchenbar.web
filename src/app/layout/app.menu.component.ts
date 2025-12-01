@@ -18,6 +18,17 @@ export class AppMenuComponent implements OnInit {
         var user =this.auth.getCurrentUser();
 
         if(role != 0){
+
+            if(role == 1){
+                this.model.push( {
+                label: "Panel",
+                items: [
+                    { label: 'Graficos', icon: 'pi pi-fw pi-check-square', routerLink: ['/dashboard'] },
+                ]
+            });
+
+            }
+
             this.model.push( {
                 label: user.instance!.name_kitchen,
                 items: [

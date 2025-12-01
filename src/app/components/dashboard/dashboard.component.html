@@ -1,0 +1,22 @@
+<div class="grid p-fluid">
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card">
+            <h5>Ventas Diarias (Hoy vs Semana Pasada)</h5>
+            <p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card">
+            <h5>Top 5 Platillos Más Vendidos</h5>
+            <p-chart type="doughnut" [data]="topItemsData" [options]="topItemsOptions"></p-chart>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card">
+            <h5>Horas Pico (Últimos 30 días)</h5>
+            <p-chart type="bar" [data]="peakHoursData" [options]="peakHoursOptions"></p-chart>
+        </div>
+    </div>
+</div>

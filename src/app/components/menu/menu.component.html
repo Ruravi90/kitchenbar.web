@@ -71,7 +71,13 @@
   </div>
 </div>
 
-<button pButton icon="pi pi-arrow-left" class="fixed bottom-0 left-0 m-4 z-5 shadow-4 p-button-rounded p-button-secondary" (click)="goBack()" *ngIf="tableId"></button>
+<button
+  pButton
+  icon="pi pi-arrow-left"
+  class="fixed bottom-0 left-0 m-4 z-5 shadow-4 p-button-rounded p-button-secondary"
+  (click)="goBack()"
+  *ngIf="tableId"
+></button>
 <button
   pButton
   icon="pi pi-shopping-cart"
@@ -79,6 +85,16 @@
   class="fixed bottom-0 right-0 m-4 z-5 shadow-4"
   (click)="cartVisible = true"
   *ngIf="cart.length > 0"
+></button>
+
+<button
+  pButton
+  icon="pi pi-user"
+  label="Mi Cuenta"
+  class="fixed bottom-0 right-0 m-4 z-5 shadow-4 mr-8"
+  style="margin-right: 150px !important"
+  (click)="accountVisible = true"
+  *ngIf="dinerId"
 ></button>
 
 <p-dialog
@@ -168,6 +184,172 @@
       icon="pi pi-check"
       class="p-button-text"
       (click)="addToCart(selectedMeal); displayDetails = false"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="accountVisible"
+  [style]="{ width: '450px' }"
+  header="Mi Cuenta"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div
+      *ngIf="
+        !dinerDetails ||
+        !dinerDetails.orders ||
+        dinerDetails.orders.length === 0
+      "
+      class="text-center"
+    >
+      No hay consumos registrados.
+    </div>
+    <div *ngIf="dinerDetails && dinerDetails.orders">
+      <div
+        *ngFor="let order of dinerDetails.orders"
+        class="flex align-items-center justify-content-between mb-3 border-bottom-1 surface-border pb-2"
+      >
+        <div>
+          <div class="font-bold">Platillo ID: {{ order.mealId }}</div>
+          <div class="text-sm text-600">Cant: {{ order.quantity }}</div>
+        </div>
+      </div>
+      <div class="flex justify-content-between font-bold text-xl mt-4">
+        <span>Total:</span>
+        <span>{{ "$" + dinerTotal }}</span>
+      </div>
+      <div class="mt-3 text-center">
+        <span class="p-tag p-tag-success" *ngIf="dinerDetails.isPay"
+          >PAGADO</span
+        >
+        <span class="p-tag p-tag-warning" *ngIf="!dinerDetails.isPay"
+          >PENDIENTE DE PAGO</span
+        >
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cerrar"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="accountVisible = false"
+    ></button>
+    <button
+      pButton
+      label="Pagar"
+      icon="pi pi-dollar"
+      class="p-button-success"
+      *ngIf="dinerDetails && !dinerDetails.isPay"
+      (click)="payTicket()"
+    ></button>
+    <button
+      pButton
+      label="Solicitar Factura"
+      icon="pi pi-file"
+      class="p-button-info"
+      *ngIf="dinerDetails && dinerDetails.isPay"
+      (click)="invoiceVisible = true; accountVisible = false"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="invoiceVisible"
+  [style]="{ width: '450px' }"
+  header="Datos de Facturación"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="rfc">RFC</label>
+      <input
+        type="text"
+        pInputText
+        id="rfc"
+        [(ngModel)]="fiscalData.rfc"
+        required
+      />
+    </div>
+    <div class="field">
+      <label for="legalName">Razón Social</label>
+      <input
+        type="text"
+        pInputText
+        id="legalName"
+        [(ngModel)]="fiscalData.legalName"
+        required
+      />
+    </div>
+    <div class="field">
+      <label for="taxRegime">Régimen Fiscal (Código)</label>
+      <input
+        type="text"
+        pInputText
+        id="taxRegime"
+        [(ngModel)]="fiscalData.taxRegime"
+        placeholder="601"
+        required
+      />
+    </div>
+    <div class="field">
+      <label for="zipCode">Código Postal</label>
+      <input
+        type="text"
+        pInputText
+        id="zipCode"
+        [(ngModel)]="fiscalData.zipCode"
+        required
+      />
+    </div>
+    <div class="field">
+      <label for="address">Dirección (Opcional)</label>
+      <input
+        type="text"
+        pInputText
+        id="address"
+        [(ngModel)]="fiscalData.address"
+      />
+    </div>
+    <div class="field">
+      <label for="email">Correo Electrónico</label>
+      <input
+        type="email"
+        pInputText
+        id="email"
+        [(ngModel)]="fiscalData.email"
+        required
+      />
+    </div>
+    <div class="field">
+      <label for="useCfdi">Uso de CFDI</label>
+      <input
+        type="text"
+        pInputText
+        id="useCfdi"
+        [(ngModel)]="fiscalData.useCfdi"
+        placeholder="G03"
+        required
+      />
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cancelar"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="invoiceVisible = false"
+    ></button>
+    <button
+      pButton
+      label="Enviar"
+      icon="pi pi-send"
+      (click)="requestInvoice()"
     ></button>
   </ng-template>
 </p-dialog>

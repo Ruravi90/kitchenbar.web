@@ -1,0 +1,88 @@
+<div class="flex align-items-center justify-content-center min-h-screen surface-ground p-4">
+    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+        <div class="text-center mb-5">
+            <div class="text-900 text-3xl font-medium mb-3">Portal de Facturación</div>
+            <span class="text-600 font-medium line-height-3">KitchenBar</span>
+        </div>
+
+        <p-toast></p-toast>
+
+        <!-- STEP 1: Search -->
+        <div *ngIf="step === 1">
+            <div class="text-center mb-4">
+                <span class="text-600">Ingrese su correo o teléfono para ver sus consumos pendientes de facturar del mes actual.</span>
+            </div>
+            
+            <div class="field">
+                <label for="contact" class="block text-900 font-medium mb-2">Correo o Teléfono (Registrado en mesa)</label>
+                <input id="contact" type="text" pInputText class="w-full mb-3" [(ngModel)]="searchForm.contact" placeholder="Correo o Teléfono">
+            </div>
+
+            <button pButton pRipple label="Buscar Tickets" icon="pi pi-search" class="w-full mb-4" (click)="searchTickets()" [loading]="loading"></button>
+
+            <div *ngIf="pendingTickets.length > 0">
+                <div class="text-900 font-medium mb-3">Tickets Pendientes</div>
+                <div *ngFor="let ticket of pendingTickets" class="surface-card p-3 shadow-1 border-round mb-3 flex align-items-center justify-content-between hover:surface-100 cursor-pointer" (click)="selectTicket(ticket)">
+                    <div>
+                        <div class="text-900 font-medium">Ticket #{{ticket.id}}</div>
+                        <div class="text-600 text-sm">{{ticket.createdAt | date:'medium'}}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-900 font-bold">{{ticket.total | currency}}</div>
+                        <div class="text-primary text-sm font-medium">Seleccionar <i class="pi pi-arrow-right text-xs"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Fiscal Data -->
+        <div *ngIf="step === 2">
+            <div class="surface-100 p-3 border-round mb-4">
+                <div class="text-900 font-medium mb-2">Ticket #{{selectedTicket.id}}</div>
+                <div class="text-600 text-sm">Cliente: {{selectedTicket.name_client}}</div>
+                <div class="text-600 text-sm">Fecha: {{selectedTicket.createdAt | date:'short'}}</div>
+                <div class="text-900 font-bold text-xl mt-2">Total: {{selectedTicket.total | currency}}</div>
+            </div>
+
+            <div class="field">
+                <label for="rfc" class="block text-900 font-medium mb-2">RFC</label>
+                <input id="rfc" type="text" pInputText class="w-full mb-3" [(ngModel)]="fiscalData.rfc">
+            </div>
+            <div class="field">
+                <label for="legalName" class="block text-900 font-medium mb-2">Razón Social</label>
+                <input id="legalName" type="text" pInputText class="w-full mb-3" [(ngModel)]="fiscalData.legalName">
+            </div>
+            <div class="field">
+                <label for="taxRegime" class="block text-900 font-medium mb-2">Régimen Fiscal</label>
+                <input id="taxRegime" type="text" pInputText class="w-full mb-3" [(ngModel)]="fiscalData.taxRegime" placeholder="601">
+            </div>
+            <div class="field">
+                <label for="zipCode" class="block text-900 font-medium mb-2">Código Postal</label>
+                <input id="zipCode" type="text" pInputText class="w-full mb-3" [(ngModel)]="fiscalData.zipCode">
+            </div>
+            <div class="field">
+                <label for="email" class="block text-900 font-medium mb-2">Correo Electrónico</label>
+                <input id="email" type="email" pInputText class="w-full mb-3" [(ngModel)]="fiscalData.email">
+            </div>
+            <div class="field">
+                <label for="useCfdi" class="block text-900 font-medium mb-2">Uso de CFDI</label>
+                <input id="useCfdi" type="text" pInputText class="w-full mb-3" [(ngModel)]="fiscalData.useCfdi" placeholder="G03">
+            </div>
+
+            <div class="flex gap-2">
+                <button pButton pRipple label="Atrás" icon="pi pi-arrow-left" class="p-button-outlined w-full" (click)="step = 1"></button>
+                <button pButton pRipple label="Generar Factura" icon="pi pi-check" class="w-full" (click)="generateInvoice()" [loading]="loading"></button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Success -->
+        <div *ngIf="step === 3" class="text-center">
+            <i class="pi pi-check-circle text-green-500 text-6xl mb-4"></i>
+            <div class="text-900 font-bold text-3xl mb-3">¡Factura Generada!</div>
+            <p class="text-600 line-height-3 mb-4">La factura ha sido enviada a su correo electrónico y se ha abierto en una nueva pestaña.</p>
+            
+            <button pButton pRipple label="Facturar otro ticket" icon="pi pi-refresh" class="p-button-text" (click)="reset()"></button>
+        </div>
+
+    </div>
+</div>

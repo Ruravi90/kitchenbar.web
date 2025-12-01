@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoriesInterface, MealsInterface, OrdersInterface } from '../../interfaces';
+import { CategoriesInterface, MealsInterface, OrdersInterface, DinersInterface, InvoicesInterface } from '../../interfaces';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -34,13 +34,28 @@ export class MenuComponent implements OnInit {
 
   groupedMeals: { category: any, meals: any[] }[] = [];
 
+  accountVisible: boolean = false;
+  invoiceVisible: boolean = false;
+  dinerDetails: any = null;
+  fiscalData: any = {
+    rfc: '',
+    legalName: '',
+    taxRegime: '',
+    zipCode: '',
+    address: '',
+    email: '',
+    useCfdi: 'G03'
+  };
+
   constructor(
     private categoriesService: CategoriesInterface,
     private mealsService: MealsInterface,
     private ordersService: OrdersInterface,
     private messageService: MessageService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dinersService: DinersInterface,
+    private invoicesService: InvoicesInterface
   ) { }
 
   ngOnInit(): void {
@@ -58,6 +73,10 @@ export class MenuComponent implements OnInit {
       this.tableId = params['tableId'] ? +params['tableId'] : undefined;
       this.dinerId = params['dinerId'] ? +params['dinerId'] : undefined;
       this.tableIdentity = params['tableIdentity'] ? params['tableIdentity'] : undefined;
+      
+      if (this.dinerId) {
+        this.loadDinerDetails();
+      }
     });
     
     this.sortOptions = [
@@ -189,6 +208,72 @@ export class MenuComponent implements OnInit {
       },
       error: (err) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar tu calificación.' });
+      }
+    });
+  }
+
+  loadDinerDetails() {
+    if (!this.dinerId) return;
+    this.dinersService.getItem(this.dinerId).subscribe({
+      next: (diner) => {
+        this.dinerDetails = diner;
+      },
+      error: (err) => {
+        console.error('Error loading diner details', err);
+      }
+    });
+  }
+
+  get dinerTotal() {
+    if (!this.dinerDetails || !this.dinerDetails.orders) return 0;
+    // Assuming orders have price or we calculate it. 
+    // Since we don't have price in order, we might need to fetch meals or use what we have.
+    // For simplicity, let's assume the backend or a previous step populated prices, 
+    // or we just sum up based on the meals we loaded.
+    // Ideally, the backend should return the total.
+    // Let's try to match orders with loaded meals to get price.
+    let total = 0;
+    this.dinerDetails.orders.forEach((order: any) => {
+        const meal = this.meals.find(m => m.id === order.mealId);
+        if (meal) {
+            total += meal.price * order.quantity;
+        }
+    });
+    return total;
+  }
+
+  payTicket() {
+    if (!this.dinerId) return;
+    this.dinersService.closeTicket(this.dinerId).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Pago Exitoso', detail: 'Tu cuenta ha sido pagada.' });
+        this.loadDinerDetails(); // Reload to update status
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo procesar el pago.' });
+      }
+    });
+  }
+
+  requestInvoice() {
+    if (!this.dinerId) return;
+    
+    const request = {
+      dinerId: this.dinerId,
+      ...this.fiscalData
+    };
+
+    this.invoicesService.generateInvoice(request).subscribe({
+      next: (invoice) => {
+        this.messageService.add({ severity: 'success', summary: 'Factura Generada', detail: 'Tu factura ha sido enviada a tu correo.' });
+        this.invoiceVisible = false;
+        // Optionally open the PDF
+        if (invoice.pdfUrl) {
+            window.open(invoice.pdfUrl, '_blank');
+        }
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar la factura. Verifique sus datos.' });
       }
     });
   }

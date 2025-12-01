@@ -16,8 +16,8 @@ export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
 ];
 
-import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService, DinersService, BranchesService, NotificationsService} from './services'
-import { AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface, HubInterface, MealsInterface, NotificationsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
+import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService, DinersService, BranchesService, NotificationsService, InvoicesService} from './services'
+import { AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface, HubInterface, InvoicesInterface, MealsInterface, NotificationsInterface, OrdersInterface, TablesInterface, UsersInterface } from './interfaces';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppUpdateService } from "./utilities/AppUpdateService"
 
@@ -46,6 +46,7 @@ import { AppUpdateService } from "./utilities/AppUpdateService"
         { provide: DinersInterface, useClass: DinersService },
         { provide: BranchesInterface, useClass: BranchesService },
         { provide: NotificationsInterface, useClass: NotificationsService },
+        { provide: InvoicesInterface, useClass: InvoicesService },
         httpInterceptorProviders,
         ConfirmationService,
         MessageService,

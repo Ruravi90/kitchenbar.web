@@ -30,6 +30,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ChipModule } from 'primeng/chip';
 import { AvatarModule } from 'primeng/avatar';
+import { TabViewModule } from 'primeng/tabview';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -64,7 +66,10 @@ import { AvatarModule } from 'primeng/avatar';
     ReactiveFormsModule,
     InputSwitchModule,
     ChipModule,
-    AvatarModule
+    ChipModule,
+    AvatarModule,
+    TabViewModule,
+    TagModule
   ]
 })
 export class SharedModule { }

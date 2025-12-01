@@ -1,44 +1,89 @@
 <div class="flex flex-wrap justify-content-center ">
     <div class="w-full">
-        <p-card header="Ordenes" [style]="{'width':'100%'}">
-            <p-dataView #dv [value]="items" [rows]="10" [paginator]="true" emptyMessage="Sin ordenes en proceso" >
-                <ng-template pTemplate="list" let-items>
-                    <div class="grid grid-nogutter">
-                        <div class="col-12 pb-2" *ngFor="let item of items; let first = first">
-                            <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first}">
-                                <div class="col-fixed">
-                                    <img *ngIf="item.statusOrderId == 1 && !item.isCancel" pTooltip="En proceso" alt="En proceso" src="./assets/images/icon/process.svg" style="width: 25px;">
-                                    <img *ngIf="item.statusOrderId == 2 && !item.isCancel" pTooltip="Preparando" alt="Preparando" src="./assets/images/icon/uniform.svg" style="width: 25px;">
-                                </div>
-                                <div class="col-fixed gap-1">
-                                    <p-chip [label]="item.table?.name"></p-chip>
-                                </div>
-                                <div class="col gap-2">
-                                    <div class="text-lg font-medium text-900 mt-2">{{ item.quantity + " " + item.meal?.name }}</div>
-                                </div>
-                                <div class="col-fixed gap-1" *ngIf="item.aditional !=null">
-                                    <p-button severity="secondary" icon="pi pi-comment" [rounded]="true" [raised]="true" 
-                                    (onClick)="toggleComents($event, op, item)" />
-                                </div>
-                                <div class="col-fixed gap-1" *ngIf="item.statusOrderId == 1">
-                                    <p-button  pTooltip="Preparando" severity="warning" icon="./assets/images/icon/process.svg" [rounded]="true" [raised]="true" (onClick)="changeStatusOrder($event,item,2)" >
-                                        <ng-template pTemplate="buttonicon"> 
-                                            <img src="./assets/images/icon/uniform.svg" style="width: 60%;"/>
-                                        </ng-template>
-                                    </p-button>
-                                </div>
-                                <div class="col-fixed gap-1" *ngIf="item.statusOrderId == 2">
-                                    <p-button  pTooltip="Enviado" severity="help" icon="./assets/images/icon/delivery.svg" [disabled]="item.statusOrderId === 1"[rounded]="true" [raised]="true" (onClick)="changeStatusOrder($event,item,3)" >
-                                        <ng-template pTemplate="buttonicon"> 
-                                            <img src="./assets/images/icon/delivery.svg" style="width: 60%;"/>
-                                        </ng-template>
-                                    </p-button>
+        <p-card header="KDS Pro" [style]="{'width':'100%'}">
+            <p-tabView>
+                <!-- KITCHEN TAB -->
+                <p-tabPanel header="Cocina" leftIcon="pi pi-box">
+                    <p-dataView #dvKitchen [value]="kitchenItems" [rows]="10" [paginator]="true" emptyMessage="Sin ordenes de cocina">
+                        <ng-template pTemplate="list" let-items>
+                            <div class="grid grid-nogutter">
+                                <div class="col-12 pb-2" *ngFor="let item of items; let first = first">
+                                    <div class="grid align-items-center p-2 border-bottom-1 surface-border" [ngClass]="{'border-top-1': first}">
+                                        <div class="col-fixed" style="width: 100px;">
+                                            <p-tag [value]="getElapsedTime(item.createdAt)" [severity]="getSeverity(item.createdAt)" icon="pi pi-clock"></p-tag>
+                                        </div>
+                                        <div class="col-fixed gap-1">
+                                            <p-chip [label]="item.table?.name" icon="pi pi-table"></p-chip>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-xl font-bold text-900">{{ item.quantity }}x {{ item.meal?.name }}</div>
+                                            <div *ngIf="item.aditional" class="text-sm text-600 mt-1"><i class="pi pi-comment mr-1"></i>{{ item.aditional }}</div>
+                                        </div>
+                                        <div class="col-fixed gap-2 flex">
+                                            <p-button *ngIf="item.statusOrderId == 1" label="Preparar" severity="warning" icon="pi pi-cog" (onClick)="changeStatusOrder($event,item,2)"></p-button>
+                                            <p-button *ngIf="item.statusOrderId == 2" label="Terminar" severity="success" icon="pi pi-check" (onClick)="changeStatusOrder($event,item,3)"></p-button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </ng-template>
-            </p-dataView>
+                        </ng-template>
+                    </p-dataView>
+                </p-tabPanel>
+
+                <!-- BAR TAB -->
+                <p-tabPanel header="Bar" leftIcon="pi pi-filter">
+                    <p-dataView #dvBar [value]="barItems" [rows]="10" [paginator]="true" emptyMessage="Sin ordenes de bar">
+                        <ng-template pTemplate="list" let-items>
+                            <div class="grid grid-nogutter">
+                                <div class="col-12 pb-2" *ngFor="let item of items; let first = first">
+                                    <div class="grid align-items-center p-2 border-bottom-1 surface-border" [ngClass]="{'border-top-1': first}">
+                                        <div class="col-fixed" style="width: 100px;">
+                                            <p-tag [value]="getElapsedTime(item.createdAt)" [severity]="getSeverity(item.createdAt)" icon="pi pi-clock"></p-tag>
+                                        </div>
+                                        <div class="col-fixed gap-1">
+                                            <p-chip [label]="item.table?.name" icon="pi pi-table"></p-chip>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-xl font-bold text-900">{{ item.quantity }}x {{ item.meal?.name }}</div>
+                                            <div *ngIf="item.aditional" class="text-sm text-600 mt-1"><i class="pi pi-comment mr-1"></i>{{ item.aditional }}</div>
+                                        </div>
+                                        <div class="col-fixed gap-2 flex">
+                                            <p-button *ngIf="item.statusOrderId == 1" label="Preparar" severity="warning" icon="pi pi-cog" (onClick)="changeStatusOrder($event,item,2)"></p-button>
+                                            <p-button *ngIf="item.statusOrderId == 2" label="Terminar" severity="success" icon="pi pi-check" (onClick)="changeStatusOrder($event,item,3)"></p-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-dataView>
+                </p-tabPanel>
+
+                <!-- HISTORY TAB -->
+                <p-tabPanel header="Historial" leftIcon="pi pi-history">
+                    <p-dataView #dvHistory [value]="historyItems" [rows]="10" [paginator]="true" emptyMessage="Sin historial reciente">
+                        <ng-template pTemplate="list" let-items>
+                            <div class="grid grid-nogutter">
+                                <div class="col-12 pb-2" *ngFor="let item of items; let first = first">
+                                    <div class="grid align-items-center p-2 border-bottom-1 surface-border" [ngClass]="{'border-top-1': first}">
+                                        <div class="col-fixed" style="width: 100px;">
+                                            <span class="text-500">{{ item.createdAt | date:'shortTime' }}</span>
+                                        </div>
+                                        <div class="col-fixed gap-1">
+                                            <p-chip [label]="item.table?.name" icon="pi pi-table"></p-chip>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-lg font-medium text-700">{{ item.quantity }}x {{ item.meal?.name }}</div>
+                                        </div>
+                                        <div class="col-fixed">
+                                            <p-tag value="Completado" severity="success"></p-tag>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-dataView>
+                </p-tabPanel>
+            </p-tabView>
         </p-card>
     </div>
 </div>

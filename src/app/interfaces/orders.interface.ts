@@ -9,6 +9,7 @@ export abstract class OrdersInterface{
     abstract getItemWithIncludes(id:number): Observable<Order>;
     abstract getItem(id: number): Observable<any>;
     abstract createItem(item: any): Observable<any>;
+    abstract createPublicItem(items: any[]): Observable<any>;
     abstract updateItem(id: number, item: any): Observable<any> ;
     abstract deleteItem(id: number): Observable<any>;
 }

@@ -21,6 +21,8 @@ import { AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface,
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppUpdateService } from "./utilities/AppUpdateService"
 
+import { NgxStripeModule } from 'ngx-stripe';
+
 @NgModule({ declarations: [AppComponent, NotfoundComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
         FormsModule,
@@ -33,6 +35,7 @@ import { AppUpdateService } from "./utilities/AppUpdateService"
           // or after 30 seconds (whichever comes first).
           registrationStrategy: 'registerWhenStable:30000'
         }),
+        NgxStripeModule.forRoot('pk_test_51Q...'), // Replace with your Stripe Publishable Key
       ],
       providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoriesInterface, MealsInterface, OrdersInterface, DinersInterface, InvoicesInterface } from '../../interfaces';
+import { CategoriesInterface, MealsInterface, OrdersInterface, DinersInterface, InvoicesInterface, AuthInterface } from '../../interfaces';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -47,6 +47,8 @@ export class MenuComponent implements OnInit {
     useCfdi: 'G03'
   };
 
+  isLogin: boolean = false;
+
   constructor(
     private categoriesService: CategoriesInterface,
     private mealsService: MealsInterface,
@@ -55,10 +57,13 @@ export class MenuComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dinersService: DinersInterface,
-    private invoicesService: InvoicesInterface
+    private invoicesService: InvoicesInterface,
+    private authService: AuthInterface
   ) { }
 
   ngOnInit(): void {
+    this.isLogin = this.authService.checkLogin();
+
     this.route.params.subscribe(params => {
       const identity = params['identity'];
       if (identity) {
@@ -92,9 +97,6 @@ export class MenuComponent implements OnInit {
   }
 
   loadData(identity: string) {
-    // We need both categories and meals to group them effectively.
-    // Ideally use forkJoin, but for minimal refactor, we can just load independently and call groupMeals()
-    
     this.categoriesService.getPublic(identity).subscribe({
       next: (cats) => {
         this.categories = cats;
@@ -122,7 +124,6 @@ export class MenuComponent implements OnInit {
   groupMeals() {
     if (!this.categories.length || !this.meals.length) return;
 
-    // If a specific category is selected (and it's not "All"), show only that category group
     if (this.selectedCategory && this.selectedCategory.id) {
       const cat = this.categories.find(c => c.id === this.selectedCategory.id);
       if (cat) {
@@ -130,7 +131,6 @@ export class MenuComponent implements OnInit {
         this.groupedMeals = [{ category: cat, meals: catMeals }];
       }
     } else {
-      // Show all categories that have meals
       this.groupedMeals = this.categories.map(cat => {
         return {
           category: cat,
@@ -180,23 +180,63 @@ export class MenuComponent implements OnInit {
     return this.cart.reduce((acc, item) => acc + item.price, 0);
   }
 
+  // ... existing methods ...
+
   placeOrder() {
     if (this.cart.length === 0) return;
 
-    const order = {
-      // Construct order object based on API requirements
-      // This is a simplified example
-      items: this.cart.map(item => ({ mealId: item.id, quantity: 1 })),
-      total: this.cartTotal
-    };
+    if (!this.isLogin) {
+        if (!this.tableId) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se ha identificado la mesa.' });
+            return;
+        }
 
-    this.ordersService.createItem(order).subscribe(() => {
-      this.messageService.add({ severity: 'success', summary: 'Orden Enviada', detail: 'Tu orden ha sido enviada a la cocina.' });
-      this.cart = [];
-      this.cartVisible = false;
-    }, error => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al enviar la orden.' });
-    });
+        const orders = this.cart.map(item => ({
+            tableId: this.tableId,
+            mealId: item.id,
+            quantity: 1,
+            dinerId: this.dinerId || 0, // Optional if we have dinerId
+            statusOrderId: 1
+        }));
+
+        this.ordersService.createPublicItem(orders).subscribe({
+            next: () => {
+                this.messageService.add({ severity: 'success', summary: 'Orden Enviada', detail: 'Tu orden ha sido enviada a la cocina.' });
+                this.cart = [];
+                this.cartVisible = false;
+                // Optionally redirect to attendance/client view
+                if (this.tableIdentity) {
+                    this.router.navigate(['/client', this.tableIdentity]);
+                }
+            },
+            error: (err) => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al enviar la orden.' });
+            }
+        });
+    } else {
+        // Logged in user (Waiter) - Send items one by one as OrdersController expects single Order
+        // Ideally backend should support bulk, but sticking to existing pattern for now
+        // We use recursion or Promise.all to handle multiple requests
+        
+        const promises = this.cart.map(item => {
+            const order = {
+                mealId: item.id,
+                quantity: 1,
+                tableId: this.tableId,
+                dinerId: this.dinerId,
+                statusOrderId: 1
+            };
+            return this.ordersService.createItem(order).toPromise();
+        });
+
+        Promise.all(promises).then(() => {
+            this.messageService.add({ severity: 'success', summary: 'Orden Enviada', detail: 'La orden ha sido enviada.' });
+            this.cart = [];
+            this.cartVisible = false;
+        }).catch(err => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al enviar parte de la orden.' });
+        });
+    }
   }
 
   onRate(meal: any, event: any) {

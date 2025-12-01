@@ -1,8 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Diner, Meal, Order, Table } from '../../../models';
 import { AuthInterface, DinersInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface } from '../../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { StripeService, StripePaymentElementComponent } from 'ngx-stripe';
+import { StripeElementsOptions, StripePaymentElementOptions } from '@stripe/stripe-js';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-attendace',
@@ -10,6 +14,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrl: './attendance.component.scss',
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
+  @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
+
   skeleton :boolean = true;
   items:Order[] = [];
   order:Order = {};
@@ -31,6 +37,19 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   instanceIdentity : string = "";
   showModalDiner:boolean = false;
 
+  // Stripe Properties
+  showPaymentModal: boolean = false;
+  elementsOptions: StripeElementsOptions = {
+    locale: 'es',
+    appearance: {
+      theme: 'stripe'
+    }
+  };
+  paymentElementOptions: StripePaymentElementOptions = {
+    layout: 'tabs'
+  };
+  paying: boolean = false;
+
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -41,7 +60,9 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     private _serviceMeal: MealsInterface,
     private route: ActivatedRoute,
     private router: Router,
-    private hub: HubInterface){
+    private hub: HubInterface,
+    private stripeService: StripeService,
+    private http: HttpClient){
 
     this.isLogin = _serviceAuth.checkLogin();
 
@@ -288,7 +309,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           },
           error: (e) => {
             console.log(e);
-            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.message });
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.error });
           }
         });
       }
@@ -313,7 +334,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       error: (e) => {
         this.showModalDiner = true;
         console.log(e);
-        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.error });
       }
     });
   }
@@ -339,5 +360,51 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   openNewDinerModal() {
     this.dinerForm = {};
     this.showModalDiner = true;
+  }
+
+  payOnline() {
+    if (!this.diner || !this.diner.id) return;
+    
+    this.paying = true;
+    this.http.post<any>(`${environment.apiBase}Payments/create-payment-intent-diner`, { dinerId: this.diner.id })
+      .subscribe({
+        next: (res) => {
+          this.elementsOptions.clientSecret = res.clientSecret;
+          this.showPaymentModal = true;
+          this.paying = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo iniciar el pago.' });
+          this.paying = false;
+        }
+      });
+  }
+
+  confirmPayment() {
+    if (this.paying) return;
+    this.paying = true;
+
+    this.stripeService.confirmPayment({
+      elements: this.paymentElement.elements,
+      confirmParams: {
+        return_url: window.location.href, // Or specific success page
+      },
+      redirect: 'if_required'
+    }).subscribe(result => {
+      this.paying = false;
+      if (result.error) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: result.error.message });
+      } else {
+        if (result.paymentIntent.status === 'succeeded') {
+            this.messageService.add({ severity: 'success', summary: 'Pago Exitoso', detail: 'Tu cuenta ha sido pagada.' });
+            this.showPaymentModal = false;
+            // Close ticket in backend
+            this._serviceDiner.closeTicket(this.diner.id!).subscribe(() => {
+                this.getDiner(); // Reload status
+            });
+        }
+      }
+    });
   }
 }

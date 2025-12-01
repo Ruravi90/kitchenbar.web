@@ -36,6 +36,9 @@ export class OrdersService {
   createItem(item: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, item);
   }
+  createPublicItem(items: any[]): Observable<any> {
+    return this.http.post<any>(environment.apiBase + 'PublicOrders', items);
+  }
   updateItem(id: number, item: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, item);
   }

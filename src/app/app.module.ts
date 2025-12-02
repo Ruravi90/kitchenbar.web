@@ -22,6 +22,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppUpdateService } from "./utilities/AppUpdateService"
 
 import { NgxStripeModule } from 'ngx-stripe';
+import { environment } from '../environments/environment';
 
 @NgModule({ declarations: [AppComponent, NotfoundComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -35,7 +36,7 @@ import { NgxStripeModule } from 'ngx-stripe';
           // or after 30 seconds (whichever comes first).
           registrationStrategy: 'registerWhenStable:30000'
         }),
-        NgxStripeModule.forRoot('pk_test_51Q...'), // Replace with your Stripe Publishable Key
+        NgxStripeModule.forRoot(environment.stripePublicKey),
       ],
       providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },

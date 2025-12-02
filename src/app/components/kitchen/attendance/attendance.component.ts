@@ -3,8 +3,8 @@ import { Diner, Meal, Order, Table } from '../../../models';
 import { AuthInterface, DinersInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface } from '../../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { StripeService, StripePaymentElementComponent } from 'ngx-stripe';
-import { StripeElementsOptions, StripePaymentElementOptions } from '@stripe/stripe-js';
+import { StripeService, StripePaymentElementComponent, StripeElementsDirective } from 'ngx-stripe';
+import { StripeElementsOptions, StripePaymentElementOptions, StripeElements } from '@stripe/stripe-js';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
@@ -14,7 +14,6 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './attendance.component.scss',
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
-  @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
 
   skeleton :boolean = true;
   items:Order[] = [];
@@ -369,8 +368,14 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.http.post<any>(`${environment.apiBase}Payments/create-payment-intent-diner`, { dinerId: this.diner.id })
       .subscribe({
         next: (res) => {
-          this.elementsOptions.clientSecret = res.clientSecret;
-          this.showPaymentModal = true;
+          console.log('Client Secret Response:', res);
+          if (res.clientSecret && !res.clientSecret.includes('{{')) {
+              this.elementsOptions.clientSecret = res.clientSecret;
+              this.showPaymentModal = true;
+          } else {
+              console.error('Invalid Client Secret:', res.clientSecret);
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error de configuración de pagos.' });
+          }
           this.paying = false;
         },
         error: (err) => {
@@ -381,12 +386,15 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       });
   }
 
+  @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
+  elements!: StripeElements;
+
   confirmPayment() {
     if (this.paying) return;
     this.paying = true;
 
     this.stripeService.confirmPayment({
-      elements: this.paymentElement.elements,
+      elements: this.elements,
       confirmParams: {
         return_url: window.location.href, // Or specific success page
       },

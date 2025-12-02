@@ -26,12 +26,14 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const startTime = Date.now();
     let status: string;
-    req = req.clone({
-      setHeaders: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.auth.getToken()}`
-      }
-    });
+    let headers = req.headers
+        .set('Authorization', `Bearer ${this.auth.getToken()}`);
+
+    if (!(req.body instanceof FormData)) {
+        headers = headers.set('Content-Type', 'application/json');
+    }
+
+    req = req.clone({ headers });
 
     return next.handle(req).pipe(catchError(x=> this.handleAuthError(x)));
   }

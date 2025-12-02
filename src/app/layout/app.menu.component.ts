@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
                 this.model.push( {
                 label: "Panel",
                 items: [
-                    { label: 'Graficos', icon: 'pi pi-fw pi-check-square', routerLink: ['/dashboard'] },
+                    { label: 'Graficos', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard'] },
                 ]
             });
 
@@ -32,8 +32,8 @@ export class AppMenuComponent implements OnInit {
             this.model.push( {
                 label: user.instance!.name_kitchen,
                 items: [
-                    { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/tables'] },
-                    { label: 'Ordenes', icon: 'pi pi-fw pi-check-square', routerLink: ['/kitchen/orders'] },
+                    { label: 'Mesas', icon: 'pi pi-fw pi-table', routerLink: ['/kitchen/tables'] },
+                    { label: 'Ordenes', icon: 'pi pi-fw pi-list', routerLink: ['/kitchen/orders'] },
                 ]
             });
 
@@ -41,18 +41,18 @@ export class AppMenuComponent implements OnInit {
                 this.model.push({
                     label: 'Configuración',
                     items: [
-                        { label: 'Mesas', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/tables'] },
-                        { label: 'Categorías', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/categories'] },
-                        { label: 'Alimentos', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/meals'] },
-                        { label: 'Sucursales', icon: 'pi pi-fw pi-check-square', routerLink: ['/settings/branches'] },
-                        { label: 'Usuarios', icon: 'pi pi-fw pi-bookmark', routerLink: ['/settings/users'] },
+                        { label: 'Mesas', icon: 'pi pi-fw pi-table', routerLink: ['/settings/tables'] },
+                        { label: 'Categorías', icon: 'pi pi-fw pi-tags', routerLink: ['/settings/categories'] },
+                        { label: 'Alimentos', icon: 'pi pi-fw pi-apple', routerLink: ['/settings/meals'] },
+                        { label: 'Sucursales', icon: 'pi pi-fw pi-building', routerLink: ['/settings/branches'] },
+                        { label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/settings/users'] },
                     ]
                 });
                 this.model.push({
                     label: 'Inventario',
                     items: [
-                        { label: 'Gestionar', icon: 'pi pi-fw pi-check-square', routerLink: ['/inventory'] },
-                        { label: 'Predecir', icon: 'pi pi-fw pi-bookmark', routerLink: ['/inventory-prediction'] },
+                        { label: 'Gestionar', icon: 'pi pi-fw pi-box', routerLink: ['/inventory'] },
+                        { label: 'Predecir', icon: 'pi pi-fw pi-chart-line', routerLink: ['/inventory-prediction'] },
                     ]
                 });
             }
@@ -61,8 +61,8 @@ export class AppMenuComponent implements OnInit {
             this.model.push({
                 label: 'Administración',
                 items: [
-                    { label: 'Licencias', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/licenses'] },
-                    { label: 'Instancias', icon: 'pi pi-fw pi-bookmark', routerLink: ['/admin/instances'] },
+                    { label: 'Licencias', icon: 'pi pi-fw pi-id-card', routerLink: ['/admin/licenses'] },
+                    { label: 'Instancias', icon: 'pi pi-fw pi-globe', routerLink: ['/admin/instances'] },
                 ]
             });
         }
@@ -71,7 +71,7 @@ export class AppMenuComponent implements OnInit {
             label: 'Sesión',
             items: [
               { label: 'Mi cuenta',icon: 'pi pi-fw pi-user', routerLink: ['/settings/account'] },
-              { label: 'Cerrar sesión',icon: 'pi pi-fw pi-lock', routerLink: ['/auth/login'] },
+              { label: 'Cerrar sesión',icon: 'pi pi-fw pi-power-off', routerLink: ['/auth/login'] },
             ]
         });
 

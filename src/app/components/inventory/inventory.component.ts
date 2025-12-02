@@ -54,7 +54,7 @@ import { DropdownModule } from 'primeng/dropdown';
                 <td>{{ item.stock }}</td>
                 <td>{{ item.unit_measure?.name || 'N/A' }}</td>
                 <td>
-                  <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="success" (onClick)="editItem(item)"></p-button>
+                  <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="warning" (onClick)="editItem(item)"></p-button>
                   <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" (onClick)="deleteItem(item)"></p-button>
                 </td>
               </tr>

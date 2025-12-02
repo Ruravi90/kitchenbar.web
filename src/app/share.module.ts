@@ -34,6 +34,8 @@ import { TabViewModule } from 'primeng/tabview';
 import { TagModule } from 'primeng/tag';
 
 
+import { TableModule } from 'primeng/table';
+
 @NgModule({
   exports: [
     CommonModule,
@@ -69,7 +71,8 @@ import { TagModule } from 'primeng/tag';
     ChipModule,
     AvatarModule,
     TabViewModule,
-    TagModule
+    TagModule,
+    TableModule
   ]
 })
 export class SharedModule { }

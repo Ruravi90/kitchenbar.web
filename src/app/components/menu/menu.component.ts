@@ -1,7 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesInterface, MealsInterface, OrdersInterface, DinersInterface, InvoicesInterface, AuthInterface } from '../../interfaces';
 import { MessageService } from 'primeng/api';
+import { StripeService, StripePaymentElementComponent } from 'ngx-stripe';
+import { StripeElementsOptions, StripePaymentElementOptions } from '@stripe/stripe-js';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
+interface CartItem {
+  meal: any;
+  quantity: number;
+  comment?: string;
+}
 
 @Component({
   selector: 'app-menu',
@@ -22,8 +32,14 @@ export class MenuComponent implements OnInit {
   displayDetails: boolean = false;
   selectedMeal: any = null;
 
-  cart: any[] = [];
+  cart: CartItem[] = [];
   cartVisible: boolean = false;
+
+  // Add to cart dialog properties
+  showAddToCartDialog: boolean = false;
+  selectedMealForCart: any = null;
+  orderComment: string = '';
+  orderQuantity: number = 1;
 
   categoryOptions: any[] = [];
 
@@ -49,6 +65,19 @@ export class MenuComponent implements OnInit {
 
   isLogin: boolean = false;
 
+  // Stripe payment properties
+  @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
+  paymentVisible: boolean = false;
+  elementsOptions: StripeElementsOptions = {
+    locale: 'es',
+  };
+  paymentElementOptions: StripePaymentElementOptions = {
+    layout: 'tabs'
+  };
+  paying: boolean = false;
+  paymentMethod: 'cash' | 'online' | null = null;
+  showPaymentMethodDialog: boolean = false;
+
   constructor(
     private categoriesService: CategoriesInterface,
     private mealsService: MealsInterface,
@@ -58,7 +87,9 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private dinersService: DinersInterface,
     private invoicesService: InvoicesInterface,
-    private authService: AuthInterface
+    private authService: AuthInterface,
+    private stripeService: StripeService,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -168,8 +199,32 @@ export class MenuComponent implements OnInit {
   }
 
   addToCart(meal: any) {
-    this.cart.push(meal);
-    this.messageService.add({ severity: 'success', summary: 'Agregado al Carrito', detail: meal.name });
+    this.selectedMealForCart = meal;
+    this.orderComment = '';
+    this.orderQuantity = 1;
+    this.showAddToCartDialog = true;
+  }
+
+  confirmAddToCart() {
+    if (!this.selectedMealForCart) return;
+    
+    const cartItem: CartItem = {
+      meal: this.selectedMealForCart,
+      quantity: this.orderQuantity,
+      comment: this.orderComment.trim() || undefined
+    };
+    
+    this.cart.push(cartItem);
+    this.messageService.add({ 
+      severity: 'success', 
+      summary: 'Agregado al Carrito', 
+      detail: this.selectedMealForCart.name 
+    });
+    
+    this.showAddToCartDialog = false;
+    this.selectedMealForCart = null;
+    this.orderComment = '';
+    this.orderQuantity = 1;
   }
 
   removeFromCart(index: number) {
@@ -177,7 +232,7 @@ export class MenuComponent implements OnInit {
   }
 
   get cartTotal() {
-    return this.cart.reduce((acc, item) => acc + item.price, 0);
+    return this.cart.reduce((acc, item) => acc + (item.meal.price * item.quantity), 0);
   }
 
   // ... existing methods ...
@@ -193,9 +248,10 @@ export class MenuComponent implements OnInit {
 
         const orders = this.cart.map(item => ({
             tableId: this.tableId,
-            mealId: item.id,
-            quantity: 1,
-            dinerId: this.dinerId || 0, // Optional if we have dinerId
+            mealId: item.meal.id,
+            quantity: item.quantity,
+            aditional: item.comment,
+            dinerId: this.dinerId || 0,
             statusOrderId: 1
         }));
 
@@ -220,8 +276,9 @@ export class MenuComponent implements OnInit {
         
         const promises = this.cart.map(item => {
             const order = {
-                mealId: item.id,
-                quantity: 1,
+                mealId: item.meal.id,
+                quantity: item.quantity,
+                aditional: item.comment,
                 tableId: this.tableId,
                 dinerId: this.dinerId,
                 statusOrderId: 1
@@ -280,6 +337,66 @@ export class MenuComponent implements OnInit {
         }
     });
     return total;
+  }
+
+  selectPaymentMethod(method: 'cash' | 'online') {
+    this.paymentMethod = method;
+    this.showPaymentMethodDialog = false;
+    this.accountVisible = false;
+    
+    if (method === 'online') {
+      this.createPaymentIntent();
+      this.paymentVisible = true;
+    } else {
+      this.payTicket();
+    }
+  }
+
+  createPaymentIntent() {
+    if (!this.dinerId) return;
+    
+    const amount = this.dinerTotal;
+    this.http.post<any>(`${environment.apiBase}Payments/create-payment-intent-diner`, { 
+      dinerId: this.dinerId,
+      amount: amount 
+    }).subscribe({
+      next: (res) => {
+        this.elementsOptions.clientSecret = res.clientSecret;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo iniciar el pago.' });
+        this.paymentVisible = false;
+      }
+    });
+  }
+
+  confirmPayment() {
+    if (this.paying || !this.paymentElement) return;
+    this.paying = true;
+
+    this.stripeService.confirmPayment({
+      elements: this.paymentElement.elements,
+      confirmParams: {
+        return_url: window.location.href,
+      },
+      redirect: 'if_required'
+    }).subscribe({
+      next: (result) => {
+        this.paying = false;
+        if (result.error) {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: result.error.message || 'Error al procesar el pago.' });
+        } else {
+          if (result.paymentIntent.status === 'succeeded') {
+            this.payTicket();
+            this.paymentVisible = false;
+          }
+        }
+      },
+      error: (err) => {
+        this.paying = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al procesar el pago.' });
+      }
+    });
   }
 
   payTicket() {

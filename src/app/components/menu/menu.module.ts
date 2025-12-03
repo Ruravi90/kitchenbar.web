@@ -13,6 +13,9 @@ import { TabViewModule } from 'primeng/tabview';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
+import { NgxStripeModule } from 'ngx-stripe';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,10 @@ import { ToastModule } from 'primeng/toast';
     TabViewModule,
     CardModule,
     DialogModule,
-    ToastModule
+    ToastModule,
+    NgxStripeModule,
+    InputNumberModule,
+    InputTextareaModule
   ]
 })
 export class MenuModule { }

@@ -112,9 +112,10 @@
       *ngFor="let item of cart; let i = index"
       class="flex align-items-center justify-content-between mb-3 border-bottom-1 surface-border pb-2"
     >
-      <div>
-        <div class="font-bold">{{ item.name }}</div>
-        <div class="text-sm text-600">{{ "$" + item.price }}</div>
+      <div class="flex-1">
+        <div class="font-bold">{{ item.quantity }}x {{ item.meal.name }}</div>
+        <div class="text-sm text-600">{{ "$" + (item.meal.price * item.quantity) }}</div>
+        <div class="text-sm text-500 italic" *ngIf="item.comment">{{ item.comment }}</div>
       </div>
       <button
         pButton
@@ -190,6 +191,65 @@
 </p-dialog>
 
 <p-dialog
+  [(visible)]="showAddToCartDialog"
+  [style]="{ width: '450px' }"
+  header="Agregar al Carrito"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div *ngIf="selectedMealForCart">
+      <div class="mb-4">
+        <div class="text-2xl font-bold text-900 mb-2">{{ selectedMealForCart.name }}</div>
+        <div class="text-xl text-primary font-semibold">{{ "$" + selectedMealForCart.price }}</div>
+      </div>
+      
+      <div class="field mb-4">
+        <label for="quantity" class="font-semibold">Cantidad</label>
+        <p-inputNumber 
+          id="quantity" 
+          [(ngModel)]="orderQuantity" 
+          [showButtons]="true" 
+          [min]="1"
+          [max]="20"
+          buttonLayout="horizontal"
+          decrementButtonClass="p-button-secondary"
+          incrementButtonClass="p-button-secondary"
+        ></p-inputNumber>
+      </div>
+
+      <div class="field">
+        <label for="comment" class="font-semibold">Comentarios o Modificaciones (Opcional)</label>
+        <textarea 
+          id="comment" 
+          pInputTextarea 
+          [(ngModel)]="orderComment" 
+          rows="3"
+          placeholder="Ej: Sin cebolla, término medio, extra picante..."
+          class="w-full"
+        ></textarea>
+        <small class="text-600">Agrega instrucciones especiales para tu platillo</small>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cancelar"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="showAddToCartDialog = false"
+    ></button>
+    <button
+      pButton
+      label="Agregar al Carrito"
+      icon="pi pi-shopping-cart"
+      (click)="confirmAddToCart()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
   [(visible)]="accountVisible"
   [style]="{ width: '450px' }"
   header="Mi Cuenta"
@@ -245,7 +305,7 @@
       icon="pi pi-dollar"
       class="p-button-success"
       *ngIf="dinerDetails && !dinerDetails.isPay"
-      (click)="payTicket()"
+      (click)="showPaymentMethodDialog = true; accountVisible = false"
     ></button>
     <button
       pButton
@@ -351,6 +411,76 @@
       label="Enviar"
       icon="pi pi-send"
       (click)="requestInvoice()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="showPaymentMethodDialog"
+  [style]="{ width: '450px' }"
+  header="Seleccionar Método de Pago"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="flex flex-column gap-3">
+      <button
+        pButton
+        label="Pagar en Efectivo"
+        icon="pi pi-money-bill"
+        class="p-button-lg"
+        (click)="selectPaymentMethod('cash')"
+      ></button>
+      <button
+        pButton
+        label="Pagar en Línea (Tarjeta)"
+        icon="pi pi-credit-card"
+        class="p-button-lg p-button-success"
+        (click)="selectPaymentMethod('online')"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="paymentVisible"
+  [style]="{ width: '500px' }"
+  header="Pago en Línea"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="mb-4">
+      <div class="flex justify-content-between align-items-center mb-3">
+        <span class="text-xl font-bold">Total a Pagar:</span>
+        <span class="text-xl font-bold text-primary">{{ "$" + dinerTotal }}</span>
+      </div>
+    </div>
+    <div *ngIf="elementsOptions?.clientSecret">
+      <ngx-stripe-elements [elementsOptions]="elementsOptions">
+        <ngx-stripe-payment [options]="paymentElementOptions"></ngx-stripe-payment>
+      </ngx-stripe-elements>
+    </div>
+    <div *ngIf="!elementsOptions?.clientSecret">
+      <p>Cargando opciones de pago...</p>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cancelar"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="paymentVisible = false"
+    ></button>
+    <button
+      pButton
+      label="Pagar {{ '$' + dinerTotal }}"
+      icon="pi pi-check"
+      class="p-button-success"
+      [disabled]="!elementsOptions?.clientSecret"
+      [loading]="paying"
+      (click)="confirmPayment()"
     ></button>
   </ng-template>
 </p-dialog>

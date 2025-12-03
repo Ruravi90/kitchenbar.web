@@ -19,26 +19,64 @@ export class OrderHubService {
         //        let token = currentUser.token;
         //        return token ?? '';
         //    }
-        }) // Replace with your SignalR hub URL
-        .withAutomaticReconnect()
+        })
+        .withAutomaticReconnect([0, 2000, 5000, 10000, 30000]) // Retry intervals
         .build();
+
+        // Handle reconnection events
+        this.hubConnection.onreconnecting((error) => {
+            console.warn('SignalR reconnecting...', error);
+        });
+
+        this.hubConnection.onreconnected((connectionId) => {
+            console.log('SignalR reconnected!', connectionId);
+            // Rejoin group after reconnection
+            if (currentUser) {
+                this.joinGroup();
+            }
+        });
+
+        this.hubConnection.onclose((error) => {
+            console.error('SignalR connection closed', error);
+        });
 
         this.hubConnection
         .start()
         .then(() => console.log('Connected to SignalR hub'))
         .catch(err => console.error('Error connecting to SignalR hub:', err));
-
     }
+    
+    // Helper method to safely invoke hub methods
+    private async safeInvoke(methodName: string, ...args: any[]): Promise<void> {
+        if (!this.hubConnection) {
+            console.warn(`Hub connection not initialized. Cannot invoke ${methodName}`);
+            return;
+        }
+
+        if (this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+            console.warn(`Hub connection not in Connected state (current: ${this.hubConnection.state}). Cannot invoke ${methodName}`);
+            return;
+        }
+
+        try {
+            await this.hubConnection.invoke(methodName, ...args);
+        } catch (error) {
+            console.error(`Error invoking ${methodName}:`, error);
+        }
+    }
+
     joinGroup() {
         const currentUser = JSON.parse(localStorage.getItem('user')!);
-        this.hubConnection?.invoke('JoinGroup',currentUser.instance.identity,currentUser.user_name);
+        this.safeInvoke('JoinGroup', currentUser.instance.identity, currentUser.user_name);
     }
+    
     joinGroupAnonymus(identity:string) {
-        this.hubConnection?.invoke('JoinGroup',identity,"Anonymus");
+        this.safeInvoke('JoinGroup', identity, "Anonymus");
     }
+    
     leaveGroup() {
         const currentUser = JSON.parse(localStorage.getItem('user')!);
-        this.hubConnection?.invoke('LeaveGroup',currentUser.instance.identity,currentUser.user_name);
+        this.safeInvoke('LeaveGroup', currentUser.instance.identity, currentUser.user_name);
     }
     newUser(): Observable<string> {
         return new Observable<string>((observer) => {
@@ -58,7 +96,7 @@ export class OrderHubService {
     }
     sendOrder(object:any) {
         const currentUser = JSON.parse(localStorage.getItem('user')!);
-        this.hubConnection?.invoke('SendOrder',currentUser.instance.identity,object);
+        this.safeInvoke('SendOrder', currentUser.instance.identity, object);
     }
 
     receiveOrderToKitchen(): Observable<any> {
@@ -79,7 +117,7 @@ export class OrderHubService {
     }
     sendNotificationTables(table:Table): void {
       const currentUser = JSON.parse(localStorage.getItem('user')!);
-      this.hubConnection?.invoke('SendNotificacionTables',currentUser.instance.identity,table);
+      this.safeInvoke('SendNotificacionTables', currentUser.instance.identity, table);
     }
     notificationWarnTables(): Observable<Table> {
         return new Observable<Table>((observer) => {

@@ -26,8 +26,7 @@
           "src/assets",
           "src/manifest.webmanifest"
         ],
-        "styles": [
-          "node_modules/primeng/resources/themes/lara-dark-blue/theme.css",
+        "styles": [         
           "node_modules/primeng/resources/primeng.min.css",
           "node_modules/primeflex/primeflex.css",
           "node_modules/primeicons/primeicons.css",

@@ -1,7 +1,7 @@
-/* Variables de color para estados, fácil de mantener */
-$status-new: #ff6347; /* Rojo para nuevos pedidos */
-$status-in-progress: #ffd700; /* Amarillo para en preparación */
-$status-ready: #32cd32; /* Verde para listos */
+/* Variables de color para estados */
+$status-new: #ff6347;           /* Rojo para nuevos pedidos */
+$status-in-progress: #ffd700;   /* Amarillo para en preparación */
+$status-ready: #32cd32;         /* Verde para listos */
 
 /* Contenedor principal para un layout de tarjetas */
 .kitchen-orders-container {
@@ -13,7 +13,6 @@ $status-ready: #32cd32; /* Verde para listos */
 
 /* Estilo para las tarjetas de pedido */
 .order-card {
-    background-color: #333;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 1.5rem;

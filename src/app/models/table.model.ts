@@ -1,4 +1,5 @@
 import { Base } from "./base.model";
+import { Branch } from "./branch.model";
 import { Instance } from "./instance.model";
 
 export class Table extends Base {
@@ -11,5 +12,7 @@ export class Table extends Base {
     isRequestCheck?:boolean;
     isWarnCheck?:boolean;
     isDangerCheck?:boolean;
+    branchId?: number;
+    branch?: Branch;
     instance?:Instance;
 }

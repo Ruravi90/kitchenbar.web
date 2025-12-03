@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Table } from '../../../models';
-import { TablesInterface } from '../../../interfaces';
+import { Branch, Table } from '../../../models';
+import { BranchesInterface, TablesInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FixMeLater, QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
@@ -16,11 +16,13 @@ export class TablesComponent {
   constructor( 
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private tablesServices: TablesInterface){
+    private tablesServices: TablesInterface,
+    private branchesService: BranchesInterface){
     this.elementType= "canvas" as QRCodeElementType;
   }
 
   tables: Table[] = [];
+  branches: Branch[] = [];
   table: Table = {}
   visibleModal: boolean = false;
   visibleQRModal:boolean = false;
@@ -49,6 +51,7 @@ export class TablesComponent {
 
   ngOnInit(): void {
     this.getTables();
+    this.getBranches();
   }
 
   getTables(): void {
@@ -59,6 +62,17 @@ export class TablesComponent {
       error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
+    });
+  }
+
+  getBranches(): void {
+    this.branchesService.getItemsByInstance().subscribe({
+      next: (data) => {
+        this.branches = data;
+      },
+      error: (e) => {
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
 
@@ -75,6 +89,11 @@ export class TablesComponent {
   }
 
   confirmSave(){
+    if(!this.table.branchId){
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Debe seleccionar una sucursal' });
+      return;
+    }
+
     if(this.isEdit){
       this.tablesServices.updateItem(this.table!.id!,this.table).subscribe({
         next: (data) => this.getTables(),

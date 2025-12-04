@@ -7,6 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { loadStripe, Stripe, StripeElements, StripePaymentElement } from '@stripe/stripe-js';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-attendace',
@@ -100,6 +101,13 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   async delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  getInstanceIdentity(): string | undefined {
+    debugger;
+    if (this.instanceIdentity) return this.instanceIdentity;
+    if (this.table && this.table.instance && this.table.instance.identity) return this.table.instance.identity;
+    return undefined;
   }
 
   getTable(){
@@ -238,7 +246,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.order.dinerId = this.diner.id;
     this._serviceOrder.createItem(this.order!).subscribe({
       next: (data) => {
-        this.hub.sendOrder(this.diner);
+        this.hub.sendOrder(this.diner, this.instanceIdentity);
         this.order = {};
         this.order.quantity = 1;
         this.selectedItem=undefined;
@@ -254,7 +262,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     order.isCancel = true;
     this._serviceOrder.updateItem(order.id!,order).subscribe({
       next: (data) => {
-        this.hub.sendOrder(this.diner);
+        this.hub.sendOrder(this.diner, this.instanceIdentity);
       },
       error: (e) => {
         console.log(e);
@@ -280,7 +288,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           order.statusOrderId = 4;
           this._serviceOrder.updateItem(order.id!,order).subscribe({
             next: (data) => {
-              this.hub.sendOrder(this.diner);
+              this.hub.sendOrder(this.diner, this.instanceIdentity);
             },
             error: (e) => {
               console.log(e);
@@ -290,24 +298,70 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         }
     });
   }
-  confirmCloseTicket(){
-    this.confirmationService.confirm({
-      header: 'Estas seguro de cerrar la cuenta?',
-      message: 'Por favor de confirmar.',
-      accept: () => {
-        this._serviceDiner.closeTicket(this.diner.id!).subscribe({
-          next: (data) => {
-            this.hub.sendOrder(this.diner);
-            this.getDiner();
-            //this.router.navigate(['/kitchen/tables']);
-          },
-          error: (e) => {
-            console.log(e);
-            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.error });
-          }
-        });
+  hasPendingOrders(): boolean {
+    // Status < 4 means it is not yet delivered (Pending, Processing, Preparing, OnTheWay)
+    // We also check !isCancel to only count active orders
+    return this.items.some(item => item.statusOrderId! < 4 && !item.isCancel);
+  }
+
+  confirmCloseTicket() {
+    if (this.hasPendingOrders()) {
+      this.confirmationService.confirm({
+        header: 'Órdenes Pendientes',
+        message: 'Hay órdenes en preparación o sin entregar. ¿Deseas cancelarlas para cerrar la cuenta?',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Sí, cancelar y cerrar',
+        rejectLabel: 'No',
+        accept: () => {
+          this.cancelPendingOrdersAndClose();
+        }
+      });
+    } else {
+      this.confirmationService.confirm({
+        header: '¿Estás seguro de cerrar la cuenta?',
+        message: 'Por favor confirmar.',
+        accept: () => {
+          this.closeTicket();
+        }
+      });
+    }
+  }
+
+  cancelPendingOrdersAndClose() {
+    const pendingOrders = this.items.filter(item => item.statusOrderId! < 4 && !item.isCancel);
+    const cancelObservables = pendingOrders.map(order => {
+      order.isCancel = true;
+      return this._serviceOrder.updateItem(order.id!, order);
+    });
+
+    if (cancelObservables.length > 0) {
+      forkJoin(cancelObservables).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Órdenes pendientes canceladas.' });
+          this.hub.sendOrder(this.diner, this.instanceIdentity); // Notify updates
+          this.closeTicket();
+        },
+        error: (e) => {
+          console.error(e);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cancelar órdenes.' });
+        }
+      });
+    } else {
+      this.closeTicket();
+    }
+  }
+
+  closeTicket() {
+    this._serviceDiner.closeTicket(this.diner.id!).subscribe({
+      next: (data) => {
+        this.hub.sendOrder(this.diner, this.instanceIdentity);
+        this.getDiner();
+      },
+      error: (e) => {
+        console.log(e);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.error });
       }
-  });
+    });
   }
   saveDiner(){
     if(this.table == null)
@@ -322,7 +376,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         this.order.quantity = 1;
         this.showModalDiner = false;
         this.dinerForm = {};
-        this.hub.sendOrder(this.diner);
+        this.hub.sendOrder(this.diner, this.instanceIdentity);
         this.getDiner();
       },
       error: (e) => {
@@ -358,6 +412,15 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   async payOnline() {
     if (!this.diner || !this.diner.id) return;
+
+    if (this.hasPendingOrders()) {
+      this.messageService.add({ 
+        severity: 'warn', 
+        summary: 'Órdenes Pendientes', 
+        detail: 'No puedes pagar mientras haya órdenes en preparación. Por favor solicita a tu mesero que las cancele o espere a que sean entregadas.' 
+      });
+      return;
+    }
     
     this.paying = true;
     
@@ -414,11 +477,21 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     if (result.error) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: result.error.message });
     } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-      this.messageService.add({ severity: 'success', summary: 'Pago Exitoso', detail: 'Tu cuenta ha sido pagada.' });
-      this.showPaymentModal = false;
-      this._serviceDiner.closeTicket(this.diner.id!).subscribe(() => {
-          this.getDiner();
-      });
+      
+      // Call backend to confirm payment and close ticket securely
+      this.http.post<any>(`${environment.apiBase}Payments/confirm-diner-payment`, { paymentIntentId: result.paymentIntent.id })
+        .subscribe({
+          next: (res) => {
+            this.messageService.add({ severity: 'success', summary: 'Pago Exitoso', detail: 'Tu cuenta ha sido pagada y cerrada.' });
+            this.showPaymentModal = false;
+            this.hub.sendOrder(this.diner, this.instanceIdentity);
+            this.getDiner();
+          },
+          error: (err) => {
+            console.error(err);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Pago exitoso pero error al cerrar ticket. Contacta al mesero.' });
+          }
+        });
     }
   }
 }

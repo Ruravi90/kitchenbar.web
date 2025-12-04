@@ -8,7 +8,7 @@ export abstract class HubInterface{
     abstract leaveGroup():void;
     abstract newUser(): Observable<string>;
     abstract leftUser(): Observable<string>;
-    abstract sendOrder(object:any):void;
+    abstract sendOrder(object:any, instanceIdentity?: string):void;
     abstract sendNotificationTables(table:Table): void;
     abstract receiveOrderToKitchen(): Observable<any>;
     abstract receiveOrderFromTable(): Observable<any>;

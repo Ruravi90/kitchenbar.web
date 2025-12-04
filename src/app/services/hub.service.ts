@@ -94,9 +94,20 @@ export class OrderHubService {
             });
         });
     }
-    sendOrder(object:any) {
-        const currentUser = JSON.parse(localStorage.getItem('user')!);
-        this.safeInvoke('SendOrder', currentUser.instance.identity, object);
+    sendOrder(object:any, instanceIdentity?: string) {
+        let identity = instanceIdentity;
+        if (!identity) {
+            const currentUser = JSON.parse(localStorage.getItem('user')!);
+            if (currentUser && currentUser.instance) {
+                identity = currentUser.instance.identity;
+            }
+        }
+        
+        if (identity) {
+            this.safeInvoke('SendOrder', identity, object);
+        } else {
+            console.error("Cannot send order: Instance identity not found.");
+        }
     }
 
     receiveOrderToKitchen(): Observable<any> {

@@ -1,0 +1,139 @@
+<p-toast></p-toast>
+
+<div class="card">
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <h5 class="m-0">Manage Memberships</h5>
+    </ng-template>
+    <ng-template pTemplate="right">
+      <button
+        pButton
+        pRipple
+        label="New"
+        icon="pi pi-plus"
+        class="p-button-success mr-2"
+        (click)="openNew()"
+      ></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table
+    [value]="memberships"
+    [loading]="loading"
+    [rows]="10"
+    [paginator]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [tableStyle]="{ 'min-width': '75rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Instance</th>
+        <th>License</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-membership>
+      <tr>
+        <td>{{ membership.instance?.name_client || membership.instanceId }}</td>
+        <td>{{ membership.license?.name || membership.licenseId }}</td>
+        <td>{{ membership.startDate | date }}</td>
+        <td>{{ membership.endDate | date }}</td>
+        <td>
+          <span
+            [class]="
+              'product-badge status-' +
+              (membership.status ? membership.status.toLowerCase() : '')
+            "
+            >{{ membership.status }}</span
+          >
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-eye"
+            class="p-button-rounded p-button-info mr-2"
+            [routerLink]="['/admin/memberships', membership.id]"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">
+        In total there are
+        {{ memberships ? memberships.length : 0 }} memberships.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  [(visible)]="membershipDialog"
+  [style]="{ width: '450px' }"
+  header="Membership Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="instance">Instance</label>
+      <p-dropdown
+        [options]="instances"
+        [(ngModel)]="selectedInstance"
+        optionLabel="name_client"
+        placeholder="Select a Instance"
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && !selectedInstance"
+        >Instance is required.</small
+      >
+    </div>
+    <div class="field">
+      <label for="license">License</label>
+      <p-dropdown
+        [options]="licenses"
+        [(ngModel)]="selectedLicense"
+        optionLabel="name"
+        placeholder="Select a License"
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && !selectedLicense"
+        >License is required.</small
+      >
+    </div>
+    <div class="field">
+      <label for="rangeDates">Period</label>
+      <p-calendar
+        [(ngModel)]="rangeDates"
+        selectionMode="range"
+        [readonlyInput]="true"
+        placeholder="Select Date Range"
+      ></p-calendar>
+      <small
+        class="p-error"
+        *ngIf="submitted && (!rangeDates || rangeDates.length < 2)"
+        >Date Range is required.</small
+      >
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+      (click)="saveMembership()"
+    ></button>
+  </ng-template>
+</p-dialog>

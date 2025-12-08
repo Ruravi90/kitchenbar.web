@@ -9,6 +9,10 @@ import { LicensesRoutingModule } from './licenses-routing.module';
 import { LicensesComponent } from './licenses.component';
 import { DataViewModule } from 'primeng/dataview';
 import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 @NgModule({
@@ -21,7 +25,11 @@ import { CardModule } from 'primeng/card';
         FormsModule,
         PasswordModule,
         DataViewModule,
-        CardModule
+        CardModule,
+        TableModule,
+        ToolbarModule,
+        ToastModule,
+        ConfirmDialogModule
     ],
     declarations: [LicensesComponent]
 })

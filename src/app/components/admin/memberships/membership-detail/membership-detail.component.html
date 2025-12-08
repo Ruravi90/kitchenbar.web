@@ -1,0 +1,27 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<div class="card" *ngIf="membership">
+    <h5>Membership Details</h5>
+    <div class="grid">
+        <div class="col-12 md:col-6">
+            <p><strong>License:</strong> {{membership.license?.name}}</p>
+            <p><strong>Start Date:</strong> {{membership.startDate | date}}</p>
+            <p><strong>End Date:</strong> {{membership.endDate | date}}</p>
+            <p><strong>Status:</strong> <span [class]="'product-badge status-' + (membership.status ? membership.status.toLowerCase() : '')">{{membership.status}}</span></p>
+        </div>
+        <div class="col-12 md:col-6">
+            <p><strong>Instance:</strong> {{membership.instance?.name_client || membership.instanceId}}</p>
+            <p><strong>Created At:</strong> {{membership.createdAt | date:'medium'}}</p>
+            <p><strong>Updated At:</strong> {{membership.updatedAt | date:'medium'}}</p>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2 mt-3">
+        <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-secondary" [routerLink]="['/admin/memberships']"></button>
+        <button *ngIf="membership.status === 'Active'" pButton pRipple label="Cancel Membership" icon="pi pi-times" class="p-button-danger" (click)="cancelMembership()"></button>
+    </div>
+</div>
+<div *ngIf="!membership && !loading" class="card">
+    <p>Membership not found.</p>
+    <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-secondary" [routerLink]="['/admin/memberships']"></button>
+</div>

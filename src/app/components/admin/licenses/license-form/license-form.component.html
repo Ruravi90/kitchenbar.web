@@ -1,0 +1,35 @@
+<p-toast></p-toast>
+<div class="card">
+    <h5>{{isEditMode ? 'Edit License' : 'New License'}}</h5>
+    <form [formGroup]="licenseForm" (ngSubmit)="onSubmit()">
+        <div class="p-fluid grid formgrid">
+            <div class="field col-12 md:col-6">
+                <label for="name">Name</label>
+                <input pInputText id="name" formControlName="name" type="text" />
+                <small *ngIf="licenseForm.get('name')?.invalid && (licenseForm.get('name')?.dirty || licenseForm.get('name')?.touched)" class="p-error">Name is required.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="price">Price</label>
+                <p-inputNumber id="price" formControlName="price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+                <small *ngIf="licenseForm.get('price')?.invalid && (licenseForm.get('price')?.dirty || licenseForm.get('price')?.touched)" class="p-error">Price is required and must be non-negative.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="period">Period (Days)</label>
+                <p-inputNumber id="period" formControlName="period"></p-inputNumber>
+                <small *ngIf="licenseForm.get('period')?.invalid && (licenseForm.get('period')?.dirty || licenseForm.get('period')?.touched)" class="p-error">Period is required and must be positive.</small>
+            </div>
+            <div class="field col-12">
+                <label for="description">Description</label>
+                <input pInputText id="description" formControlName="description" type="text" />
+            </div>
+            <div class="field col-12">
+                <label for="features">Features (JSON)</label>
+                <textarea pInputTextarea id="features" formControlName="features" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="flex justify-content-end gap-2">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-secondary" [routerLink]="['/admin/licenses']" type="button"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-primary" type="submit" [disabled]="licenseForm.invalid || loading"></button>
+        </div>
+    </form>
+</div>

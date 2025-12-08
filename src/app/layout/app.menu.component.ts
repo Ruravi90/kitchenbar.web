@@ -63,6 +63,9 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     { label: 'Licencias', icon: 'pi pi-fw pi-id-card', routerLink: ['/admin/licenses'] },
                     { label: 'Instancias', icon: 'pi pi-fw pi-globe', routerLink: ['/admin/instances'] },
+                    { label: 'Paquetes', icon: 'pi pi-fw pi-globe', routerLink: ['/admin/packages'] },
+                    { label: 'Promociones', icon: 'pi pi-fw pi-globe', routerLink: ['/admin/promotions'] },
+                    // { label: 'Membrecías', icon: 'pi pi-fw pi-globe', routerLink: ['/admin/memberships'] },
                 ]
             });
         }

@@ -1,0 +1,31 @@
+<p-toast></p-toast>
+<div class="card">
+    <h5>{{isEditMode ? 'Edit Package' : 'New Package'}}</h5>
+    <form [formGroup]="packageForm" (ngSubmit)="onSubmit()">
+        <div class="p-fluid grid formgrid">
+            <div class="field col-12 md:col-6">
+                <label for="name">Name</label>
+                <input pInputText id="name" formControlName="name" type="text" />
+                <small *ngIf="packageForm.get('name')?.invalid && (packageForm.get('name')?.dirty || packageForm.get('name')?.touched)" class="p-error">Name is required.</small>
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="price">Price</label>
+                <p-inputNumber id="price" formControlName="price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+                <small *ngIf="packageForm.get('price')?.invalid && (packageForm.get('price')?.dirty || packageForm.get('price')?.touched)" class="p-error">Price is required and must be non-negative.</small>
+            </div>
+            <div class="field col-12">
+                <label for="description">Description</label>
+                <input pInputText id="description" formControlName="description" type="text" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="credits">Credits</label>
+                <p-inputNumber id="credits" formControlName="credits"></p-inputNumber>
+                <small *ngIf="packageForm.get('credits')?.invalid && (packageForm.get('credits')?.dirty || packageForm.get('credits')?.touched)" class="p-error">Credits are required and must be non-negative.</small>
+            </div>
+        </div>
+        <div class="flex justify-content-end gap-2">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-secondary" [routerLink]="['/admin/packages']" type="button"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-primary" type="submit" [disabled]="packageForm.invalid || loading"></button>
+        </div>
+    </form>
+</div>

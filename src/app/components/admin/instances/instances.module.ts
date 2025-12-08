@@ -9,6 +9,11 @@ import { InstancesRoutingModule } from './instances-routing.module';
 import { InstancesComponent } from './instances.component';
 import { DataViewModule } from 'primeng/dataview';
 import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
     imports: [
@@ -20,7 +25,12 @@ import { CardModule } from 'primeng/card';
         FormsModule,
         PasswordModule,
         DataViewModule,
-        CardModule
+        CardModule,
+        TableModule,
+        DialogModule,
+        DropdownModule,
+        CalendarModule,
+        TooltipModule
     ],
     declarations: [InstancesComponent]
 })

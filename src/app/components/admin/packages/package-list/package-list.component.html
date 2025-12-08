@@ -1,0 +1,70 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+
+<div class="card">
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <button
+        pButton
+        pRipple
+        label="New"
+        icon="pi pi-plus"
+        class="p-button-success mr-2"
+        [routerLink]="['/admin/packages/new']"
+      ></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table
+    [value]="packages"
+    [loading]="loading"
+    [rows]="10"
+    [paginator]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [tableStyle]="{ 'min-width': '75rem' }"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <h5 class="m-0">Manage Packages</h5>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Credits</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-pkg>
+      <tr>
+        <td>{{ pkg.name }}</td>
+        <td>{{ pkg.description }}</td>
+        <td>{{ pkg.price | currency }}</td>
+        <td>{{ pkg.credits }}</td>
+        <td>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success mr-2"
+            [routerLink]="['/admin/packages/edit', pkg.id]"
+          ></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-warning"
+            (click)="deletePackage(pkg)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">
+        In total there are {{ packages ? packages.length : 0 }} packages.
+      </div>
+    </ng-template>
+  </p-table>
+</div>

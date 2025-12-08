@@ -5,4 +5,8 @@ export class License{
     updatedAt?: Date;
     deletedAt?: Date;
     name?: string;
+    description?: string;
+    price?: number;
+    credits?: number;
+    period?: number;
 }

@@ -1,0 +1,48 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<div class="card">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/admin/promotions/new']"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table [value]="promotions" [loading]="loading" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10, 25, 50]" [tableStyle]="{'min-width': '75rem'}">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Manage Promotions</h5>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Code</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Valid From</th>
+                <th>Valid To</th>
+                <th>Usage</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-promo>
+            <tr>
+                <td>{{promo.code}}</td>
+                <td>{{promo.discountType}}</td>
+                <td>{{promo.discountValue}}</td>
+                <td>{{promo.validFrom | date}}</td>
+                <td>{{promo.validTo | date}}</td>
+                <td>{{promo.currentUsage}} / {{promo.maxUsage}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" [routerLink]="['/admin/promotions/edit', promo.id]"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deletePromotion(promo)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{promotions ? promotions.length : 0 }} promotions.
+            </div>
+        </ng-template>
+    </p-table>
+</div>

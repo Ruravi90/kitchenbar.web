@@ -7,3 +7,4 @@ export * from "./branch.model";
 export * from "./license.model";
 export * from "./instance.model";
 export * from "./diner.model";
+export * from "./membership.model";

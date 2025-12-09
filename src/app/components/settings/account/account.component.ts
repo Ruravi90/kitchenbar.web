@@ -22,8 +22,6 @@ export class AccountComponent implements OnInit {
   user: User = new User();
   loading: boolean = false;
 
-  //"publicKey":"BGCRL5HzYcj1d9_XThOzy78j278TqvKRO_Qa08vR7BEDkTQt9x2yxXYQdKJbjRNyFV53JNq7pMx6naT8RwPbum4","privateKey":"jxxp74J725RLgbOQP1LCZrtAeHgCDku0hUq29Jo-e4M"
-
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -31,12 +29,6 @@ export class AccountComponent implements OnInit {
     private authService: AuthService,
     private usersService: UsersService
   ) {
-    Notification.requestPermission().then((permission) => {
-      if (permission == "granted")
-        this.IsActiveNotification = true;
-      console.log("requestPermission", permission);
-    });
-
     // Detects if device is on iOS
     const isIos = () => {
       const userAgent = window.navigator.userAgent.toLowerCase();
@@ -47,7 +39,12 @@ export class AccountComponent implements OnInit {
 
     // Checks if should display install popup notification:
     if (isIos() && !isInStandaloneMode()) {
-      //this.setState({ showInstallMessage: true });
+      this.messageService.add({ 
+        severity: 'info', 
+        summary: 'Activar Notificaciones', 
+        detail: 'Para recibir notificaciones en iOS, debes agregar esta aplicación a tu pantalla de inicio ("Add to Home Screen").',
+        life: 10000 
+      });
     }
   }
 

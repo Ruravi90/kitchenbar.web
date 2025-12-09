@@ -22,10 +22,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    Notification.requestPermission().then((result) => {
-      if (result === "granted") {
-      }
-    });
     this.primengConfig.ripple = true;
   }
 

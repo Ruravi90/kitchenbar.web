@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   constructor(
     private primengConfig: PrimeNGConfig,
     private notifiacionsService:NotificationsInterface,
+    private webNotificationService: WebNotificationService,
     private updates: AppUpdateService) {
     localStorage.removeItem('userSwPush');
     this.updates.checkForUpdate();

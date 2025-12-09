@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Branch, Table } from '../../../models';
-import { BranchesInterface, TablesInterface } from '../../../interfaces';
+import { BranchesInterface, TablesInterface, DashboardInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FixMeLater, QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
@@ -17,7 +17,8 @@ export class TablesComponent {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private tablesServices: TablesInterface,
-    private branchesService: BranchesInterface){
+    private branchesService: BranchesInterface,
+    private dashboardService: DashboardInterface){
     this.elementType= "canvas" as QRCodeElementType;
   }
 
@@ -54,15 +55,33 @@ export class TablesComponent {
     this.getBranches();
   }
 
+  canCreateTables: boolean = true;
+  maxTables: number = -1;
+
   getTables(): void {
     this.tablesServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.tables = data;
+        this.checkLicenseLimit();
       },
       error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
     });
+  }
+
+  checkLicenseLimit() {
+      // Assuming instance ID is available from one of the services or manually passed 0 to infer from token
+      this.dashboardService.getLicenseStatus().subscribe((license: any) => {
+          if (license) {
+              this.maxTables = license.maxTables === 'Unlimited' ? -1 : parseInt(license.maxTables);
+              if (this.maxTables !== -1 && this.tables.length >= this.maxTables) {
+                  this.canCreateTables = false;
+              } else {
+                  this.canCreateTables = true;
+              }
+          }
+      });
   }
 
   getBranches(): void {

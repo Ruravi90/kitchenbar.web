@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
         { path: 'users', loadChildren: () => import('../settings/users/users.module').then(m => m.UsersModule) },
         { path: 'meals', loadChildren: () => import('../settings/meals/meals.module').then(m => m.MealsModule) },
         { path: 'branches', loadChildren: () => import('../settings/branches/branches.module').then(m => m.BranchesModule) },
+        { path: 'config', loadChildren: () => import('../settings/restaurant-config/restaurant-config.module').then(m => m.RestaurantConfigModule) },
         { path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]

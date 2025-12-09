@@ -7,7 +7,7 @@
                         <i class="pi pi-search"></i>
                     </p-inputGroupAddon>
                     <input type="text" pInputText placeholder="Buscar" />
-                    <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small" pTooltip="Nuevo usuario" (click)="showModal()"></button>
+                    <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small" pTooltip="Nuevo usuario" (click)="showModal()" [disabled]="!canCreateUsers"></button>
                 </p-inputGroup>
 
                 <p-table [value]="items" [paginator]="true" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm">

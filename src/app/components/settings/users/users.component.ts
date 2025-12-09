@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Branch, User } from '../../../models';
-import { AuthInterface, BranchesInterface, UsersInterface } from '../../../interfaces';
+import { AuthInterface, BranchesInterface, UsersInterface, DashboardInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 
@@ -15,7 +15,8 @@ export class UsersComponent {
     private messageService: MessageService,
     private _serviceAuth: AuthInterface,
     private _serviceBranch: BranchesInterface,
-    private usersServices: UsersInterface){}
+    private usersServices: UsersInterface,
+    private dashboardService: DashboardInterface){}
 
   items: User[] = [];
   branches:Branch[] =[];
@@ -42,15 +43,32 @@ export class UsersComponent {
     this.current = this._serviceAuth.getCurrentUser();
   }
 
+  canCreateUsers: boolean = true;
+  maxUsers: number = -1;
+
   getUsers(): void {
     this.usersServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.items = data;
+        this.checkLicenseLimit();
       },
       error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
     });
+  }
+
+  checkLicenseLimit() {
+      this.dashboardService.getLicenseStatus().subscribe((license: any) => {
+          if (license) {
+              this.maxUsers = license.maxUsers === 'Unlimited' ? -1 : parseInt(license.maxUsers);
+              if (this.maxUsers !== -1 && this.items.length >= this.maxUsers) {
+                  this.canCreateUsers = false;
+              } else {
+                  this.canCreateUsers = true;
+              }
+          }
+      });
   }
   getBranches(): void {
     this._serviceBranch.getItemsByInstance().subscribe({

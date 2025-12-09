@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit {
   peakHoursOptions: any;
 
   branchId: number = 0;
+  instanceId: number = 0; // Capture instanceId from user
 
   constructor(
     private dashboardService: DashboardInterface,
@@ -26,8 +27,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     const user = this.authService.getCurrentUser();
-    if (user && user.branchId) {
-      this.branchId = user.branchId;
+    if (user) {
+        if (user.branchId) this.branchId = user.branchId;
+        if (user.instanceId) this.instanceId = user.instanceId;
+    }
+    
+    if (this.branchId) {
       this.loadDashboardData();
     }
 

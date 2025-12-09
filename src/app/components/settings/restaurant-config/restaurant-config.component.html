@@ -1,0 +1,126 @@
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-8 lg:col-6">
+        <p-card header="Configuración del Negocio" styleClass="mb-3">
+            <div class="flex flex-column gap-4">
+                <div class="p-fluid">
+                    <div class="field">
+                        <label htmlFor="legalName">Razón Social</label>
+                        <input pInputText id="legalName" [(ngModel)]="config.legalName" />
+                    </div>
+                    <div class="field">
+                        <label htmlFor="rfc">RFC</label>
+                        <input pInputText id="rfc" [(ngModel)]="config.rfc" />
+                    </div>
+                    <div class="field">
+                        <label htmlFor="email">Correo Electrónico (Facturación)</label>
+                        <input pInputText id="email" [(ngModel)]="config.email" />
+                    </div>
+                    <div class="field">
+                        <label htmlFor="address">Dirección Fiscal</label>
+                        <textarea pInputTextarea id="address" [(ngModel)]="config.address" rows="3"></textarea>
+                    </div>
+                    <div class="field grid">
+                        <div class="col-6">
+                             <label htmlFor="zipCode">Código Postal</label>
+                             <input pInputText id="zipCode" [(ngModel)]="config.zipCode" />
+                        </div>
+                         <div class="col-6">
+                             <label htmlFor="vat">IVA (%)</label>
+                             <p-inputNumber id="vat" [(ngModel)]="config.vatPercentage" suffix="%"></p-inputNumber>
+                        </div>
+                    </div>
+                     <div class="field">
+                        <label htmlFor="taxRegime">Régimen Fiscal</label>
+                        <input pInputText id="taxRegime" [(ngModel)]="config.taxRegime" />
+                    </div>
+                     <div class="field">
+                        <label htmlFor="notification">Mensaje en Ticket/Factura</label>
+                        <input pInputText id="notification" [(ngModel)]="config.notificationMessage" />
+                    </div>
+                </div>
+
+                <div class="flex justify-content-end">
+                    <p-button label="Guardar Configuración" icon="pi pi-save" (onClick)="save()" [loading]="loading"></p-button>
+                </div>
+            </div>
+        </p-card>
+
+        <!-- New License Status Card -->
+        <p-card header="Plan y Licencia" styleClass="mb-3" *ngIf="licenseData">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Plan Actual</span>
+                    <div class="text-900 font-medium text-xl">{{licenseData.planName}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-id-card text-blue-500 text-xl"></i>
+                </div>
+            </div>
+            
+            <div class="flex flex-column gap-2">
+                <div class="flex align-items-center gap-2">
+                    <span class="text-green-500 font-medium" *ngIf="licenseData.status === 'Active'">Activo - </span>
+                    <span class="text-500">Expira en {{licenseData.daysRemaining}} días</span>
+                </div>
+                
+                <p-divider></p-divider>
+                
+                <div class="grid">
+                    <div class="col-6">
+                        <span class="text-500 block">Mesas</span>
+                        <span class="font-medium text-900">{{licenseData.maxTables === '-1' ? 'Ilimitado' : licenseData.maxTables}}</span>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-500 block">Usuarios</span>
+                        <span class="font-medium text-900">{{licenseData.maxUsers === '-1' ? 'Ilimitado' : licenseData.maxUsers}}</span>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <div>
+                    <span class="text-500 block mb-2 font-medium">Módulos Incluidos</span>
+                    <div *ngFor="let feature of licenseData.features | keyvalue" class="flex align-items-center mb-1">
+                        <i class="pi pi-check-circle text-green-500 mr-2" *ngIf="feature.value"></i>
+                        <i class="pi pi-times-circle text-pink-500 mr-2" *ngIf="!feature.value"></i>
+                        <span class="text-sm">{{getFeatureName($any(feature.key))}}</span>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card header="Pagos e Ingresos (Stripe)" styleClass="mb-3">
+             <div class="flex flex-column gap-3">
+                <p>Conecta tu cuenta de Stripe para recibir los pagos de tus comensales directamente en tu cuenta bancaria.</p>
+                
+                <div *ngIf="loadingStripe" class="flex justify-content-center">
+                    <p-progressSpinner [style]="{width: '30px', height: '30px'}"></p-progressSpinner>
+                </div>
+
+                <div *ngIf="!loadingStripe">
+                    <div *ngIf="!stripeStatus?.connected || !stripeStatus?.detailsSubmitted" class="flex flex-column align-items-center gap-3 p-4 surface-50 border-round">
+                        <i class="pi pi-wallet text-5xl text-primary"></i>
+                        <span class="text-xl font-bold">Recibe pagos con tarjeta</span>
+                        <p class="text-center m-0">Es necesario completar el proceso de alta en Stripe para activar los pagos con tarjeta y QR.</p>
+                        <p-button label="Conectar con Stripe" icon="pi pi-external-link" (onClick)="connectStripe()"></p-button>
+                    </div>
+
+                    <div *ngIf="stripeStatus?.connected && stripeStatus?.detailsSubmitted" class="flex flex-column gap-3">
+                        <div class="flex align-items-center gap-2 text-green-600 font-bold p-3 surface-50 border-round border-green-200" style="border: 1px solid;">
+                             <i class="pi pi-check-circle text-xl"></i>
+                             <span>Cuenta Conectada y Activa</span>
+                        </div>
+                        <div class="flex justify-content-between align-items-center">
+                            <span class="text-500">ID de Cuenta: {{stripeStatus?.accountId}}</span>
+                            <span class="text-500" *ngIf="stripeStatus?.chargesEnabled">Pagos Habilitados: <i class="pi pi-check text-green-500"></i></span>
+                            <span class="text-500" *ngIf="!stripeStatus?.chargesEnabled">Pagos Habilitados: <i class="pi pi-times text-red-500"></i></span>
+                        </div>
+                        <p-button label="Ir al Dashboard de Stripe" icon="pi pi-external-link" styleClass="p-button-outlined" (onClick)="connectStripe()"></p-button>
+                        <small class="text-500">Haz clic para actualizar tus datos bancarios o ver tus transferencias.</small>
+                    </div>
+                </div>
+             </div>
+        </p-card>
+    </div>
+</div>
+<p-toast></p-toast>

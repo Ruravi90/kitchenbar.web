@@ -58,6 +58,32 @@
                     </p-dataView>
                 </p-tabPanel>
 
+                <!-- EXPO TAB -->
+                <p-tabPanel header="Expo" leftIcon="pi pi-list">
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-4" *ngFor="let ticket of expoItems">
+                            <p-card [header]="ticket.tableName" styleClass="h-full">
+                                <ng-template pTemplate="subtitle">
+                                     <p-tag [value]="getElapsedTime(ticket.createdAt)" [severity]="getSeverity(ticket.createdAt)" icon="pi pi-clock"></p-tag>
+                                </ng-template>
+                                <ul class="list-none p-0 m-0">
+                                    <li *ngFor="let item of ticket.items" class="flex align-items-center justify-content-between mb-3 border-bottom-1 surface-border pb-2">
+                                        <div>
+                                            <span class="font-bold text-900">{{item.quantity}}x</span> {{item.meal?.name}}
+                                            <div *ngIf="item.aditional" class="text-sm text-600"><i class="pi pi-comment mr-1"></i>{{item.aditional}}</div>
+                                        </div>
+                                        <p-tag [value]="item.statusOrderId == 2 ? 'Prep' : (item.statusOrderId == 3 ? 'Listo' : 'Esp')" 
+                                               [severity]="item.statusOrderId == 3 ? 'success' : (item.statusOrderId == 2 ? 'warning' : 'info')"></p-tag>
+                                    </li>
+                                </ul>
+                            </p-card>
+                        </div>
+                        <div *ngIf="expoItems.length === 0" class="col-12 text-center p-5">
+                            <span class="text-xl text-500">No hay ordenes activas</span>
+                        </div>
+                    </div>
+                </p-tabPanel>
+
                 <!-- HISTORY TAB -->
                 <p-tabPanel header="Historial" leftIcon="pi pi-history">
                     <p-dataView #dvHistory [value]="historyItems" [rows]="10" [paginator]="true" emptyMessage="Sin historial reciente">

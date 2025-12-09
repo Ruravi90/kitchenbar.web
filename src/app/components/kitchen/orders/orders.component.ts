@@ -27,6 +27,7 @@ export class OrdersComponent implements OnInit{
   items?: Order[];
   kitchenItems: Order[] = [];
   barItems: Order[] = [];
+  expoItems: { tableId: number, tableName: string, items: Order[], createdAt: Date | string }[] = [];
   historyItems: Order[] = [];
 
   async ngOnInit() {
@@ -53,9 +54,14 @@ export class OrdersComponent implements OnInit{
         this.kitchenItems = activeOrders.filter(i => !i.meal?.category?.isDrink);
         this.barItems = activeOrders.filter(i => i.meal?.category?.isDrink);
 
+        // Group for Expo
+        this.groupOrdersByTable(activeOrders);
+
         // History (Completed orders)
         this.historyItems = data.filter(i => !i.isCancel && i.statusOrderId == 3).sort((a, b) => {
-            return new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime();
+            const timeA = new Date(a.createdAt!).getTime();
+            const timeB = new Date(b.createdAt!).getTime();
+            return timeB - timeA;
         });
       },
       error: (e) => {
@@ -64,9 +70,37 @@ export class OrdersComponent implements OnInit{
     });
   }
 
-  getElapsedTime(dateString: string): string {
-    if (!dateString) return '00:00';
-    const start = new Date(dateString).getTime();
+  groupOrdersByTable(orders: Order[]) {
+    const groups: { [key: number]: { tableId: number, tableName: string, items: Order[], createdAt: Date | string } } = {};
+    
+    orders.forEach(order => {
+        if (!order.tableId) return;
+        
+        if (!groups[order.tableId]) {
+            groups[order.tableId] = {
+                tableId: order.tableId,
+                tableName: order.table?.name || 'Mesa ?',
+                items: [],
+                createdAt: order.createdAt!
+            };
+        }
+        groups[order.tableId].items.push(order);
+        
+        // Use oldest time for the ticket
+        const currentGroupTime = new Date(groups[order.tableId].createdAt).getTime();
+        const orderTime = new Date(order.createdAt!).getTime();
+
+        if (orderTime < currentGroupTime) {
+             groups[order.tableId].createdAt = order.createdAt!;
+        }
+    });
+
+    this.expoItems = Object.values(groups).sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
+
+  getElapsedTime(dateInput: string | Date | undefined): string {
+    if (!dateInput) return '00:00';
+    const start = new Date(dateInput).getTime();
     const now = new Date().getTime();
     const diff = now - start;
     
@@ -76,13 +110,13 @@ export class OrdersComponent implements OnInit{
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  getSeverity(dateString: string): "success" | "secondary" | "info" | "warning" | "danger" | "contrast" | undefined {
-    if (!dateString) return 'success';
-    const start = new Date(dateString).getTime();
+  getSeverity(dateInput: string | Date | undefined): "success" | "secondary" | "info" | "warning" | "danger" | "contrast" | undefined {
+    if (!dateInput) return 'success';
+    const start = new Date(dateInput).getTime();
     const now = new Date().getTime();
     const diff = (now - start) / 60000; // minutes
 
-    if (diff > 15) return 'danger';
+    if (diff > 20) return 'danger';
     if (diff > 10) return 'warning';
     return 'success';
   }

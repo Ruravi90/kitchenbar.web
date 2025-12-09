@@ -11,9 +11,11 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { TokenInterceptor } from './utilities/token.interceptor';
+import { OfflineInterceptor } from './utilities/offline.interceptor';
 
 export const httpInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+  { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: OfflineInterceptor, multi: true }
 ];
 
 import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService, DinersService, BranchesService, NotificationsService, InvoicesService, DashboardService} from './services'

@@ -27,5 +27,35 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-performance",
+      "urls": [
+        "/api/Categories/**",
+        "/api/Meals/**",
+        "/api/RestaurantConfig"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "1d"
+      }
+    },
+    {
+      "name": "api-freshness",
+      "urls": [
+        "/api/Tables/**",
+        "/api/Users/**",
+        "/api/Diners/**",
+        "/api/Branches/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "1h",
+        "timeout": "5s"
+      }
+    }
   ]
 }

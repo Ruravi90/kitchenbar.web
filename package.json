@@ -25,6 +25,7 @@
     "@stripe/stripe-js": "^4.10.0",
     "angularx-qrcode": "^18.0.2",
     "chart.js": "^4.5.1",
+    "idb": "^8.0.3",
     "ng-qrcode": "^18.0.0",
     "ngx-image-compress": "^15.1.6",
     "ngx-stripe": "^18.1.0",

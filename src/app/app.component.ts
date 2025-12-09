@@ -5,6 +5,8 @@ import { WebNotificationService } from './utilities/WebNotificationService';
 import { NotificationsInterface } from './interfaces';
 import { AppUpdateService } from "./utilities/AppUpdateService"
 import { environment } from '../environments/environment';
+import { OfflineService } from './services/offline.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,6 +19,7 @@ export class AppComponent implements OnInit {
     private primengConfig: PrimeNGConfig,
     private notifiacionsService:NotificationsInterface,
     private webNotificationService: WebNotificationService,
+    private offlineService: OfflineService,
     private updates: AppUpdateService) {
     localStorage.removeItem('userSwPush');
     this.updates.checkForUpdate();

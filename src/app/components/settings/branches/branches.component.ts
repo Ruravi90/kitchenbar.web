@@ -103,10 +103,20 @@ export class BranchesComponent {
   }
 
   showQRModal(item: Branch) {
+    if (!item.identity) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Esta sucursal no tiene un código QR válido. Por favor, recarga la página.'
+      });
+      return;
+    }
+
+    this.branch = item;
+    // Use current origin for QR URL to work in any environment
+    const origin = window.location.origin;
+    this.qrData.qrdata = `${origin}/client-portal/link-branch/${item.identity}`;
     this.visibleQRModal = true;
-    this.branch = item!;
-    // Generate URL for client portal link-branch route
-    this.qrData.qrdata = `${environment.baseUrl}/client-portal/link-branch/${item.identity}`;
   }
 
   saveQRAsImage(parent: FixMeLater) {

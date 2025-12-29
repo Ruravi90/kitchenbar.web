@@ -43,6 +43,7 @@ import { DropdownModule } from 'primeng/dropdown';
             <ng-template pTemplate="header">
               <tr>
                 <th pSortableColumn="meal.name">Platillo <p-sortIcon field="meal.name"></p-sortIcon></th>
+                <th pSortableColumn="name">Nombre (Ingrediente) <p-sortIcon field="name"></p-sortIcon></th>
                 <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
                 <th pSortableColumn="unit_measure.name">Unidad <p-sortIcon field="unit_measure.name"></p-sortIcon></th>
                 <th>Acciones</th>
@@ -50,12 +51,14 @@ import { DropdownModule } from 'primeng/dropdown';
             </ng-template>
             <ng-template pTemplate="body" let-item>
               <tr>
-                <td>{{ item.meal?.name || 'N/A' }}</td>
+                <td>{{ item.meal?.name || '---' }}</td>
+                <td>{{ item.name || '---' }}</td>
                 <td>{{ item.stock }}</td>
                 <td>{{ item.unit_measure?.name || 'N/A' }}</td>
                 <td>
-                  <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="warning" (onClick)="editItem(item)"></p-button>
-                  <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" (onClick)="deleteItem(item)"></p-button>
+                  <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="warning" (onClick)="editItem(item)" pTooltip="Editar"></p-button>
+                  <p-button icon="pi pi-trash" class="mr-2" [rounded]="true" [outlined]="true" severity="danger" (onClick)="deleteItem(item)" pTooltip="Eliminar"></p-button>
+                  <p-button icon="pi pi-exclamation-triangle" [rounded]="true" [outlined]="true" severity="help" (onClick)="openWaste(item)" pTooltip="Reportar Merma"></p-button>
                 </td>
               </tr>
             </ng-template>
@@ -64,9 +67,24 @@ import { DropdownModule } from 'primeng/dropdown';
       </div>
     </div>
 
+    <!-- Edit/New Dialog -->
     <p-dialog [(visible)]="itemDialog" [style]="{ width: '450px' }" header="Detalles de Inventario" [modal]="true" styleClass="p-fluid">
       <ng-template pTemplate="content">
         <div class="field">
+          <label for="type">Tipo</label>
+          <div class="flex gap-3">
+              <div class="flex align-items-center">
+                  <p-radioButton name="type" value="meal" [(ngModel)]="inventoryType" inputId="type1"></p-radioButton>
+                  <label for="type1" class="ml-2">Platillo</label>
+              </div>
+              <div class="flex align-items-center">
+                  <p-radioButton name="type" value="ingredient" [(ngModel)]="inventoryType" inputId="type2"></p-radioButton>
+                  <label for="type2" class="ml-2">Ingrediente Puro</label>
+              </div>
+          </div>
+        </div>
+
+        <div class="field" *ngIf="inventoryType === 'meal'">
           <label for="meal">Platillo</label>
           <p-dropdown 
             id="meal" 
@@ -77,14 +95,25 @@ import { DropdownModule } from 'primeng/dropdown';
             [filter]="true"
             filterBy="name"
             [showClear]="true"
-            appendTo="body"
-            [required]="true">
+            appendTo="body">
           </p-dropdown>
         </div>
+
+        <div class="field" *ngIf="inventoryType === 'ingredient'">
+            <label for="name">Nombre del Ingrediente</label>
+            <input type="text" pInputText id="name" [(ngModel)]="item.name" required autofocus />
+        </div>
+
         <div class="field">
-          <label for="stock">Stock</label>
+          <label for="stock">Stock Actual</label>
           <p-inputNumber id="stock" [(ngModel)]="item.stock" [required]="true"></p-inputNumber>
         </div>
+        
+        <div class="field">
+          <label for="cost">Costo Unitario</label>
+          <p-inputNumber id="cost" [(ngModel)]="item.cost" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+        </div>
+
         <div class="field">
           <label for="unitMeasure">Unidad de Medida</label>
           <p-dropdown 
@@ -105,6 +134,28 @@ import { DropdownModule } from 'primeng/dropdown';
       </ng-template>
     </p-dialog>
 
+    <!-- Waste Dialog -->
+    <p-dialog [(visible)]="wasteDialog" [style]="{ width: '400px' }" header="Reportar Merma" [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="field">
+                <label>Item</label>
+                <input pInputText [disabled]="true" [value]="wasteItem?.meal?.name || wasteItem?.name" />
+            </div>
+            <div class="field">
+                <label for="wasteQty">Cantidad Perdida</label>
+                <p-inputNumber id="wasteQty" [(ngModel)]="wasteQuantity" [min]="0" [max]="wasteItem?.stock"></p-inputNumber>
+            </div>
+            <div class="field">
+                <label for="reason">Razón</label>
+                <p-dropdown [options]="wasteReasons" [(ngModel)]="wasteReason" placeholder="Selecciona razón" [editable]="true"></p-dropdown>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <p-button label="Cancelar" icon="pi pi-times" [text]="true" (onClick)="hideWasteDialog()"></p-button>
+            <p-button label="Confirmar" icon="pi pi-check" severity="danger" (onClick)="confirmWaste()"></p-button>
+        </ng-template>
+    </p-dialog>
+
     <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
     <p-toast></p-toast>
   `,
@@ -115,12 +166,18 @@ export class InventoryComponent implements OnInit {
   item: any = {};
   itemDialog: boolean = false;
   submitted: boolean = false;
+  inventoryType: 'meal' | 'ingredient' = 'meal';
+
+  // Waste UI
+  wasteDialog: boolean = false;
+  wasteItem: any = {};
+  wasteQuantity: number = 0;
+  wasteReason: string = '';
+  wasteReasons: string[] = ['Caducado', 'Dañado', 'Error de Preparación', 'Robo', 'Cortesía no registrada'];
 
   meals: any[] = [];
   selectedMeal: any;
 
-  // Lista estática de unidades de medida (simulando una tabla de BD)
-  // En un sistema real, esto vendría de una API
   unitMeasures: any[] = [
     { id: 1, name: 'Unidad' },
     { id: 2, name: 'Kilogramo (kg)' },
@@ -143,7 +200,7 @@ export class InventoryComponent implements OnInit {
   }
 
   loadInventory() {
-    this.inventoryService.getInventory().subscribe(data => this.inventoryItems = data);
+    this.inventoryService.getItemsByInstance().subscribe(data => this.inventoryItems = data);
   }
 
   loadMeals() {
@@ -155,17 +212,15 @@ export class InventoryComponent implements OnInit {
     this.selectedMeal = null;
     this.selectedUnitMeasure = null;
     this.submitted = false;
+    this.inventoryType = 'meal';
     this.itemDialog = true;
   }
 
   editItem(item: any) {
     this.item = { ...item };
-    // Mapear objetos seleccionados
+    this.inventoryType = item.mealId ? 'meal' : 'ingredient';
     this.selectedMeal = this.meals.find(m => m.id === item.mealId);
-    // Para unit measure, como es estático, buscamos por ID si viene del backend, o por nombre si es lo que tenemos
-    // Asumimos que el backend devuelve unitMeasureId
     this.selectedUnitMeasure = this.unitMeasures.find(u => u.id === item.unitMeasureId);
-    
     this.itemDialog = true;
   }
 
@@ -175,7 +230,7 @@ export class InventoryComponent implements OnInit {
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.inventoryService.deleteInventory(item.id).subscribe(() => {
+        this.inventoryService.deleteItem(item.id).subscribe(() => {
           this.loadInventory();
           this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item eliminado', life: 3000 });
         });
@@ -191,26 +246,75 @@ export class InventoryComponent implements OnInit {
   saveItem() {
     this.submitted = true;
 
-    if (this.selectedMeal && this.item.stock !== undefined && this.selectedUnitMeasure) {
-      // Asignar IDs desde los objetos seleccionados
-      this.item.mealId = this.selectedMeal.id;
-      this.item.unitMeasureId = this.selectedUnitMeasure.id;
-
-      if (this.item.id) {
-        this.inventoryService.updateInventory(this.item.id, this.item).subscribe(() => {
-          this.loadInventory();
-          this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item actualizado', life: 3000 });
-          this.hideDialog();
-        });
-      } else {
-        this.inventoryService.createInventory(this.item).subscribe(() => {
-          this.loadInventory();
-          this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item creado', life: 3000 });
-          this.hideDialog();
-        });
-      }
-    } else {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor complete todos los campos requeridos', life: 3000 });
+    // Validation
+    if (!this.item.stock || !this.selectedUnitMeasure) {
+         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Complete stock y unidad', life: 3000 });
+         return;
     }
+    if (this.inventoryType === 'meal' && !this.selectedMeal) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Seleccione un platillo', life: 3000 });
+        return;
+    }
+    if (this.inventoryType === 'ingredient' && !this.item.name) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ingrese nombre del ingrediente', life: 3000 });
+        return;
+    }
+
+    this.item.unitMeasureId = this.selectedUnitMeasure.id;
+    
+    if (this.inventoryType === 'meal') {
+        this.item.mealId = this.selectedMeal.id;
+        this.item.name = null; 
+    } else {
+        this.item.mealId = null;
+    }
+
+    if (this.item.id) {
+    this.inventoryService.updateItem(this.item.id, this.item).subscribe(() => {
+        this.loadInventory();
+        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item actualizado', life: 3000 });
+        this.hideDialog();
+    });
+    } else {
+    this.inventoryService.createItem(this.item).subscribe(() => {
+        this.loadInventory();
+        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item creado', life: 3000 });
+        this.hideDialog();
+    });
+    }
+  }
+
+  // Waste Logic
+  openWaste(item: any) {
+      this.wasteItem = item;
+      this.wasteQuantity = 0;
+      this.wasteReason = '';
+      this.wasteDialog = true;
+  }
+
+  hideWasteDialog() {
+      this.wasteDialog = false;
+  }
+
+  confirmWaste() {
+      if (this.wasteQuantity <= 0 || !this.wasteReason) {
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Ingrese cantidad y razón' });
+          return;
+      }
+
+      const wasteData = {
+          inventoryId: this.wasteItem.id,
+          quantity: this.wasteQuantity,
+          reason: this.wasteReason
+      };
+
+      this.inventoryService.recordWaste(wasteData).subscribe({
+          next: () => {
+              this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Merma registrada' });
+              this.loadInventory();
+              this.hideWasteDialog();
+          },
+          error: (e) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo registrar merma' })
+      });
   }
 }

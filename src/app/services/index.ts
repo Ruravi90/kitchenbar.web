@@ -12,3 +12,5 @@ export * from "./branches.service";
 export * from "./notifications.service";
 export * from "./invoices.service";
 export * from "./dashboard.service";
+export * from './inventory.service';
+export * from './recipes.service';

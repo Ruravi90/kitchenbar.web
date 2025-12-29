@@ -45,6 +45,10 @@ export class AuthService {
       const currentUser = JSON.parse(localStorage.getItem('user')!);
       return currentUser.token;
     }
+    else if (localStorage.getItem('client_token')) {
+      const currentoken = localStorage.getItem('client_token')!;
+      return currentoken;
+    }
     return '';
   }
   getCurrentUser(): any{

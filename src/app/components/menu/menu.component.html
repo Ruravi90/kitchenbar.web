@@ -114,8 +114,12 @@
     >
       <div class="flex-1">
         <div class="font-bold">{{ item.quantity }}x {{ item.meal.name }}</div>
-        <div class="text-sm text-600">{{ "$" + (item.meal.price * item.quantity) }}</div>
-        <div class="text-sm text-500 italic" *ngIf="item.comment">{{ item.comment }}</div>
+        <div class="text-sm text-600">
+          {{ "$" + item.meal.price * item.quantity }}
+        </div>
+        <div class="text-sm text-500 italic" *ngIf="item.comment">
+          {{ item.comment }}
+        </div>
       </div>
       <button
         pButton
@@ -146,7 +150,7 @@
       label="Ordenar"
       icon="pi pi-check"
       [disabled]="cart.length === 0"
-      (click)="placeOrder()"
+      (click)="initiateOrderParams()"
     ></button>
   </ng-template>
 </p-dialog>
@@ -200,16 +204,20 @@
   <ng-template pTemplate="content">
     <div *ngIf="selectedMealForCart">
       <div class="mb-4">
-        <div class="text-2xl font-bold text-900 mb-2">{{ selectedMealForCart.name }}</div>
-        <div class="text-xl text-primary font-semibold">{{ "$" + selectedMealForCart.price }}</div>
+        <div class="text-2xl font-bold text-900 mb-2">
+          {{ selectedMealForCart.name }}
+        </div>
+        <div class="text-xl text-primary font-semibold">
+          {{ "$" + selectedMealForCart.price }}
+        </div>
       </div>
-      
+
       <div class="field mb-4">
         <label for="quantity" class="font-semibold">Cantidad</label>
-        <p-inputNumber 
-          id="quantity" 
-          [(ngModel)]="orderQuantity" 
-          [showButtons]="true" 
+        <p-inputNumber
+          id="quantity"
+          [(ngModel)]="orderQuantity"
+          [showButtons]="true"
           [min]="1"
           [max]="20"
           buttonLayout="horizontal"
@@ -219,16 +227,20 @@
       </div>
 
       <div class="field">
-        <label for="comment" class="font-semibold">Comentarios o Modificaciones (Opcional)</label>
-        <textarea 
-          id="comment" 
-          pInputTextarea 
-          [(ngModel)]="orderComment" 
+        <label for="comment" class="font-semibold"
+          >Comentarios o Modificaciones (Opcional)</label
+        >
+        <textarea
+          id="comment"
+          pInputTextarea
+          [(ngModel)]="orderComment"
           rows="3"
           placeholder="Ej: Sin cebolla, término medio, extra picante..."
           class="w-full"
         ></textarea>
-        <small class="text-600">Agrega instrucciones especiales para tu platillo</small>
+        <small class="text-600"
+          >Agrega instrucciones especiales para tu platillo</small
+        >
       </div>
     </div>
   </ng-template>
@@ -437,6 +449,7 @@
         icon="pi pi-credit-card"
         class="p-button-lg p-button-success"
         (click)="selectPaymentMethod('online')"
+        *ngIf="enableOnlinePayments"
       ></button>
     </div>
   </ng-template>
@@ -453,12 +466,16 @@
     <div class="mb-4">
       <div class="flex justify-content-between align-items-center mb-3">
         <span class="text-xl font-bold">Total a Pagar:</span>
-        <span class="text-xl font-bold text-primary">{{ "$" + dinerTotal }}</span>
+        <span class="text-xl font-bold text-primary">{{
+          "$" + dinerTotal
+        }}</span>
       </div>
     </div>
     <div *ngIf="elementsOptions?.clientSecret">
       <ngx-stripe-elements [elementsOptions]="elementsOptions">
-        <ngx-stripe-payment [options]="paymentElementOptions"></ngx-stripe-payment>
+        <ngx-stripe-payment
+          [options]="paymentElementOptions"
+        ></ngx-stripe-payment>
       </ngx-stripe-elements>
     </div>
     <div *ngIf="!elementsOptions?.clientSecret">

@@ -38,5 +38,10 @@
     ]
   },
   "nxCloudId": "67296e9634b08f66a3f6ed71",
-  "useLegacyCache":true
+  "useLegacyCache": true,
+  "generators": {
+    "@nx/angular:component": {
+      "style": "css"
+    }
+  }
 }

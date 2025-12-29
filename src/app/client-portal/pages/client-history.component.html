@@ -1,0 +1,40 @@
+<div class="history-container">
+    <app-client-navigation></app-client-navigation>
+    <h2>Order History</h2>
+
+    <div class="orders-list">
+        <ng-container *ngIf="orders$ | async as orders; else loading">
+            <div class="empty-state" *ngIf="orders.length === 0">
+                <p>No orders yet. Start ordering your favorite meals!</p>
+            </div>
+
+            <div class="order-card" *ngFor="let order of orders">
+                <div class="order-header">
+                    <span class="order-date">{{ order.createdAt | date:'mediumDate' }}</span>
+                    <span class="order-status" [ngClass]="getOrderStatusColor(order.status)">
+                        {{ order.status }}
+                    </span>
+                </div>
+                
+                <div class="order-body">
+                    <div class="branch-info" *ngIf="order.branch">
+                        <strong>{{ order.branch.name }}</strong>
+                    </div>
+                    
+                    <div class="items-summary" *ngIf="order.meal">
+                         <p>{{ order.meal.name }}</p>
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount">{{ order.total | currency }}</span>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #loading>
+            <div class="loading-spinner">Loading history...</div>
+        </ng-template>
+    </div>
+</div>

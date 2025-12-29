@@ -10,4 +10,5 @@ export class RestaurantConfig {
     notificationMessage?: string;
     stripeAccountId?: string;
     stripeOnboardingCompleted?: boolean;
+    enableOnlinePayments?: boolean;
 }

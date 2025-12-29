@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Meal, User } from '../../../models';
-import { CategoriesInterface, MealsInterface } from '../../../interfaces';
+import { Meal, User, Inventory, Recipe } from '../../../models';
+import { CategoriesInterface, MealsInterface, InventoryInterface, RecipesInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 
@@ -15,7 +15,10 @@ export class MealsComponent {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private iMeal: MealsInterface,
-    private categoriesServices: CategoriesInterface){}
+    private categoriesServices: CategoriesInterface,
+    private inventoryService: InventoryInterface,
+    private recipesService: RecipesInterface
+  ){}
 
   items: Meal[] = [];
   meal: Meal = new Meal();
@@ -24,9 +27,16 @@ export class MealsComponent {
   categories:any[] = [];
   selectedCategory:any;
 
+  // Recipe-related properties
+  inventoryItems: Inventory[] = [];
+  currentRecipes: Recipe[] = [];
+  newRecipe: Recipe = new Recipe();
+  selectedInventoryItem: Inventory | undefined;
+
   ngOnInit(): void {
     this.getMeals();
     this.getCategories();
+    this.getInventory();
   }
 
   async delay(ms: number) {
@@ -55,15 +65,36 @@ export class MealsComponent {
     });
   }
 
+  getInventory() {
+    this.inventoryService.getItemsByInstance().subscribe({
+        next: (data) => this.inventoryItems = data,
+        error: (e) => console.error(e)
+    });
+  }
+
+  getRecipesForMeal(mealId: number) {
+    this.recipesService.getByMeal(mealId).subscribe({
+        next: (data) => this.currentRecipes = data,
+        error: (e) => console.error(e)
+    });
+  }
+
   showModal(isEdit:boolean = false, item?:Meal){
     console.log(item);
     this.isEdit = isEdit;
     if(isEdit){
       this.meal = item!;
       this.selectedCategory = this.categories.find(i=> i.id == item?.categoryId);
+      // Load recipes
+      if(this.meal.id) this.getRecipesForMeal(this.meal.id);
     }
-    else
+    else {
       this.meal = new Meal();
+      this.currentRecipes = []; 
+    }
+    
+    this.newRecipe = new Recipe(); // Reset new recipe form
+    this.selectedInventoryItem = undefined;
     this.visibleModal =  true;
   }
 
@@ -71,7 +102,11 @@ export class MealsComponent {
     this.meal.categoryId = this.selectedCategory.id;
     if(this.isEdit){
       this.iMeal.updateItem(this.meal!.id!,this.meal).subscribe({
-        next: (data) => this.getMeals(),
+        next: (data) => {
+            this.getMeals();
+            this.visibleModal = false; 
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Platillo actualizado' });
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -79,15 +114,56 @@ export class MealsComponent {
     }
     else{
       this.iMeal.createItem(this.meal).subscribe({
-        next: (data) => this.getMeals(),
+        next: (data) => {
+            this.getMeals();
+            this.visibleModal = false;
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Platillo creado' });
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
       });
     }
-
     this.selectedCategory = null;
-    this.visibleModal = false;
+  }
+
+  // Recipes Logic
+  addRecipe() {
+    if (!this.selectedInventoryItem || !this.newRecipe.quantity) {
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Selecciona ingrediente y cantidad' });
+        return;
+    }
+
+    if (!this.meal.id) {
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Guarda primero el platillo para agregar ingredientes' });
+        return;
+    }
+
+    const recipe: Recipe = {
+        mealId: this.meal.id,
+        inventoryId: this.selectedInventoryItem.id,
+        quantity: this.newRecipe.quantity
+    };
+
+    this.recipesService.createItem(recipe).subscribe({
+        next: (res) => {
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Ingrediente agregado' });
+            this.getRecipesForMeal(this.meal.id!);
+            this.newRecipe = new Recipe();
+            this.selectedInventoryItem = undefined;
+        },
+        error: (e) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar ingrediente' })
+    });
+  }
+
+  deleteRecipe(id: number) {
+      this.recipesService.deleteItem(id).subscribe({
+          next: () => {
+              this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: 'Ingrediente eliminado' });
+              this.getRecipesForMeal(this.meal.id!);
+          },
+          error: (e) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar' })
+      });
   }
 
   confirmDeleted(item:Meal) {

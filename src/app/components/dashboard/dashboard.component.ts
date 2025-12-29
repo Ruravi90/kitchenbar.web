@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardInterface } from '../../interfaces/dashboard.interface';
+import { DashboardInterface, InventoryInterface } from '../../interfaces';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,12 +17,16 @@ export class DashboardComponent implements OnInit {
   peakHoursData: any;
   peakHoursOptions: any;
 
+  predictionData: any;
+  predictionOptions: any;
+
   branchId: number = 0;
   instanceId: number = 0; // Capture instanceId from user
 
   constructor(
     private dashboardService: DashboardInterface,
-    private authService: AuthService
+    private authService: AuthService,
+    private inventoryService: InventoryInterface
   ) {}
 
   ngOnInit() {
@@ -96,6 +100,36 @@ export class DashboardComponent implements OnInit {
           }
         ]
       };
+    });
+
+    // 4. Inventory Prediction
+    this.inventoryService.predict(7).subscribe(data => {
+        // Sort by suggested reorder descending to show most critical first
+        const sortedData = data.sort((a, b) => b.suggestedReorder - a.suggestedReorder).slice(0, 10);
+
+        this.predictionData = {
+            labels: sortedData.map(item => item.mealName),
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Stock Actual',
+                    backgroundColor: '#66BB6A',
+                    data: sortedData.map(item => item.currentStock)
+                },
+                {
+                    type: 'bar',
+                    label: 'Consumo Predicho (7d)',
+                    backgroundColor: '#FFA726',
+                    data: sortedData.map(item => item.predictedConsumption)
+                },
+                {
+                    type: 'bar',
+                    label: 'Sugerencia Compra',
+                    backgroundColor: '#EF5350',
+                    data: sortedData.map(item => item.suggestedReorder)
+                }
+            ]
+        };
     });
   }
 
@@ -171,6 +205,44 @@ export class DashboardComponent implements OnInit {
                 }
             },
             y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+        }
+    };
+
+    this.predictionOptions = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                stacked: false,
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            },
+            y: {
+                stacked: false,
                 ticks: {
                     color: textColorSecondary
                 },

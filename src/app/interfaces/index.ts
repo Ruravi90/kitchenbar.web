@@ -10,3 +10,5 @@ export * from "./branches.interface"
 export * from "./notifications.interface"
 export * from "./invoices.interface"
 export * from "./dashboard.interface"
+export * from './inventory.interface';
+export * from './RecipesInterface';

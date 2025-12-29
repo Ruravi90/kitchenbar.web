@@ -1,0 +1,50 @@
+<div class="link-container">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <i class="pi pi-qrcode"></i>
+        <h2>Vincular Restaurante</h2>
+      </div>
+    </ng-template>
+
+    <!-- Scanner QR -->
+    <app-qr-scanner
+      *ngIf="isScanning"
+      [allowManualInput]="true"
+      [manualPlaceholder]="'Código del restaurante'"
+      (onScanSuccess)="onScanSuccess($event)"
+      (onScanError)="onScanError($event)"
+    >
+    </app-qr-scanner>
+
+    <!-- Loading -->
+    <div *ngIf="isProcessing" class="loading-section">
+      <p-progressSpinner></p-progressSpinner>
+      <p>Vinculando restaurante...</p>
+    </div>
+
+    <!-- Success -->
+    <div *ngIf="linkedBranch && !isProcessing" class="success-section">
+      <i class="pi pi-check-circle success-icon"></i>
+      <h3>{{ linkedBranch.name }}</h3>
+      <p>Restaurante agregado a tus favoritos</p>
+
+      <div class="button-group">
+        <p-button
+          label="Ver Menú"
+          icon="pi pi-book"
+          (onClick)="navigateToMenu()"
+        >
+        </p-button>
+        <p-button
+          label="Mis Favoritos"
+          icon="pi pi-heart"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="navigateToFavorites()"
+        >
+        </p-button>
+      </div>
+    </div>
+  </p-card>
+</div>

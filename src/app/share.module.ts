@@ -32,6 +32,7 @@ import { ChipModule } from 'primeng/chip';
 import { AvatarModule } from 'primeng/avatar';
 import { TabViewModule } from 'primeng/tabview';
 import { TagModule } from 'primeng/tag';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 import { TableModule } from 'primeng/table';
@@ -72,7 +73,8 @@ import { TableModule } from 'primeng/table';
     AvatarModule,
     TabViewModule,
     TagModule,
-    TableModule
+    TableModule,
+    ProgressSpinnerModule
   ]
 })
 export class SharedModule { }

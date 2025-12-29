@@ -1,83 +1,170 @@
-<div class="flex flex-wrap justify-content-center ">
-    <div class="w-full">
-        <p-card header="Sucursales"  class="">
-            <div>
-                <p-inputGroup class="w-full mb-4">
-                    <p-inputGroupAddon>
-                        <i class="pi pi-search"></i>
-                    </p-inputGroupAddon>
-                    <input type="text" pInputText placeholder="Buscar sucursal" pTooltip="Escribe para buscar"/>
-                    <button type="button" pButton icon="pi pi-plus" size="small" 
-                    class="p-button-success" (click)="showModal()"  pTooltip="Nueva sucursal" ></button>
-                </p-inputGroup>
+<div class="flex flex-wrap justify-content-center">
+  <div class="w-full">
+    <p-card header="Sucursales" class="">
+      <div>
+        <p-inputGroup class="w-full mb-4">
+          <p-inputGroupAddon>
+            <i class="pi pi-search"></i>
+          </p-inputGroupAddon>
+          <input
+            type="text"
+            pInputText
+            placeholder="Buscar sucursal"
+            pTooltip="Escribe para buscar"
+          />
+          <button
+            type="button"
+            pButton
+            icon="pi pi-plus"
+            size="small"
+            class="p-button-success"
+            (click)="showModal()"
+            pTooltip="Nueva sucursal"
+          ></button>
+        </p-inputGroup>
 
-                <p-table [value]="branches" [paginator]="true" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Nombre</th>
-                            <th class="text-center" style="width: 120px">Acciones</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-item>
-                        <tr>
-                            <td>{{item.name}}</td>
-                            <td class="text-center">
-                                <div class="flex justify-content-center gap-2">
-                                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="warning" pTooltip="Editar" (click)="showModal(true,item)"/>
-                                    <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" pTooltip="Eliminar" (click)="confirmDeleted(item)"/>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="2" class="text-center">Sin sucursales registradas</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-        </p-card>
-    </div>
+        <p-table
+          [value]="branches"
+          [paginator]="true"
+          [rows]="5"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nombre</th>
+              <th class="text-center" style="width: 120px">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>{{ item.name }}</td>
+              <td class="text-center">
+                <div class="flex justify-content-center gap-2">
+                  <p-button
+                    icon="pi pi-qrcode"
+                    [rounded]="true"
+                    [outlined]="true"
+                    severity="secondary"
+                    size="small"
+                    pTooltip="Descargar QR"
+                    (click)="showQRModal(item)"
+                  />
+                  <p-button
+                    icon="pi pi-pencil"
+                    [rounded]="true"
+                    [outlined]="true"
+                    severity="warning"
+                    pTooltip="Editar"
+                    (click)="showModal(true, item)"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [rounded]="true"
+                    [outlined]="true"
+                    severity="danger"
+                    pTooltip="Eliminar"
+                    (click)="confirmDeleted(item)"
+                  />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="2" class="text-center">
+                Sin sucursales registradas
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-card>
+  </div>
 </div>
 
-<p-dialog header="{{isEdit?'Editar':'Nueva'}} sucursal" [modal]="true" [(visible)]="visibleModal" >
-    <div class="formgrid grid gap-3 mb-3 mt-3">
-        <div class="field col-12">
-            <label for="tableName">Nombre de la sucursal</label>
-            <input id="tableName" type="text" [(ngModel)]="branch.name" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
-        </div>
+<p-dialog
+  header="{{ isEdit ? 'Editar' : 'Nueva' }} sucursal"
+  [modal]="true"
+  [(visible)]="visibleModal"
+>
+  <div class="formgrid grid gap-3 mb-3 mt-3">
+    <div class="field col-12">
+      <label for="tableName">Nombre de la sucursal</label>
+      <input
+        id="tableName"
+        type="text"
+        [(ngModel)]="branch.name"
+        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+      />
     </div>
-    <div class="flex justify-content-end gap-2">
-        <p-button label="Cancelar" severity="secondary" (click)="visibleModal = false" />
-        <p-button label="Guardar" (click)="confirmSave()" />
-    </div>
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      (click)="visibleModal = false"
+    />
+    <p-button label="Guardar" (click)="confirmSave()" />
+  </div>
 </p-dialog>
 
 <p-toast />
 <p-confirmDialog #cd>
-    <ng-template pTemplate="headless" let-message>
-        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
-            <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
-                <i class="pi pi-question text-5xl"></i>
-            </div>
-            <span class="font-bold text-2xl block mb-2 mt-4">
-                {{ message.header }}
-            </span>
-            <p class="mb-0">{{ message.message }}</p>
-            <div class="flex align-items-center gap-2 mt-4">
-                <button 
-                    pButton 
-                    label="Si" 
-                    (click)="cd.accept()" 
-                    class="w-8rem">
-                </button>
-                <button 
-                    pButton 
-                    label="No" 
-                    (click)="cd.reject()" 
-                    class="p-button-outlined w-8rem ">
-                </button>
-            </div>
-        </div>
+  <ng-template pTemplate="headless" let-message>
+    <div
+      class="flex flex-column align-items-center p-5 surface-overlay border-round"
+    >
+      <div
+        class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem"
+      >
+        <i class="pi pi-question text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4">
+        {{ message.header }}
+      </span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button
+          pButton
+          label="Si"
+          (click)="cd.accept()"
+          class="w-8rem"
+        ></button>
+        <button
+          pButton
+          label="No"
+          (click)="cd.reject()"
+          class="p-button-outlined w-8rem"
+        ></button>
+      </div>
+</div>
     </ng-template>
 </p-confirmDialog>
+
+<p-dialog header="QR de sucursal {{branch.name}}" [modal]="true" [(visible)]="visibleQRModal" >
+    <div #parent>
+        <qrcode
+        [elementType]="qrData.elementType"
+        [errorCorrectionLevel]="qrData.errorCorrectionLevel"
+        [qrdata]="qrData.qrdata"
+        [scale]="qrData.scale"
+        [width]="qrData.width"
+        [margin]="qrData.margin"
+        [className]="qrData.cssClass"
+        [colorDark]="qrData.colorDark"
+        [colorLight]="qrData.colorLight"
+        [margin]="qrData.margin"
+        [alt]="qrData.alt"
+        [ariaLabel]="qrData.ariaLabel"
+        [title]="qrData.title"
+        [imageSrc]="qrData.imageSrc"
+        [imageHeight]="qrData.imageHeight"
+        [imageWidth]="qrData.imageWidth"
+      ></qrcode>
+    </div>
+    <div class="flex justify-content-end gap-2 mt-3">
+        <p-button label="Cancelar" severity="secondary" (click)="visibleQRModal = false" />
+        <p-button icon="pi pi-cloud-download" label="Descargar" (click)="saveQRAsImage(parent)" />
+    </div>
+</p-dialog>

@@ -1,0 +1,73 @@
+<div class="profile-container">
+    <app-client-navigation></app-client-navigation>
+    <header class="profile-header glass-effect">
+        <h1>My Profile</h1>
+        <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+    </header>
+
+    <div class="content-grid">
+        <!-- User Info -->
+        <div class="card user-card">
+            <div class="avatar-placeholder">
+                {{ user?.name?.charAt(0) || 'U' }}
+            </div>
+            <h2>{{ user?.name }}</h2>
+            <p class="email">{{ user?.email }}</p>
+            <p class="phone" *ngIf="user?.phoneNumber">{{ user?.phoneNumber }}</p>
+        </div>
+
+        <!-- Addresses -->
+        <div class="card address-card">
+            <div class="card-title-row">
+                <h3>Saved Addresses</h3>
+                <button class="btn btn-sm btn-primary" (click)="toggleAddressForm()" *ngIf="!showAddressForm">
+                    + Add New
+                </button>
+            </div>
+
+            <!-- Add Address Form -->
+            <div class="add-address-form" *ngIf="showAddressForm">
+                <h4>New Address</h4>
+                <form [formGroup]="addressForm" (ngSubmit)="onAddAddress()">
+                    <div class="form-row">
+                        <div class="form-group half">
+                             <label>Tag (e.g. Home)</label>
+                             <input formControlName="tagName" class="form-control" placeholder="Home">
+                        </div>
+                        <div class="form-group half">
+                            <label>Zip Code</label>
+                            <input formControlName="zipCode" class="form-control" placeholder="12345">
+                       </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea formControlName="address" class="form-control" rows="2" placeholder="Street, Number, Apt..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Instructions</label>
+                        <input formControlName="instructions" class="form-control" placeholder="Gate code, near park...">
+                    </div>
+                    <div class="form-actions right">
+                        <button type="button" class="btn btn-text" (click)="cancelAddress()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="addressForm.invalid || loading">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- List -->
+            <div class="address-list" *ngIf="!showAddressForm">
+                <div class="empty-state" *ngIf="addresses.length === 0">
+                    No addresses saved yet.
+                </div>
+                <div class="address-item" *ngFor="let addr of addresses">
+                    <div class="address-icon">📍</div>
+                    <div class="address-details">
+                        <span class="tag">{{ addr.tagName }}</span>
+                        <p>{{ addr.address }}</p>
+                        <small *ngIf="addr.instructions">Note: {{ addr.instructions }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

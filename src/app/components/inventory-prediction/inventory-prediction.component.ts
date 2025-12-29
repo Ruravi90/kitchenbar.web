@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InventoryService, InventoryPrediction } from '../../services/inventory.service';
+import { InventoryService } from '../../services/inventory.service';
+import { InventoryPrediction } from '../../models/inventory.model';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
@@ -141,7 +142,7 @@ export class InventoryPredictionComponent implements OnInit {
   }
 
   loadPredictions(): void {
-    this.inventoryService.getPredictions(this.daysToPredict).subscribe({
+    this.inventoryService.predict(this.daysToPredict).subscribe({
       next: (data) => {
         this.predictions = data;
       },
@@ -159,31 +160,19 @@ export class InventoryPredictionComponent implements OnInit {
 
   saveStock() {
     if (this.selectedItem) {
-      // Necesitamos el ID del inventario, pero el DTO de predicción tiene MealId.
-      // Asumiremos que podemos buscar el inventario por MealId o que el endpoint de predicción debería devolver InventoryId.
-      // Por ahora, para simplificar y dado que no tenemos InventoryId en el DTO,
-      // vamos a hacer un fetch del inventario por MealId (o asumir que el backend lo maneja).
-      // CORRECCIÓN: El DTO de predicción NO tiene InventoryId. 
-      // Opción A: Agregar InventoryId al DTO.
-      // Opción B: Buscar el inventario en el frontend (ineficiente).
-      // Vamos a asumir que el usuario quiere actualizar el stock de ese platillo.
-      // Necesitamos actualizar el DTO para incluir InventoryId o usar MealId para buscar.
       
-      // Para esta iteración, voy a buscar el item de inventario completo usando el servicio (si tuviera un método de búsqueda)
-      // O mejor, voy a actualizar el DTO en el backend para incluir InventoryId.
-      
-      // ... Espera, voy a hacer una llamada rápida para obtener el inventario y luego actualizarlo.
-      // Esto es un "hack" rápido, lo ideal es actualizar el DTO.
-      
-      this.inventoryService.getInventory().subscribe(items => {
+      this.inventoryService.getItemsByInstance().subscribe(items => {
         const inventoryItem = items.find(i => i.mealId === this.selectedItem.mealId);
         if (inventoryItem) {
           inventoryItem.stock = this.newStockValue;
-          this.inventoryService.updateInventory(inventoryItem.id, inventoryItem).subscribe(() => {
-            this.messageService.add({severity:'success', summary:'Stock Actualizado', detail:`Stock de ${this.selectedItem.mealName} actualizado a ${this.newStockValue}`});
-            this.adjustDialog = false;
-            this.loadPredictions(); // Recargar predicciones
-          });
+          // IMPORTANT: Check if ID exists before update
+          if (inventoryItem.id) {
+            this.inventoryService.updateItem(inventoryItem.id, inventoryItem).subscribe(() => {
+                this.messageService.add({severity:'success', summary:'Stock Actualizado', detail:`Stock de ${this.selectedItem.mealName} actualizado a ${this.newStockValue}`});
+                this.adjustDialog = false;
+                this.loadPredictions(); // Recargar predicciones
+            });
+          }
         } else {
              this.messageService.add({severity:'error', summary:'Error', detail:'No se encontró el item de inventario'});
         }

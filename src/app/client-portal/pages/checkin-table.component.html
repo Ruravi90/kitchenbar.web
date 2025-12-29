@@ -1,0 +1,48 @@
+<div class="checkin-container">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <i class="pi pi-qrcode"></i>
+        <h2>Check-in en Mesa</h2>
+      </div>
+    </ng-template>
+    
+    <!-- Scanner QR -->
+    <app-qr-scanner 
+      *ngIf="isScanning"
+      [allowManualInput]="true"
+      [manualPlaceholder]="'Código de la mesa'"
+      (onScanSuccess)="onScanSuccess($event)"
+      (onScanError)="onScanError($event)">
+    </app-qr-scanner>
+    
+    <!-- Loading -->
+    <div *ngIf="isProcessing" class="loading-section">
+      <p-progressSpinner></p-progressSpinner>
+      <p>Realizando check-in...</p>
+    </div>
+    
+    <!-- Success -->
+    <div *ngIf="sessionData && !isProcessing && !sessionData.dinerId" class="success-section">
+      <i class="pi pi-check-circle success-icon"></i>
+      <h3>¡Check-in exitoso!</h3>
+      <p class="restaurant-info">
+        <strong>{{ sessionData.branchName }}</strong><br>
+        Mesa: {{ sessionData.tableName }}
+      </p>
+      <p class="redirect-info">Redirigiendo al menú...</p>
+    </div>
+
+    <!-- Sesión existente -->
+    <div *ngIf="sessionData?.dinerId && !isProcessing" class="existing-session">
+      <i class="pi pi-info-circle info-icon"></i>
+      <h3>Ya tienes una sesión activa</h3>
+      <p>Tienes un pedido pendiente en otra mesa.</p>
+      <p-button 
+        label="Ir a mi pedido" 
+        icon="pi pi-arrow-right"
+        (onClick)="goToExistingSession()">
+      </p-button>
+    </div>
+  </p-card>
+</div>

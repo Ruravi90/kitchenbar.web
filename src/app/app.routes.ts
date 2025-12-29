@@ -22,6 +22,7 @@ import { canActivateChild } from './utilities/AlwaysAuthGuard';
                 ]
             },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
+            { path: 'client-portal', loadChildren: () => import('./client-portal/client-portal.module').then(m => m.ClientPortalModule) },
             { path: 'facturacion', loadChildren: () => import('./components/invoicing/invoicing.module').then(m => m.InvoicingModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },

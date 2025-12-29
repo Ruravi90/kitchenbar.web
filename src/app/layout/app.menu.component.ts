@@ -56,8 +56,8 @@ export class AppMenuComponent implements OnInit {
                              inventoryItems.push({ label: 'Predecir', icon: 'pi pi-fw pi-chart-line', routerLink: ['/inventory-prediction'] });
                          }
 
-                        this.model.push({
-                            label: 'Inventario',
+                this.model.push({
+                    label: 'Inventario',
                             items: inventoryItems
                         });
                     }

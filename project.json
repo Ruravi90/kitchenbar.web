@@ -24,7 +24,8 @@
         "assets": [
           "src/favicon.ico",
           "src/assets",
-          "src/manifest.webmanifest"
+          "src/manifest.webmanifest",
+          "src/sw-push.js"
         ],
         "styles": [       
           "node_modules/primeng/resources/themes/lara-light-amber/theme.css",  

@@ -7,7 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { loadStripe, Stripe, StripeElements, StripePaymentElement } from '@stripe/stripe-js';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-attendace',
@@ -36,6 +36,9 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   tableIdentity : string = "";
   instanceIdentity : string = "";
   showModalDiner:boolean = false;
+  
+  // Subscription tracking for cleanup
+  private subscriptions: Subscription[] = [];
 
   // Stripe Properties
   showPaymentModal: boolean = false;
@@ -73,7 +76,8 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     if(!this.isLogin){
       this.hub.connect();
       await this.delay(1000);
-      this.hub.newUser().subscribe();
+      const newUserSub = this.hub.newUser().subscribe();
+      this.subscriptions.push(newUserSub);
     }
 
     await this.delay(1000);
@@ -83,11 +87,13 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     if(this.isLogin)
       this.getMeals();
 
-    this.hub.receiveOrderFromTable().subscribe(x =>  {
+    // Store subscriptions for cleanup
+    const orderSub = this.hub.receiveOrderFromTable().subscribe(x =>  {
       this.getDiner();
     });
+    this.subscriptions.push(orderSub);
 
-    this.hub.notificationWarnTables().subscribe(x =>  {
+    const tableSub = this.hub.notificationWarnTables().subscribe(x =>  {
       if(x.id == this.table!.id){
         if(x.isRequestAttendace)
           this.table!.isRequestAttendace = x.isRequestAttendace;
@@ -95,8 +101,11 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           this.table!.isRequestCheck = x.isRequestCheck;
       }
     });
+    this.subscriptions.push(tableSub);
   }
   ngOnDestroy(): void {
+    // Clean up all subscriptions to prevent memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   async delay(ms: number) {

@@ -48,13 +48,47 @@
             </div>
         </p-card>
 
-        <p-card header="Configuración" styleClass="mb-3">
-            <div class="flex align-items-center justify-content-between">
-                <div>
-                    <span class="font-bold block mb-1">Notificaciones Push</span>
-                    <span class="text-500 text-sm">Recibir alertas sobre pedidos y actualizaciones.</span>
+        <p-card header="Notificaciones" styleClass="mb-3">
+            <div class="flex flex-column gap-3">
+                <!-- Push Notifications Toggle -->
+                <div class="flex align-items-center justify-content-between">
+                    <div class="flex-1">
+                        <div class="flex align-items-center gap-2 mb-1">
+                            <i class="pi pi-bell" style="font-size: 1.2rem"></i>
+                            <span class="font-bold">Notificaciones Push</span>
+                        </div>
+                        <span class="text-500 text-sm block">
+                            Recibe alertas en tiempo real sobre pedidos, actualizaciones de estado y solicitudes de mesas, incluso cuando la app está cerrada.
+                        </span>
+                    </div>
+                    <p-inputSwitch 
+                        [(ngModel)]="IsActiveNotification" 
+                        (onChange)="activeNotification($event)"
+                        [disabled]="checkingSubscription">
+                    </p-inputSwitch>
                 </div>
-                <p-inputSwitch [(ngModel)]="IsActiveNotification" (onChange)="activeNotification($event)"></p-inputSwitch>
+
+                <!-- Status Indicator -->
+                <div *ngIf="!checkingSubscription && IsActiveNotification" class="flex align-items-center gap-2 p-2 surface-100 border-round">
+                    <i class="pi pi-check-circle text-green-500"></i>
+                    <span class="text-sm text-600">Notificaciones activadas correctamente</span>
+                </div>
+
+                <div *ngIf="checkingSubscription" class="flex align-items-center gap-2 p-2 surface-100 border-round">
+                    <i class="pi pi-spin pi-spinner"></i>
+                    <span class="text-sm text-600">Verificando estado de notificaciones...</span>
+                </div>
+
+                <!-- Browser Support Warning -->
+                <div *ngIf="permission() === 'denied'" class="flex align-items-start gap-2 p-3 bg-yellow-50 border-round">
+                    <i class="pi pi-exclamation-triangle text-yellow-600 mt-1"></i>
+                    <div class="flex-1">
+                        <span class="font-semibold text-yellow-900 block mb-1">Permisos bloqueados</span>
+                        <span class="text-sm text-yellow-800">
+                            Las notificaciones están bloqueadas en tu navegador. Ve a la configuración del navegador para permitirlas.
+                        </span>
+                    </div>
+                </div>
             </div>
         </p-card>
     </div>

@@ -5,6 +5,7 @@ import { LayoutService } from "./service/app.layout.service";
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from './app.topbar.component';
 import { AuthInterface, HubInterface } from '../interfaces';
+import { WebPushNotificationService } from '../services/web-push-notification.service';
 
 @Component({
     selector: 'app-layout',
@@ -24,7 +25,14 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
 
     public joined = false;
 
-    constructor(private auth:AuthInterface, private hub: HubInterface,public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
+    constructor(
+      private auth: AuthInterface, 
+      private hub: HubInterface,
+      private pushService: WebPushNotificationService,
+      public layoutService: LayoutService, 
+      public renderer: Renderer2, 
+      public router: Router
+    ) {
       if(!this.auth.checkLogin()){// se oculta el menu para usuarios que no estan registrados y son comenzales
         this.hideMenu();
         this.layoutService.onMenuToggle();
@@ -77,9 +85,36 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
           this.hub.leftUser().subscribe(x =>{
             this.joined = false;
           });
-          this.hub.receiveOrderToKitchen().subscribe(x =>  {
+          this.hub.receiveOrderToKitchen().subscribe(x => {
 
           });
+
+          // Subscribe to push notifications
+          this.subscribeToPushNotifications();
+      }
+    }
+
+    /**
+     * Subscribe user to push notifications
+     */
+    async subscribeToPushNotifications() {
+      try {
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.register('/sw-push.js');
+          console.log('Service Worker registered:', registration);
+        }
+
+        // Wait a bit for service worker to be ready
+        await this.delay(500);
+
+        // Request subscription
+        const subscribed = await this.pushService.subscribe();
+        if (subscribed) {
+          console.log('Successfully subscribed to push notifications');
+        }
+      } catch (error) {
+        console.error('Error setting up push notifications:', error);
       }
     }
 
@@ -140,8 +175,9 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
+        // Properly disconnect from hub
         this.hub?.leaveGroup();
+        
         if (this.overlayMenuOpenSubscription) {
             this.overlayMenuOpenSubscription.unsubscribe();
         }

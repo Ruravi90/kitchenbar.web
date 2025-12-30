@@ -1,6 +1,6 @@
 {
   "name": "kitchenbar.web",
-  "version": "0.1.81",
+  "version": "0.1.82",
   "scripts": {
     "ng": "ng",
     "start": "npx nx run kitchenbar.web:serve:development",

@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Order } from '../../../models';
 import { HubInterface, OrdersInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tables',
@@ -10,19 +11,18 @@ import { OverlayPanel } from 'primeng/overlaypanel';
   styleUrl: './orders.component.scss',
   providers: [ConfirmationService]
 })
-export class OrdersComponent implements OnInit{
+export class OrdersComponent implements OnInit, OnDestroy {
 
   private user?:any;
   public coments?:string;
+  private subscriptions: Subscription[] = [];
   
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private _serviceOrder: OrdersInterface, 
     private hub: HubInterface
-  ){
-    
-  }
+  ){}
 
   items?: Order[];
   kitchenItems: Order[] = [];
@@ -33,9 +33,16 @@ export class OrdersComponent implements OnInit{
   async ngOnInit() {
     this.retrieveOrders();
 
-    this.hub.receiveOrderToKitchen().subscribe(x =>  {
+    // Subscribe to order updates and store subscription
+    const orderSub = this.hub.receiveOrderToKitchen().subscribe(x => {
       this.retrieveOrders();
     });
+    this.subscriptions.push(orderSub);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up all subscriptions to prevent memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   async delay(ms: number) {

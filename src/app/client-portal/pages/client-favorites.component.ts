@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ClientPortalService } from '../../services/client-portal.service';
 import { Observable } from 'rxjs';
 import { ClientNavigationComponent } from '../components/client-navigation/client-navigation.component';
@@ -15,7 +16,10 @@ export class ClientFavoritesComponent implements OnInit {
   favorites: any[] = [];
   loading = true;
 
-  constructor(private clientService: ClientPortalService) {}
+  constructor(
+    private clientService: ClientPortalService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadFavorites();
@@ -38,5 +42,15 @@ export class ClientFavoritesComponent implements OnInit {
     this.clientService.removeFavorite(branchId).subscribe(() => {
         this.favorites = this.favorites.filter(b => b.id !== branchId);
     });
+  }
+
+  orderNow(branch: any) {
+    // Navigate to menu using instance identity (not branch identity)
+    if (branch.instance?.identity) {
+      this.router.navigate(['/menu', branch.instance.identity]);
+    } else {
+      console.error('Instance identity not available for branch:', branch);
+      // Fallback: show error message to user
+    }
   }
 }

@@ -38,14 +38,22 @@ export class ClientProfileComponent implements OnInit {
         this.user = u;
         if (!u) {
             this.router.navigate(['/client-portal/login']);
+        } else {
+            // Only load addresses if user is authenticated
+            this.loadAddresses();
         }
     });
-    this.loadAddresses();
   }
 
   loadAddresses() {
-    this.clientService.getAddresses().subscribe(res => {
-      this.addresses = res;
+    this.clientService.getAddresses().subscribe({
+      next: (res) => {
+        this.addresses = res;
+      },
+      error: (err) => {
+        // Handle error silently or show message
+        console.error('Error loading addresses:', err);
+      }
     });
   }
 

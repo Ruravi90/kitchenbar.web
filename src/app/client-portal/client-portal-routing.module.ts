@@ -6,12 +6,13 @@ import { ClientHistoryComponent } from './pages/client-history.component';
 import { ClientFavoritesComponent } from './pages/client-favorites.component';
 import { LinkBranchComponent } from './pages/link-branch.component';
 import { CheckinTableComponent } from './pages/checkin-table.component';
+import { clientAuthGuard } from './guards/client-auth.guard';
 
 const routes: Routes = [
   { path: 'login', component: ClientLoginComponent },
-  { path: 'profile', component: ClientProfileComponent },
-  { path: 'history', component: ClientHistoryComponent },
-  { path: 'favorites', component: ClientFavoritesComponent },
+  { path: 'profile', component: ClientProfileComponent, canActivate: [clientAuthGuard] },
+  { path: 'history', component: ClientHistoryComponent, canActivate: [clientAuthGuard] },
+  { path: 'favorites', component: ClientFavoritesComponent, canActivate: [clientAuthGuard] },
   { path: 'link-branch/:branchIdentity', component: LinkBranchComponent },
   { path: 'link-branch', component: LinkBranchComponent },
   { path: 'checkin-table/:tableIdentity', component: CheckinTableComponent },

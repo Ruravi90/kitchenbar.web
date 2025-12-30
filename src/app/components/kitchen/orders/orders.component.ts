@@ -145,4 +145,36 @@ export class OrdersComponent implements OnInit{
     op.toggle(event);
   }
 
+  isOnlineOrder(order: Order): boolean {
+    return order.table?.name === 'Online Orders';
+  }
+
+  cancelOrder(event: Event, order: Order) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: "¿Estás seguro que deseas cancelar esta orden? Esta acción no se puede deshacer.",
+      header: 'Cancelar Orden Online',
+      accept: () => {
+        order.isCancel = true;
+        this._serviceOrder.updateItem(order.id!, order).subscribe({
+          next: (data) => {
+            this.messageService.add({ 
+              severity: 'success', 
+              summary: 'Orden Cancelada', 
+              detail: 'La orden ha sido cancelada exitosamente.' 
+            });
+            this.retrieveOrders(); // Refresh orders list
+          },
+          error: (e) => {
+            this.messageService.add({ 
+              severity: 'error', 
+              summary: 'Error', 
+              detail: e.error?.messages || 'Error al cancelar la orden.' 
+            });
+          }
+        });
+      }
+    });
+  }
+
 }

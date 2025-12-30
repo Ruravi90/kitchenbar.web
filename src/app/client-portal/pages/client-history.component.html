@@ -11,8 +11,8 @@
             <div class="order-card" *ngFor="let order of orders">
                 <div class="order-header">
                     <span class="order-date">{{ order.createdAt | date:'mediumDate' }}</span>
-                    <span class="order-status" [ngClass]="getOrderStatusColor(order.status)">
-                        {{ order.status }}
+                    <span class="order-status-badge" [ngClass]="getStatusClass(order.statusOrderId, order.isCancel)">
+                        {{ getStatusLabel(order.statusOrderId, order.isCancel) }}
                     </span>
                 </div>
                 
@@ -22,13 +22,27 @@
                     </div>
                     
                     <div class="items-summary" *ngIf="order.meal">
-                         <p>{{ order.meal.name }}</p>
+                         <p class="meal-name">{{ order.meal.name }}</p>
+                         <div class="meal-details">
+                            <span class="quantity">Cantidad: {{ order.quantity }}</span>
+                            <span class="separator">•</span>
+                            <span class="price">{{ order.meal.price | currency }} c/u</span>
+                         </div>
                     </div>
                 </div>
 
                 <div class="order-footer">
                     <span class="total-label">Total:</span>
-                    <span class="total-amount">{{ order.total | currency }}</span>
+                    <span class="total-amount">{{ getOrderTotal(order) | currency }}</span>
+                </div>
+                
+                <!-- Cancel button for pending orders only -->
+                <div class="order-actions" *ngIf="canCancelOrder(order)">
+                    <button pButton label="Cancelar Pedido" 
+                            icon="pi pi-times" 
+                            class="p-button-danger p-button-sm w-full mt-2"
+                            (click)="cancelOrder(order)">
+                    </button>
                 </div>
             </div>
         </ng-container>
@@ -38,3 +52,6 @@
         </ng-template>
     </div>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

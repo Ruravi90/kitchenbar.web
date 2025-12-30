@@ -20,6 +20,7 @@
                                             <div *ngIf="item.aditional" class="text-sm text-600 mt-1"><i class="pi pi-comment mr-1"></i>{{ item.aditional }}</div>
                                         </div>
                                         <div class="col-fixed gap-2 flex">
+                                            <p-button *ngIf="isOnlineOrder(item)" label="Cancelar" severity="danger" icon="pi pi-times" (onClick)="cancelOrder($event,item)"></p-button>
                                             <p-button *ngIf="item.statusOrderId == 1" label="Preparar" severity="warning" icon="pi pi-cog" (onClick)="changeStatusOrder($event,item,2)"></p-button>
                                             <p-button *ngIf="item.statusOrderId == 2" label="Terminar" severity="success" icon="pi pi-check" (onClick)="changeStatusOrder($event,item,3)"></p-button>
                                         </div>
@@ -48,6 +49,7 @@
                                             <div *ngIf="item.aditional" class="text-sm text-600 mt-1"><i class="pi pi-comment mr-1"></i>{{ item.aditional }}</div>
                                         </div>
                                         <div class="col-fixed gap-2 flex">
+                                            <p-button *ngIf="isOnlineOrder(item)" label="Cancelar" severity="danger" icon="pi pi-times" (onClick)="cancelOrder($event,item)"></p-button>
                                             <p-button *ngIf="item.statusOrderId == 1" label="Preparar" severity="warning" icon="pi pi-cog" (onClick)="changeStatusOrder($event,item,2)"></p-button>
                                             <p-button *ngIf="item.statusOrderId == 2" label="Terminar" severity="success" icon="pi pi-check" (onClick)="changeStatusOrder($event,item,3)"></p-button>
                                         </div>

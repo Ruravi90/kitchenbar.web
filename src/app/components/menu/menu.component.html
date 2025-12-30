@@ -129,6 +129,57 @@
         (click)="removeFromCart(i)"
       ></button>
     </div>
+
+    <!-- Order Type Selection (Client Portal Flow Only) -->
+    <div
+      *ngIf="isClientPortalFlow && cart.length > 0"
+      class="border-top-1 surface-border pt-3 mt-3"
+    >
+      <div class="field">
+        <label for="orderType" class="font-semibold">Tipo de Pedido</label>
+        <p-dropdown
+          id="orderType"
+          [options]="orderTypes"
+          [(ngModel)]="orderType"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecciona tipo de pedido"
+          styleClass="w-full"
+          (onChange)="onOrderTypeChange()"
+        ></p-dropdown>
+      </div>
+
+      <div class="field" *ngIf="orderType === 1">
+        <label for="deliveryAddress" class="font-semibold"
+          >Dirección de Entrega *</label
+        >
+        <textarea
+          id="deliveryAddress"
+          pInputTextarea
+          [(ngModel)]="deliveryAddress"
+          rows="2"
+          placeholder="Calle, número, colonia, ciudad..."
+          class="w-full"
+          required
+        ></textarea>
+        <small class="text-600">Ingresa la dirección completa de entrega</small>
+      </div>
+
+      <div class="field" *ngIf="orderType === 2">
+        <label for="pickupTime" class="font-semibold"
+          >Hora de Recolección (Opcional)</label
+        >
+        <input
+          type="datetime-local"
+          id="pickupTime"
+          pInputText
+          [(ngModel)]="pickupTime"
+          class="w-full"
+        />
+        <small class="text-600">¿Cuándo deseas recoger tu pedido?</small>
+      </div>
+    </div>
+
     <div
       class="flex justify-content-between font-bold text-xl mt-4"
       *ngIf="cart.length > 0"

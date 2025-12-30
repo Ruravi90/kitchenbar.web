@@ -51,6 +51,9 @@ export class MenuComponent implements OnInit {
   dinerId?: number;
   identity?: string;
   tableIdentity?: string;
+  
+  // Flow detection: true when accessed from client portal (no table params)
+  isClientPortalFlow: boolean = false;
 
   groupedMeals: { category: any, meals: any[] }[] = [];
 
@@ -135,6 +138,24 @@ export class MenuComponent implements OnInit {
       this.dinerId = params['dinerId'] ? +params['dinerId'] : undefined;
       this.tableIdentity = params['tableIdentity'] ? params['tableIdentity'] : undefined;
       
+      // Detect flow type: client portal if no table parameters
+      this.isClientPortalFlow = !this.tableId && !this.dinerId && !this.tableIdentity;
+      
+      // DEBUG: Log flow detection
+      console.log('Flow Detection:', {
+        tableId: this.tableId,
+        dinerId: this.dinerId,
+        tableIdentity: this.tableIdentity,
+        isClientPortalFlow: this.isClientPortalFlow,
+        orderType: this.orderType
+      });
+      
+      // For client portal flow, default to delivery and prompt for order type
+      if (this.isClientPortalFlow) {
+        this.orderType = OrderType.Delivery;
+        console.log('Client Portal Flow detected - orderType set to Delivery');
+      }
+      
       if (this.dinerId) {
         this.loadDinerDetails();
       }
@@ -145,7 +166,7 @@ export class MenuComponent implements OnInit {
       { label: 'Precio: Menor a Mayor', value: 'price' }
     ];
     
-    this.loadConfig();
+    //this.loadConfig();
   }
 
   goBack() {
@@ -289,7 +310,13 @@ export class MenuComponent implements OnInit {
   }
 
   initiateOrderParams() {
-      // Show dialog to select order type if not already selected or if items in cart
+      // For client portal flow, order type already selected in cart UI
+      if (this.isClientPortalFlow) {
+        this.placeOrder();
+        return;
+      }
+      
+      // For dine-in flow, show dialog to select order type
       this.showOrderTypeDialog = true;
   }
   
@@ -315,6 +342,12 @@ export class MenuComponent implements OnInit {
 
   placeOrder() {
     if (this.cart.length === 0) return;
+
+    if (this.isClientPortalFlow) {
+      // Client Portal Flow: Create order for delivery/pickup without table
+      this.createClientPortalOrder();
+      return;
+    }
 
     if (!this.isLogin) {
         if (!this.tableId) {
@@ -561,5 +594,71 @@ export class MenuComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar la factura. Verifique sus datos.' });
       }
     });
+  }
+
+  createClientPortalOrder() {
+    // Validate order type specific requirements
+    if (this.orderType === OrderType.Delivery && !this.deliveryAddress) {
+      this.messageService.add({ 
+        severity: 'warn', 
+        summary: 'Dirección requerida', 
+        detail: 'Por favor ingresa la dirección de entrega.' 
+      });
+      this.showOrderTypeDialog = true;
+      return;
+    }
+
+    const orderRequest = {
+      instanceIdentity: this.identity,
+      orderType: this.orderType,
+      pickupTime: this.pickupTime,
+      deliveryAddress: this.deliveryAddress,
+      items: this.cart.map(item => ({
+        mealId: item.meal.id,
+        quantity: item.quantity,
+        comment: item.comment
+      })),
+      loyaltyPhoneNumber: this.loyaltyPhoneNumber || null
+    };
+
+    this.http.post<any>(`${environment.apiBase}ClientInteraction/create-order`, orderRequest)
+      .subscribe({
+        next: (response) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Pedido Creado', 
+            detail: `Tu pedido ha sido recibido. Número de orden: ${response.dinerId}` 
+          });
+          this.cart = [];
+          this.cartVisible = false;
+          // Redirect to client portal history
+          this.router.navigate(['/client-portal/history']);
+        },
+        error: (err) => {
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: err.error?.message || 'Error al crear el pedido.' 
+          });
+        }
+      });
+  }
+
+  // Helper method to set default pickup time (current time + 15 minutes)
+  private setDefaultPickupTime() {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 15);
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    this.pickupTime = `${year}-${month}-${day}T${hours}:${minutes}` as any;
+  }
+  // Watch for order type changes
+  onOrderTypeChange() {
+    if (this.orderType === OrderType.Pickup) {
+      this.setDefaultPickupTime();
+    }
   }
 }

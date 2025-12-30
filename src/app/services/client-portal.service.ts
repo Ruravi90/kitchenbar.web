@@ -71,6 +71,10 @@ export class ClientPortalService {
     return this.http.delete(`${this.apiUrl}ClientInteraction/favorites/${branchId}`);
   }
 
+  cancelOrder(orderId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}ClientInteraction/cancel-order/${orderId}`, {});
+  }
+
   getHistory(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}ClientInteraction/history`);
   }

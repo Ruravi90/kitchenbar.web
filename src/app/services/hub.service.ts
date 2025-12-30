@@ -75,7 +75,12 @@ export class OrderHubService {
     }
     
     leaveGroup() {
-        const currentUser = JSON.parse(localStorage.getItem('user')!);
+        const userStr = localStorage.getItem('user');
+        if (!userStr) return; // No user, nothing to leave
+        
+        const currentUser = JSON.parse(userStr);
+        if (!currentUser || !currentUser.instance) return; // No instance, can't leave group
+        
         this.safeInvoke('LeaveGroup', currentUser.instance.identity, currentUser.user_name);
     }
     newUser(): Observable<string> {

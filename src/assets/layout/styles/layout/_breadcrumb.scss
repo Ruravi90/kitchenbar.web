@@ -1,0 +1,12 @@
+/* Breadcrumb container */
+.layout-breadcrumb {
+  padding: 1rem 2rem 0 2rem;
+  margin-left: 300px;
+  transition: margin-left $transitionDuration;
+}
+
+@media (max-width: 991px) {
+  .layout-breadcrumb {
+    margin-left: 0;
+  }
+}

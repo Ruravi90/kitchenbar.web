@@ -3,34 +3,29 @@
 }
 
 .landing-wrapper {
-  background-color: var(--surface-ground);
+  background: 
+    linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%),
+    radial-gradient(circle at top left, rgba(255, 81, 47, 0.3) 0%, transparent 70%),
+    radial-gradient(circle at bottom right, rgba(221, 36, 118, 0.3) 0%, transparent 70%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .hero-section {
-  background: linear-gradient(
-    135deg,
-    var(--primary-900) 0%,
-    var(--primary-600) 100%
-  );
-  color: white;
-  padding: 6rem 2rem;
+  padding: 8rem 2rem;
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-    pointer-events: none;
-  }
 
   .hero-content {
     position: relative;
     z-index: 1;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 3rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
   h1 {
@@ -55,16 +50,21 @@
 }
 
 .feature-card {
-  background: var(--surface-card);
-  border-radius: 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 1.5rem;
   padding: 2rem;
   height: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid var(--surface-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(31, 38, 135, 0.5);
+    background: var(--glass-bg-strong);
+    border-color: var(--glass-border-strong);
   }
 
   .feature-icon {
@@ -76,30 +76,30 @@
     justify-content: center;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    background: var(--primary-50);
-    color: var(--primary-500);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--glass-text);
   }
 
   h3 {
     font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--text-color);
+    color: var(--glass-text);
   }
 
   p {
-    color: var(--text-color-secondary);
+    color: var(--glass-text-secondary);
     line-height: 1.6;
   }
 }
 
 .roadmap-section {
-  background-color: var(--surface-section);
+  background-color: transparent;
 
   .roadmap-item {
     position: relative;
     padding-left: 2rem;
-    border-left: 2px solid var(--primary-300);
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
     padding-bottom: 2rem;
 
     &::before {
@@ -110,8 +110,8 @@
       width: 1.2rem;
       height: 1.2rem;
       border-radius: 50%;
-      background: var(--primary-500);
-      border: 3px solid var(--surface-section);
+      background: var(--glass-text);
+      border: 3px solid rgba(255, 255, 255, 0.2);
     }
 
     &:last-child {
@@ -121,8 +121,11 @@
 }
 
 .cta-section {
-  background: var(--surface-900);
-  color: var(--surface-0);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   border-radius: 2rem;
   margin: 0 2rem;
 }

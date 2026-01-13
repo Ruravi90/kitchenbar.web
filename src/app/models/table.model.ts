@@ -12,6 +12,7 @@ export class Table extends Base {
     isRequestCheck?:boolean;
     isWarnCheck?:boolean;
     isDangerCheck?:boolean;
+    isBusy?:boolean; // Indicates if table has active orders
     branchId?: number;
     branch?: Branch;
     instance?:Instance;

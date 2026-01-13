@@ -6,6 +6,7 @@ import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from './app.topbar.component';
 import { AuthInterface, HubInterface } from '../interfaces';
 import { WebPushNotificationService } from '../services/web-push-notification.service';
+import { BreadcrumbService } from './service/breadcrumb.service';
 
 @Component({
     selector: 'app-layout',
@@ -18,6 +19,8 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     menuOutsideClickListener: any;
 
     profileMenuOutsideClickListener: any;
+    
+    breadcrumbs$ = this.breadcrumbService.breadcrumbs$;
 
     @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;
 
@@ -31,7 +34,8 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
       private pushService: WebPushNotificationService,
       public layoutService: LayoutService, 
       public renderer: Renderer2, 
-      public router: Router
+      public router: Router,
+      private breadcrumbService: BreadcrumbService
     ) {
       if(!this.auth.checkLogin()){// se oculta el menu para usuarios que no estan registrados y son comenzales
         this.hideMenu();

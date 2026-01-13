@@ -1,90 +1,125 @@
-<div class="flex flex-wrap justify-content-center ">
-    <div class="w-full">
-        <p-card header="Mesas" [style]="{'width':'100%'}" class="shadow-7">
-            <p-dataView #dv [value]="tables" emptyMessage="Sin mesas registradas" >
-                <ng-template pTemplate="list" let-items>
-                    <div class="grid grid-nogutter">
-                        <div class="col-12 m-1" *ngFor="let item of items; let first = first">
-                            <div class="grid" [ngClass]="{ 'border-top-1 surface-border': !first}">
-                                <div class="col-fixed">
-                                    <i class="pi pi-bookmark mt-2" *ngIf="!item.isBusy" style="font-size: 1.5rem" pTooltip="Mesa disponible"></i>
-                                    <i class="pi pi-bookmark-fill mt-2"  *ngIf="item.isBusy" style="font-size: 1.5rem" pTooltip="Mesa ocupada"></i>
-                                </div>
-                                <div class="col">
-                                    <div class="font-medium text-700 mt-2">{{ item.name }}</div>
-                                </div>
-                                <div class="col-fixed gap-1">
-                                    <button *ngIf="item.isRequestAttendace" pButton icon="pi pi-flag-fill" class="p-button-info" (click)="requestAttendace(item)"
-                                    [rounded]="true" [text]="!item.isRequestAttendace" [raised]="true"  pTooltip="{{item.isRequestAttendace?'Necesita asistencia':''}}" ></button>
-                                </div>
-                                <div class="col-fixed gap-1">
-                                    <button *ngIf="item.isRequestCheck" pButton icon="pi pi-dollar" class="p-button-warning" (click)="requestCheck(item)"
-                                    [rounded]="true" [text]="!item.isRequestCheck" [raised]="true" pTooltip="{{item.isRequestCheck?'Solicito la cuenta':''}}" ></button>
-                                </div>
-                                <div class="col-fixed gap-1" >
-                                    <p-button
-                                        icon="pi pi-qrcode"
-                                        severity="secondary"
-                                        [rounded]="true" [text]="true" [raised]="true"
-                                        (onClick)="showQRModal(item)">
-                                    </p-button>
-                                </div>
-                                <div class="col-fixed gap-1" >
-                                    <p-button
-                                        icon="pi pi-sign-in"
-                                        routerLink="/kitchen/table/{{ item.identity}}"
-                                        [rounded]="true" [text]="true" [raised]="true"
-                                        pTooltip="Ir">
-                                    </p-button>
-                                </div>
-                            </div>
-                        </div>
+<div class="tables-container">
+    <!-- Header -->
+    <div class="page-header mb-4">
+        <div class="page-title">
+            <h1>Mesas</h1>
+            <p class="page-subtitle">Gestión de mesas del restaurante</p>
+        </div>
+    </div>
+
+    <!-- Grid de mesas -->
+    <div class="grid" *ngIf="tables && tables.length > 0">
+        <div class="col-12 md:col-6 lg:col-4 xl:col-3" 
+             *ngFor="let table of tables; let i = index"
+             class="stagger-item"
+             [style.animation-delay]="(i * 0.05) + 's'">
+            
+            <div class="table-card glass-card hover-lift"
+                 [class.table-available]="!isTableBusy(table)"
+                 [class.table-occupied]="isTableBusy(table)"
+                 [class.table-alert]="table.isRequestAttendace || table.isRequestCheck">
+                
+                <!-- Status badge flotante -->
+                <div class="table-status-badge">
+                    <p-tag [value]="isTableBusy(table) ? 'Ocupada' : 'Disponible'"
+                           [severity]="isTableBusy(table) ? 'danger' : 'success'"
+                           [rounded]="true"></p-tag>
+                </div>
+
+                <!-- Nombre de mesa -->
+                <h3 class="table-name">
+                    <i class="pi" [ngClass]="isTableBusy(table) ? 'pi-bookmark-fill' : 'pi-bookmark'"></i>
+                    {{table.name}}
+                </h3>
+
+                <!-- Alertas si existen -->
+                <div class="table-alerts" *ngIf="table.isRequestAttendace || table.isRequestCheck">
+                    <div class="alert-item pulse" *ngIf="table.isRequestAttendace">
+                        <i class="pi pi-flag-fill"></i>
+                        <span>Asistencia solicitada</span>
                     </div>
-                </ng-template>
-            </p-dataView>
-        </p-card>
+                    <div class="alert-item pulse" *ngIf="table.isRequestCheck">
+                        <i class="pi pi-dollar"></i>
+                        <span>Cuenta solicitada</span>
+                    </div>
+                </div>
+
+                <!-- Info adicional si está ocupada -->
+                <div class="table-info" *ngIf="isTableBusy(table)">
+                    <div class="info-item">
+                        <i class="pi pi-users"></i>
+                        <span>Mesa activa</span>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="table-actions">
+                    <button pButton 
+                            label="Ver Mesa" 
+                            icon="pi pi-sign-in"
+                            class="w-full mb-2"
+                            [routerLink]="['/kitchen/table', table.identity]"></button>
+                    <button pButton 
+                            label="Mostrar QR" 
+                            icon="pi pi-qrcode"
+                            class="w-full" 
+                            severity="secondary"
+                            [outlined]="true"
+                            (click)="showQRModal(table)"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state-card" *ngIf="!tables || tables.length === 0">
+        <div class="empty-icon">
+            <i class="pi pi-table"></i>
+        </div>
+        <h3 class="empty-title">No hay mesas configuradas</h3>
+        <p class="empty-message">
+            Configura tus mesas en la sección de configuración para comenzar a gestionar tu restaurante.
+        </p>
+        <div class="empty-action">
+            <button pButton 
+                    label="Ir a Configuración" 
+                    icon="pi pi-cog"
+                    routerLink="/settings"></button>
+        </div>
     </div>
 </div>
 
-<p-dialog header="QR de mesa {{table?.name}}" [modal]="true" [(visible)]="visibleQRModal" >
-    <div class="formgrid grid gap-3 mb-3 mt-3">
+<!-- Modal QR -->
+<p-dialog header="QR de mesa {{table?.name}}" 
+          [modal]="true" 
+          [(visible)]="visibleQRModal"
+          [style]="{width: '450px'}"
+          [dismissableMask]="true">
+    <div class="flex justify-content-center align-items-center p-4">
         <qrcode
-        #parent
-        [elementType]="elementType"
-        [errorCorrectionLevel]="qrData.errorCorrectionLevel"
-        [qrdata]="qrData.qrdata"
-        [scale]="qrData.scale"
-        [width]="qrData.width"
-        [allowEmptyString]="true"
-        [className]="qrData.cssClass"
-        [colorDark]="qrData.colorDark"
-        [colorLight]="qrData.colorLight"
-        [margin]="qrData.margin"
-        [alt]="qrData.alt"
-        [ariaLabel]="qrData.ariaLabel"
-        [title]="qrData.title"
-        [imageSrc]="qrData.imageSrc"
-        [imageHeight]="qrData.imageHeight"
-        [imageWidth]="qrData.imageWidth"
-      ></qrcode>
+            #parent
+            [elementType]="elementType"
+            [errorCorrectionLevel]="qrData.errorCorrectionLevel"
+            [qrdata]="qrData.qrdata"
+            [scale]="qrData.scale"
+            [width]="qrData.width"
+            [allowEmptyString]="true"
+            [className]="qrData.cssClass"
+            [colorDark]="qrData.colorDark"
+            [colorLight]="qrData.colorLight"
+            [margin]="qrData.margin"
+            [alt]="qrData.alt"
+            [ariaLabel]="qrData.ariaLabel"
+            [title]="qrData.title"
+            [imageSrc]="qrData.imageSrc"
+            [imageHeight]="qrData.imageHeight"
+            [imageWidth]="qrData.imageWidth">
+        </qrcode>
     </div>
-    <div class="flex justify-content-end gap-2">
-        <p-button label="Cerrar" severity="secondary" (click)="visibleQRModal = false" />
-    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="Cerrar" severity="secondary" (click)="visibleQRModal = false"></button>
+    </ng-template>
 </p-dialog>
 
-<p-toast position="top-center" [baseZIndex]="5000">
-    <ng-template let-message pTemplate="headless" let-closeFn="closeFn">
-        <section class="flex p-3 gap-3 w-full bg-black-alpha-90 shadow-2" style="border-radius: 10px">
-            <i class="pi pi-info text-primary-300 text-2xl"></i>
-            <div class="flex flex-column gap-3 w-full">
-                <p class="m-0 font-semibold text-base text-white">
-                    {{ message.summary }}
-                </p>
-                <p class="m-0 text-base text-400">
-                    {{ message.detail }}
-                </p>
-            </div>
-        </section>
-    </ng-template>
-</p-toast>
+<!-- Toast notifications -->
+<p-toast position="top-center"></p-toast>

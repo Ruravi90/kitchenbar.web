@@ -14,6 +14,7 @@ import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { CommonModule } from '@angular/common';
 import { HubInterface } from '../interfaces';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 @NgModule({
     declarations: [
@@ -33,7 +34,8 @@ import { HubInterface } from '../interfaces';
         InputSwitchModule,
         RippleModule,
         RouterModule,
-        RouterLink
+        RouterLink,
+        BreadcrumbModule
     ],
     exports: [AppLayoutComponent]
 })

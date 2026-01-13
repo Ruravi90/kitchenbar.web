@@ -20,6 +20,21 @@ export class DashboardComponent implements OnInit {
   predictionData: any;
   predictionOptions: any;
 
+  // KPI Data
+  loadingKPIs: boolean = true;
+  todayRevenue: number = 0;
+  revenueTrend: number = 0;
+  activeOrders: number = 0;
+  completedToday: number = 0;
+  avgOrderTime: number = 0;
+  customerSatisfaction: number = 95;
+
+  // Chart Loading States
+  loadingDailySales: boolean = true;
+  loadingTopItems: boolean = true;
+  loadingPeakHours: boolean = true;
+  loadingPredictions: boolean = true;
+
   branchId: number = 0;
   instanceId: number = 0; // Capture instanceId from user
 
@@ -36,74 +51,136 @@ export class DashboardComponent implements OnInit {
         if (user.instanceId) this.instanceId = user.instanceId;
     }
     
-    if (this.branchId) {
+    // Load data if user has branchId or at least instanceId
+    if (this.branchId || this.instanceId) {
+      // Use branchId if available, otherwise use 0 (will get all for instance)
+      const branchIdToUse = this.branchId || 0;
+      
+      this.loadKPIData();
       this.loadDashboardData();
+    } else {
+      console.warn('Dashboard: User has no branchId or instanceId, cannot load data');
+      // Set loading to false so skeletons disappear
+      this.loadingKPIs = false;
+      this.loadingDailySales = false;
+      this.loadingTopItems = false;
+      this.loadingPeakHours = false;
+      this.loadingPredictions = false;
     }
 
     this.initChartOptions();
   }
 
+  loadKPIData() {
+    this.loadingKPIs = true;
+    
+    // Simulate loading - In production, these would be real API calls
+    setTimeout(() => {
+      // Mock KPI data - replace with actual API calls
+      this.dashboardService.getDailySales(this.branchId).subscribe(data => {
+        this.todayRevenue = data.today || 0;
+        this.revenueTrend = data.lastWeek > 0 
+          ? Math.round(((data.today - data.lastWeek) / data.lastWeek) * 100) 
+          : 0;
+      });
+
+      // Mock active orders - you'd get this from orders service
+      this.activeOrders = 12;
+      this.completedToday = 48;
+      this.avgOrderTime = 18;
+      this.customerSatisfaction = 95;
+      
+      this.loadingKPIs = false;
+    }, 800);
+  }
+
   loadDashboardData() {
     // 1. Daily Sales
-    this.dashboardService.getDailySales(this.branchId).subscribe(data => {
-      this.basicData = {
-        labels: ['Hoy', 'Semana Pasada'],
-        datasets: [
-          {
-            label: 'Ventas',
-            data: [data.today, data.lastWeek],
-            backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-            borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)'],
-            borderWidth: 1
-          }
-        ]
-      };
+    this.loadingDailySales = true;
+    this.dashboardService.getDailySales(this.branchId).subscribe({
+      next: (data) => {
+        this.basicData = {
+          labels: ['Hoy', 'Semana Pasada'],
+          datasets: [
+            {
+              label: 'Ventas',
+              data: [data.today, data.lastWeek],
+              backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+              borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)'],
+              borderWidth: 1
+            }
+          ]
+        };
+        this.loadingDailySales = false;
+      },
+      error: (err) => {
+        console.error('Error loading daily sales:', err);
+        this.loadingDailySales = false;
+      }
     });
 
     // 2. Top Selling Items
-    this.dashboardService.getTopSellingItems(this.branchId).subscribe(data => {
-      this.topItemsData = {
-        labels: data.map(item => item.name),
-        datasets: [
-          {
-            data: data.map(item => item.quantity),
-            backgroundColor: [
-                "#42A5F5",
-                "#66BB6A",
-                "#FFA726",
-                "#26C6DA",
-                "#7E57C2"
-            ],
-            hoverBackgroundColor: [
-                "#64B5F6",
-                "#81C784",
-                "#FFB74D",
-                "#4DD0E1",
-                "#9575CD"
-            ]
-          }
-        ]
-      };
+    this.loadingTopItems = true;
+    this.dashboardService.getTopSellingItems(this.branchId).subscribe({
+      next: (data) => {
+        this.topItemsData = {
+          labels: data.map(item => item.name),
+          datasets: [
+            {
+              data: data.map(item => item.quantity),
+              backgroundColor: [
+                  "#42A5F5",
+                  "#66BB6A",
+                  "#FFA726",
+                  "#26C6DA",
+                  "#7E57C2"
+              ],
+              hoverBackgroundColor: [
+                  "#64B5F6",
+                  "#81C784",
+                  "#FFB74D",
+                  "#4DD0E1",
+                  "#9575CD"
+              ]
+            }
+          ]
+        };
+        this.loadingTopItems = false;
+      },
+      error: (err) => {
+        console.error('Error loading top items:', err);
+        this.loadingTopItems = false;
+      }
     });
 
     // 3. Peak Hours
-    this.dashboardService.getPeakHours(this.branchId).subscribe(data => {
-      this.peakHoursData = {
-        labels: data.map(item => `${item.hour}:00`),
-        datasets: [
-          {
-            label: 'Órdenes',
-            data: data.map(item => item.count),
-            backgroundColor: '#42A5F5',
-            borderColor: '#1E88E5',
-            borderWidth: 1
-          }
-        ]
-      };
+    this.loadingPeakHours = true;
+    this.dashboardService.getPeakHours(this.branchId).subscribe({
+      next: (data) => {
+        this.peakHoursData = {
+          labels: data.map(item => `${item.hour}:00`),
+          datasets: [
+            {
+              label: 'Órdenes',
+              data: data.map(item => item.count),
+              backgroundColor: '#42A5F5',
+              borderColor: '#1E88E5',
+              borderWidth: 1
+            }
+          ]
+        };
+        this.loadingPeakHours = false;
+      },
+      error: (err) => {
+        console.error('Error loading peak hours:', err);
+        this.loadingPeakHours = false;
+      }
     });
 
     // 4. Inventory Prediction
-    this.inventoryService.predict(7).subscribe(data => {
+    this.loadingPredictions = true;
+    this.inventoryService.predict(7).subscribe({
+      next: (data) => {
         // Sort by suggested reorder descending to show most critical first
         const sortedData = data.sort((a, b) => b.suggestedReorder - a.suggestedReorder).slice(0, 10);
 
@@ -130,6 +207,12 @@ export class DashboardComponent implements OnInit {
                 }
             ]
         };
+        this.loadingPredictions = false;
+      },
+      error: (err) => {
+        console.error('Error loading inventory predictions:', err);
+        this.loadingPredictions = false;
+      }
     });
   }
 

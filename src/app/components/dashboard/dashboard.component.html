@@ -1,31 +1,162 @@
-<div class="grid p-fluid">
-    <!-- New License Status Card Removed -->
-
-    <div class="col-12 lg:col-6 xl:col-4">
-        <div class="card">
-            <h5>Ventas Diarias (Hoy vs Semana Pasada)</h5>
-            <p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+<div class="dashboard-container">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+        <div class="page-title">
+            <h1>Dashboard</h1>
+            <p class="page-subtitle">Resumen ejecutivo de tu negocio</p>
         </div>
     </div>
 
-    <div class="col-12 lg:col-6 xl:col-4">
-        <div class="card">
-            <h5>Top 5 Platillos Más Vendidos</h5>
-            <p-chart type="doughnut" [data]="topItemsData" [options]="topItemsOptions"></p-chart>
+    <!-- KPI Header -->
+    <div class="kpi-grid mb-5">
+        <!-- Revenue KPI -->
+        <div class="kpi-card glass-card">
+            <div class="kpi-icon revenue">
+                <i class="pi pi-dollar"></i>
+            </div>
+            <div class="kpi-content">
+                <div class="kpi-label">Ingresos Hoy</div>
+                <div class="kpi-value" *ngIf="!loadingKPIs">${{todayRevenue | number:'1.2-2'}}</div>
+                <div class="skeleton skeleton-text" *ngIf="loadingKPIs"></div>
+                <div class="kpi-trend" *ngIf="!loadingKPIs && revenueTrend !== 0">
+                    <i class="pi" [ngClass]="revenueTrend > 0 ? 'pi-arrow-up' : 'pi-arrow-down'"></i>
+                    <span [class.positive]="revenueTrend > 0" [class.negative]="revenueTrend < 0">
+                        {{revenueTrend > 0 ? '+' : ''}}{{revenueTrend}}%
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Orders KPI -->
+        <div class="kpi-card glass-card">
+            <div class="kpi-icon orders">
+                <i class="pi pi-shopping-cart"></i>
+            </div>
+            <div class="kpi-content">
+                <div class="kpi-label">Órdenes Activas</div>
+                <div class="kpi-value" *ngIf="!loadingKPIs">{{activeOrders}}</div>
+                <div class="skeleton skeleton-text" *ngIf="loadingKPIs"></div>
+                <div class="kpi-subtitle" *ngIf="!loadingKPIs">{{completedToday}} completadas hoy</div>
+            </div>
+        </div>
+
+        <!-- Avg Order Time KPI -->
+        <div class="kpi-card glass-card">
+            <div class="kpi-icon time">
+                <i class="pi pi-clock"></i>
+            </div>
+            <div class="kpi-content">
+                <div class="kpi-label">Tiempo Promedio</div>
+                <div class="kpi-value" *ngIf="!loadingKPIs">{{avgOrderTime}} min</div>
+                <div class="skeleton skeleton-text" *ngIf="loadingKPIs"></div>
+                <div class="kpi-subtitle" *ngIf="!loadingKPIs">Por orden</div>
+            </div>
+        </div>
+
+        <!-- Customer Satisfaction KPI -->
+        <div class="kpi-card glass-card">
+            <div class="kpi-icon satisfaction">
+                <i class="pi pi-star-fill"></i>
+            </div>
+            <div class="kpi-content">
+                <div class="kpi-label">Satisfacción</div>
+                <div class="kpi-value" *ngIf="!loadingKPIs">{{customerSatisfaction}}%</div>
+                <div class="skeleton skeleton-text" *ngIf="loadingKPIs"></div>
+                <div class="kpi-subtitle" *ngIf="!loadingKPIs">Clientes satisfechos</div>
+            </div>
         </div>
     </div>
 
-    <div class="col-12 lg:col-6 xl:col-4">
-        <div class="card">
-            <h5>Horas Pico (Últimos 30 días)</h5>
-            <p-chart type="bar" [data]="peakHoursData" [options]="peakHoursOptions"></p-chart>
+    <!-- Charts Section -->
+    <div class="grid p-fluid">
+        <!-- Daily Sales Chart -->
+        <div class="col-12 lg:col-6 xl:col-4">
+            <div class="card chart-card glass-card">
+                <h5>Ventas Diarias (Hoy vs Semana Pasada)</h5>
+                
+                <!-- Skeleton Loader -->
+                <div class="chart-skeleton" *ngIf="loadingDailySales">
+                    <div class="skeleton-bar" *ngFor="let bar of [1,2]" [style.height]="(bar * 40 + 60) + 'px'"></div>
+                </div>
+                
+                <!-- Chart -->
+                <p-chart *ngIf="!loadingDailySales && basicData" 
+                         type="bar" 
+                         [data]="basicData" 
+                         [options]="basicOptions"
+                         class="fade-in"></p-chart>
+            </div>
         </div>
-    </div>
 
-    <div class="col-12 lg:col-12 xl:col-12">
-        <div class="card">
-            <h5>Predicciones de Inventario (Próximos 7 Días)</h5>
-            <p-chart type="bar" [data]="predictionData" [options]="predictionOptions" height="300px"></p-chart>
+        <!-- Top Items Chart -->
+        <div class="col-12 lg:col-6 xl:col-4">
+            <div class="card chart-card glass-card">
+                <h5>Top 5 Platillos Más Vendidos</h5>
+                
+                <!-- Skeleton Loader -->
+                <div class="chart-skeleton doughnut" *ngIf="loadingTopItems">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-legend">
+                        <div class="skeleton-legend-item" *ngFor="let item of [1,2,3,4,5]"></div>
+                    </div>
+                </div>
+                
+                <!-- Chart -->
+                <p-chart *ngIf="!loadingTopItems && topItemsData" 
+                         type="doughnut" 
+                         [data]="topItemsData" 
+                         [options]="topItemsOptions"
+                         class="fade-in"></p-chart>
+            </div>
+        </div>
+
+        <!-- Peak Hours Chart -->
+        <div class="col-12 lg:col-6 xl:col-4">
+            <div class="card chart-card glass-card">
+                <h5>Horas Pico (Últimos 30 días)</h5>
+                
+                <!-- Skeleton Loader -->
+                <div class="chart-skeleton" *ngIf="loadingPeakHours">
+                    <div class="skeleton-bar" style="height: 80px"></div>
+                    <div class="skeleton-bar" style="height: 120px"></div>
+                    <div class="skeleton-bar" style="height: 60px"></div>
+                    <div class="skeleton-bar" style="height: 110px"></div>
+                    <div class="skeleton-bar" style="height: 90px"></div>
+                    <div class="skeleton-bar" style="height: 70px"></div>
+                </div>
+                
+                <!-- Chart -->
+                <p-chart *ngIf="!loadingPeakHours && peakHoursData" 
+                         type="bar" 
+                         [data]="peakHoursData" 
+                         [options]="peakHoursOptions"
+                         class="fade-in"></p-chart>
+            </div>
+        </div>
+
+        <!-- Inventory Predictions Chart -->
+        <div class="col-12 lg:col-12 xl:col-12">
+            <div class="card chart-card glass-card">
+                <h5>Predicciones de Inventario (Próximos 7 Días)</h5>
+                
+                <!-- Skeleton Loader -->
+                <div class="chart-skeleton wide" *ngIf="loadingPredictions">
+                    <div class="skeleton-bar-group" *ngFor="let group of [1,2,3,4,5,6,7,8,9,10]; let i = index">
+                        <div class="skeleton-bar small" [style.height]="(40 + (i % 3) * 20) + 'px'"></div>
+                        <div class="skeleton-bar small" [style.height]="(50 + (i % 4) * 15) + 'px'"></div>
+                        <div class="skeleton-bar small" [style.height]="(45 + (i % 5) * 18) + 'px'"></div>
+                    </div>
+                </div>
+                
+                <!-- Chart -->
+                <p-chart *ngIf="!loadingPredictions && predictionData" 
+                         type="bar" 
+                         [data]="predictionData" 
+                         [options]="predictionOptions" 
+                         height="300px"
+                         class="fade-in"></p-chart>
+            </div>
         </div>
     </div>
 </div>
+

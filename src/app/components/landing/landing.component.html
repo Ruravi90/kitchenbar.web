@@ -1,206 +1,319 @@
 <div class="landing-wrapper min-h-screen flex flex-column">
-    <!-- Navbar -->
-    <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
-        <a class="flex align-items-center" href="#">
-            <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="KitchenBar Logo" height="50" class="mr-0 lg:mr-2">
-            <span class="text-900 font-medium text-2xl line-height-3 mr-8">KitchenBar</span>
-        </a>
-        <a pRipple class="cursor-pointer block lg:hidden text-700" pStyleClass="@next" enterClass="hidden" leaveToClass="hidden" [hideOnOutsideClick]="true">
-            <i class="pi pi-bars text-4xl"></i>
-        </a>
-        <div class="align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2" style="top:120px">
-            <ul class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row cursor-pointer">
-                <li>
-                    <a (click)="router.navigate(['/landing'], {fragment: 'home'})" pRipple class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3">
-                        <span>{{ 'LANDING.NAV.HOME' | translate }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a (click)="router.navigate(['/landing'], {fragment: 'features'})" pRipple class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3">
-                        <span>{{ 'LANDING.NAV.FEATURES' | translate }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a (click)="router.navigate(['/landing'], {fragment: 'roadmap'})" pRipple class="flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3">
-                        <span>{{ 'LANDING.NAV.ROADMAP' | translate }}</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="flex align-items-center gap-3">
-                <div class="flex align-items-center border-1 surface-border border-round px-2 py-1">
-                    <button pButton pRipple type="button" label="ES" (click)="switchLanguage('es')" [class.text-primary]="translationService.getCurrentLanguage() === 'es'" class="p-button-text p-button-sm font-bold p-0 min-w-min mr-2"></button>
-                    <span class="text-300">|</span>
-                    <button pButton pRipple type="button" label="EN" (click)="switchLanguage('en')" [class.text-primary]="translationService.getCurrentLanguage() === 'en'" class="p-button-text p-button-sm font-bold p-0 min-w-min ml-2"></button>
-                </div>
-                <div class="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
-                    <button pButton pRipple [label]="'LANDING.NAV.LOGIN' | translate" (click)="router.navigate(['/auth/login'])" class="p-button-text p-button-rounded border-none font-light line-height-2 text-primary-500"></button>
-                    <button pButton pRipple [label]="'LANDING.NAV.REGISTER' | translate" (click)="router.navigate(['/auth/register'])" class="p-button-rounded border-none ml-5 font-light line-height-2 bg-primary-500 text-white"></button>
-                </div>
-            </div>
+  <!-- Navbar -->
+  <div
+    class="glass-nav py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3 border-round-2xl"
+  >
+    <a class="flex align-items-center" href="#">
+      <img
+        src="assets/layout/images/logo-white.svg"
+        alt="KitchenBar Logo"
+        height="50"
+        class="mr-0 lg:mr-2"
+      />
+      <span class="text-white font-medium text-2xl line-height-3 mr-8"
+        >KitchenBar</span
+      >
+    </a>
+    <a
+      pRipple
+      class="cursor-pointer block lg:hidden text-700"
+      pStyleClass="@next"
+      enterClass="hidden"
+      leaveToClass="hidden"
+      [hideOnOutsideClick]="true"
+    >
+      <i class="pi pi-bars text-4xl"></i>
+    </a>
+    <div
+      class="align-items-center bg-transparent flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2"
+      style="top: 120px"
+    >
+      <ul
+        class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row cursor-pointer"
+      >
+        <li>
+          <a
+            (click)="router.navigate(['/landing'], { fragment: 'home' })"
+            pRipple
+            class="flex m-0 md:ml-5 px-0 py-3 text-white font-medium line-height-3 hover:text-primary-300 transition-colors transition-duration-200"
+          >
+            <span>{{ "LANDING.NAV.HOME" | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            (click)="router.navigate(['/landing'], { fragment: 'features' })"
+            pRipple
+            class="flex m-0 md:ml-5 px-0 py-3 text-white font-medium line-height-3 hover:text-primary-300 transition-colors transition-duration-200"
+          >
+            <span>{{ "LANDING.NAV.FEATURES" | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            (click)="router.navigate(['/landing'], { fragment: 'roadmap' })"
+            pRipple
+            class="flex m-0 md:ml-5 px-0 py-3 text-white font-medium line-height-3 hover:text-primary-300 transition-colors transition-duration-200"
+          >
+            <span>{{ "LANDING.NAV.ROADMAP" | translate }}</span>
+          </a>
+        </li>
+      </ul>
+      <div class="flex align-items-center gap-3">
+        <div
+          class="flex align-items-center border-1 surface-border border-round px-2 py-1"
+        >
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="ES"
+            (click)="switchLanguage('es')"
+            [class.text-primary]="
+              translationService.getCurrentLanguage() === 'es'
+            "
+            class="p-button-text p-button-sm font-bold p-0 min-w-min mr-2"
+          ></button>
+          <span class="text-300">|</span>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="EN"
+            (click)="switchLanguage('en')"
+            [class.text-primary]="
+              translationService.getCurrentLanguage() === 'en'
+            "
+            class="p-button-text p-button-sm font-bold p-0 min-w-min ml-2"
+          ></button>
         </div>
+        <div
+          class="flex justify-content-between lg:block border-top-1 lg:border-top-none border-white-alpha-20 py-3 lg:py-0 mt-3 lg:mt-0"
+        >
+          <button
+            pButton
+            pRipple
+            [label]="'LANDING.NAV.LOGIN' | translate"
+            (click)="router.navigate(['/auth/login'])"
+            class="p-button-text p-button-rounded border-none font-medium line-height-2 text-white hover:text-primary-300"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="'LANDING.NAV.REGISTER' | translate"
+            (click)="router.navigate(['/auth/register'])"
+            class="p-button-rounded border-none ml-5 font-medium line-height-2 bg-primary-500 text-white hover:bg-primary-600"
+          ></button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Hero Section -->
-    <div id="home" class="hero-section flex align-items-center justify-content-center text-center">
-        <div class="hero-content">
-            <h1 class="text-white">{{ 'LANDING.HERO.TITLE' | translate }}</h1>
-            <p class="text-white-alpha-90">{{ 'LANDING.HERO.SUBTITLE' | translate }}</p>
-            <div class="flex justify-content-center gap-3">
-                <button pButton pRipple [label]="'LANDING.HERO.GET_STARTED' | translate" (click)="router.navigate(['/auth/register'])" class="p-button-lg p-button-rounded bg-white text-primary-600 border-none font-bold"></button>
-                <button pButton pRipple [label]="'LANDING.HERO.DEMO' | translate" class="p-button-lg p-button-rounded p-button-outlined text-white border-white font-bold"></button>
-            </div>
-        </div>
+  <!-- Hero Section -->
+  <div
+    id="home"
+    class="hero-section flex align-items-center justify-content-center text-center"
+  >
+    <div class="hero-content">
+      <h1 class="text-white">{{ "LANDING.HERO.TITLE" | translate }}</h1>
+      <p class="text-white-alpha-90">
+        {{ "LANDING.HERO.SUBTITLE" | translate }}
+      </p>
+      <div class="flex justify-content-center gap-3">
+        <button
+          pButton
+          pRipple
+          [label]="'LANDING.HERO.GET_STARTED' | translate"
+          (click)="router.navigate(['/auth/register'])"
+          class="p-button-lg p-button-rounded bg-white text-primary-600 border-none font-bold"
+        ></button>
+        <button
+          pButton
+          pRipple
+          [label]="'LANDING.HERO.DEMO' | translate"
+          class="p-button-lg p-button-rounded p-button-outlined text-white border-white font-bold"
+        ></button>
+      </div>
     </div>
+  </div>
 
-    <!-- Features Section -->
-    <div id="features" class="py-8 px-4 lg:px-8 surface-section">
-        <div class="text-center mb-8">
-            <h2 class="text-900 font-bold text-4xl mb-3">{{ 'LANDING.FEATURES.TITLE' | translate }}</h2>
-            <p class="text-600 text-xl">{{ 'LANDING.FEATURES.SUBTITLE' | translate }}</p>
-        </div>
-        <div class="grid grid-nogutter">
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-check-circle"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.ORDER.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.ORDER.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-users"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.STAFF.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.STAFF.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-chart-bar"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.ANALYTICS.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.ANALYTICS.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-mobile"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.MOBILE.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.MOBILE.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-qrcode"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.QR.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.QR.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-shield"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.SECURE.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.SECURE.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-box"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.INVENTORY.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.INVENTORY.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-credit-card"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.PAYMENTS.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.PAYMENTS.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-wallet"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.SPLIT.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.SPLIT.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-file-pdf"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.INVOICE.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.INVOICE.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-star"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.RATING.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.RATING.DESC' | translate }}</p>
-                </div>
-            </div>
-            <div class="col-12 md:col-4 p-3">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="pi pi-cog"></i>
-                    </div>
-                    <h3>{{ 'LANDING.FEATURE.CONFIG.TITLE' | translate }}</h3>
-                    <p>{{ 'LANDING.FEATURE.CONFIG.DESC' | translate }}</p>
-                </div>
-            </div>
-        </div>
+  <!-- Features Section -->
+  <div id="features" class="py-8 px-4 lg:px-8">
+    <div class="text-center mb-8">
+      <h2 class="text-white font-bold text-4xl mb-3">
+        {{ "LANDING.FEATURES.TITLE" | translate }}
+      </h2>
+      <p class="text-white-alpha-80 text-xl">
+        {{ "LANDING.FEATURES.SUBTITLE" | translate }}
+      </p>
     </div>
+    <div class="grid grid-nogutter">
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-check-circle"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.ORDER.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.ORDER.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-users"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.STAFF.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.STAFF.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-chart-bar"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.ANALYTICS.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.ANALYTICS.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-mobile"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.MOBILE.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.MOBILE.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-qrcode"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.QR.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.QR.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-shield"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.SECURE.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.SECURE.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-box"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.INVENTORY.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.INVENTORY.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-credit-card"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.PAYMENTS.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.PAYMENTS.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-wallet"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.SPLIT.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.SPLIT.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-file-pdf"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.INVOICE.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.INVOICE.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-star"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.RATING.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.RATING.DESC" | translate }}</p>
+        </div>
+      </div>
+      <div class="col-12 md:col-4 p-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-cog"></i>
+          </div>
+          <h3>{{ "LANDING.FEATURE.CONFIG.TITLE" | translate }}</h3>
+          <p>{{ "LANDING.FEATURE.CONFIG.DESC" | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Future Roadmap Section -->
-    <div id="roadmap" class="py-8 px-4 lg:px-8 roadmap-section">
-        <div class="text-center mb-8">
-            <h2 class="text-900 font-bold text-4xl mb-3">{{ 'LANDING.ROADMAP.TITLE' | translate }}</h2>
-            <p class="text-600 text-xl">{{ 'LANDING.ROADMAP.SUBTITLE' | translate }}</p>
+  <!-- Future Roadmap Section -->
+  <div id="roadmap" class="py-8 px-4 lg:px-8 roadmap-section">
+    <div class="text-center mb-8">
+      <h2 class="text-white font-bold text-4xl mb-3">
+        {{ "LANDING.ROADMAP.TITLE" | translate }}
+      </h2>
+      <p class="text-white-alpha-80 text-xl">
+        {{ "LANDING.ROADMAP.SUBTITLE" | translate }}
+      </p>
+    </div>
+    <div class="flex flex-column align-items-center">
+      <div class="w-full md:w-8 lg:w-6">
+        <div class="roadmap-item">
+          <h3 class="text-xl font-bold text-white mb-2">
+            {{ "LANDING.ROADMAP.AI.TITLE" | translate }}
+          </h3>
+          <p class="text-white-alpha-80">{{ "LANDING.ROADMAP.AI.DESC" | translate }}</p>
+          <span class="text-primary-300 font-medium text-sm">{{
+            "LANDING.ROADMAP.AI.DATE" | translate
+          }}</span>
         </div>
-        <div class="flex flex-column align-items-center">
-            <div class="w-full md:w-8 lg:w-6">
-                <div class="roadmap-item">
-                    <h3 class="text-xl font-bold text-900 mb-2">{{ 'LANDING.ROADMAP.AI.TITLE' | translate }}</h3>
-                    <p class="text-700">{{ 'LANDING.ROADMAP.AI.DESC' | translate }}</p>
-                    <span class="text-primary-500 font-medium text-sm">{{ 'LANDING.ROADMAP.AI.DATE' | translate }}</span>
-                </div>
-                <div class="roadmap-item">
-                    <h3 class="text-xl font-bold text-900 mb-2">{{ 'LANDING.ROADMAP.LOYALTY.TITLE' | translate }}</h3>
-                    <p class="text-700">{{ 'LANDING.ROADMAP.LOYALTY.DESC' | translate }}</p>
-                    <span class="text-primary-500 font-medium text-sm">{{ 'LANDING.ROADMAP.LOYALTY.DATE' | translate }}</span>
-                </div>
-            </div>
+        <div class="roadmap-item">
+          <h3 class="text-xl font-bold text-white mb-2">
+            {{ "LANDING.ROADMAP.LOYALTY.TITLE" | translate }}
+          </h3>
+          <p class="text-white-alpha-80">
+            {{ "LANDING.ROADMAP.LOYALTY.DESC" | translate }}
+          </p>
+          <span class="text-primary-300 font-medium text-sm">{{
+            "LANDING.ROADMAP.LOYALTY.DATE" | translate
+          }}</span>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- CTA Section -->
-    <div class="cta-section py-8 px-4 text-center mb-8">
-        <h2 class="text-4xl font-bold mb-4">{{ 'LANDING.CTA.TITLE' | translate }}</h2>
-        <p class="text-xl opacity-90 mb-6">{{ 'LANDING.CTA.SUBTITLE' | translate }}</p>
-        <button pButton pRipple [label]="'LANDING.CTA.BUTTON' | translate" (click)="router.navigate(['/auth/register'])" class="p-button-lg p-button-rounded bg-white text-primary-900 border-none font-bold"></button>
-    </div>
+  <!-- CTA Section -->
+  <div class="cta-section py-8 px-4 text-center mb-8">
+    <h2 class="text-4xl font-bold mb-4 text-white">
+      {{ "LANDING.CTA.TITLE" | translate }}
+    </h2>
+    <p class="text-xl mb-6 text-white-alpha-90">
+      {{ "LANDING.CTA.SUBTITLE" | translate }}
+    </p>
+    <button
+      pButton
+      pRipple
+      [label]="'LANDING.CTA.BUTTON' | translate"
+      (click)="router.navigate(['/auth/register'])"
+      class="p-button-lg p-button-rounded bg-white text-primary-900 border-none font-bold"
+    ></button>
+  </div>
 
-    <!-- Footer -->
-    <div class="surface-900 py-6 px-4 lg:px-8 text-center text-white-alpha-60">
-        <p>{{ 'LANDING.FOOTER.RIGHTS' | translate }}</p>
-    </div>
+  <!-- Footer -->
+  <div class="surface-900 py-6 px-4 lg:px-8 text-center text-white-alpha-60">
+    <p>{{ "LANDING.FOOTER.RIGHTS" | translate }}</p>
+  </div>
 </div>

@@ -132,12 +132,23 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
         target: event.target as EventTarget,
         message: "",
-        header: statusId==2?'Se inicio con la preparacion?':'Se envio el alimento?',
+        header: statusId==2?'¿Iniciar con la preparación?':'¿Marcar como listo?',
         accept: () => {
           order.statusOrderId = statusId;
           this._serviceOrder.updateItem(order.id!,order).subscribe({
             next: (data) => {
               this.hub.sendOrder(order);
+              
+              // Show success message
+              const statusText = statusId === 2 ? 'en preparación' : 'lista';
+              this.messageService.add({ 
+                severity: 'success', 
+                summary: 'Orden Actualizada', 
+                detail: `Orden marcada como ${statusText}` 
+              });
+              
+              // Refresh orders to update Kanban columns
+              this.retrieveOrders();
             },
             error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
@@ -182,6 +193,32 @@ export class OrdersComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  // Kanban Helper Methods for Kitchen
+  getPendingKitchenOrders(): Order[] {
+    return this.kitchenItems.filter(order => order.statusOrderId === 1);
+  }
+
+  getInProgressKitchenOrders(): Order[] {
+    return this.kitchenItems.filter(order => order.statusOrderId === 2);
+  }
+
+  getReadyKitchenOrders(): Order[] {
+    return this.kitchenItems.filter(order => order.statusOrderId === 3);
+  }
+
+  // Kanban Helper Methods for Bar
+  getPendingBarOrders(): Order[] {
+    return this.barItems.filter(order => order.statusOrderId === 1);
+  }
+
+  getInProgressBarOrders(): Order[] {
+    return this.barItems.filter(order => order.statusOrderId === 2);
+  }
+
+  getReadyBarOrders(): Order[] {
+    return this.barItems.filter(order => order.statusOrderId === 3);
   }
 
 }

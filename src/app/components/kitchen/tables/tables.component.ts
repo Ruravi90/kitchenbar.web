@@ -48,6 +48,19 @@ export class TablesComponent {
 
   public elementType: QRCodeElementType;
 
+  // Helper to check if table is busy (uses API's isBusy property)
+  isTableBusy(table: Table): boolean {
+    // First check the API's isBusy property (indicates active orders)
+    if (table.isBusy !== undefined && table.isBusy !== null) {
+      return table.isBusy;
+    }
+    
+    // Fallback: check if table has any alerts/requests
+    return !!(table.isWarnAttendace || table.isWarnCheck || 
+              table.isRequestAttendace || table.isRequestCheck ||
+              table.isDangerAttendace || table.isDangerCheck);
+  }
+
   ngOnInit(): void {
     this.retrieveTables();
     this.hub.notificationWarnTables().subscribe(x =>  {

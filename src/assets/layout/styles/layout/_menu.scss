@@ -8,10 +8,15 @@
     top: 7rem;
     left: 2rem;
     transition: transform $transitionDuration, left $transitionDuration;
-    background-color: var(--surface-overlay);
+    background: 
+        linear-gradient(135deg, rgba(30, 60, 114, 0.75) 0%, rgba(42, 82, 152, 0.75) 100%),
+        radial-gradient(circle at bottom right, rgba(221, 36, 118, 0.2) 0%, transparent 70%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: $borderRadius;
     padding: 0.5rem 1.5rem;
-    box-shadow: 0px 3px 5px rgba(0, 0, 0, .02), 0px 0px 2px rgba(0, 0, 0, .05), 0px 1px 4px rgba(0, 0, 0, .08);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.4);
 }
 
 .layout-menu {
@@ -24,7 +29,7 @@
             font-size: .857rem;
             text-transform: uppercase;
             font-weight: 700;
-            color: var(--surface-900);
+            color: rgba(255, 255, 255, 0.9);
             margin: .75rem 0;
         }
 
@@ -61,7 +66,7 @@
             align-items: center;
             position: relative;
             outline: 0 none;
-            color: var(--text-color);
+            color: rgba(255, 255, 255, 0.85);
             cursor: pointer;
             padding: .75rem 1rem;
             border-radius: $borderRadius;
@@ -79,11 +84,13 @@
 
             &.active-route {
                 font-weight: 700;
-                color: var(--primary-color);
+                color: #ffffff;
+                background-color: rgba(255, 255, 255, 0.15);
             }
 
             &:hover {
-                background-color: var(--surface-hover);
+                background-color: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
             }
 
             &:focus {
@@ -94,6 +101,7 @@
         ul {
             overflow: hidden;
             border-radius: $borderRadius;
+            animation: slideDown 0.3s ease-out;
 
             li {
                 a {
@@ -131,5 +139,16 @@
                 }
             }
         }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

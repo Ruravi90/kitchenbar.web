@@ -1,50 +1,49 @@
-<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
-    <div class="flex flex-column align-items-center justify-content-center">
-        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="Kitchen Bar logo" class="mb-3 w-10rem flex-shrink-0">                
-        <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
-            <div class="w-full shadow-4 surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
-                <div class="text-center mb-5">
-                    <span class="text-900 font-medium">Iniciar sesion</span>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="formLogin" (submit)="login()">
-                        <div class="flex flex-column m-2" >
-                            <div class="flex align-items-center ">
-                                <label for="user_name" class="block text-900 text-xl font-medium mb-2">Usuario</label>
-                            </div>
-                            <div class="flex align-items-center">
-                                <input id="user_name" type="text"
-                                formControlName="user_name"
-                                [style]="{'width':'100%'}"
-                                placeholder="usuario@kitenbar" 
-                                [ngClass]="{'ng-invalid ng-dirty':submitted && f['user_name'].invalid}"
-                                required
-                                pInputText>
-                            </div>
-                        </div>
-                         <div class="flex flex-column m-2 " >
-                            <div class="flex align-items-center ">
-                                <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
-                            </div>
-                            <div class="flex align-items-center ">
-                                <p-password id="password1" 
-                                formControlName="password" 
-                                class="w-full"
-                                [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
-                                placeholder="Password" [toggleMask]="true"
-                                [ngClass]="{'ng-invalid ng-dirty':submitted && f['password'].invalid}"
-                                required
-                                [feedback]="false"></p-password>
-                            </div>
-                        </div>
-                        <button pButton pRipple label="Iniciar" class="w-full p-3 mt-3 text-xl"></button>
-                    </form>
-                    <div class="flex align-items-center mt-3" >
-                        <p-button label="Registrar" [link]="true" (click)="register()" />
-                        <p-button label="recuperar contraseña?" [link]="true"/>
-                    </div>
-                </div>
+<div class="login-wrapper">
+    <div class="glass-login-card">
+        <!-- Logo & Title -->
+        <div class="text-center mb-4">
+            <img src="assets/layout/images/logo-white.svg" alt="Kitchen Bar logo" class="mb-3 h-4rem">
+            <h2 class="text-white text-3xl font-bold mb-2">Bienvenido</h2>
+            <p class="text-white-alpha-70 font-normal">Inicia sesión para continuar</p>
+        </div>
+
+        <!-- Login Form -->
+        <form [formGroup]="formLogin" (submit)="login()">
+            <div class="mb-4">
+                <label for="user_name" class="block text-white font-medium mb-2">Usuario</label>
+                <input id="user_name" type="text"
+                    formControlName="user_name"
+                    class="w-full"
+                    placeholder="usuario@kitchenbar" 
+                    [ngClass]="{'ng-invalid ng-dirty':submitted && f['user_name'].invalid}"
+                    required
+                    pInputText>
             </div>
+
+            <div class="mb-4">
+                <label for="password1" class="block text-white font-medium mb-2">Contraseña</label>
+                <p-password id="password1" 
+                    formControlName="password" 
+                    class="w-full"
+                    [style]="{'width':'100%'}" 
+                    [inputStyle]="{'width':'100%'}"
+                    placeholder="Contraseña" 
+                    [toggleMask]="true"
+                    [ngClass]="{'ng-invalid ng-dirty':submitted && f['password'].invalid}"
+                    required
+                    [feedback]="false">
+                </p-password>
+            </div>
+
+            <button pButton pRipple label="Iniciar Sesión" type="submit" 
+                class="w-full p-3 text-lg font-bold bg-primary-500 border-none hover:bg-primary-600 transition-all transition-duration-200">
+            </button>
+        </form>
+
+        <!-- Footer Links -->
+        <div class="flex align-items-center justify-content-between mt-4">
+            <p-button label="Registrar" [link]="true" (click)="register()" styleClass="p-0" />
+            <p-button label="¿Olvidaste tu contraseña?" [link]="true" styleClass="p-0" />
         </div>
     </div>
 </div>

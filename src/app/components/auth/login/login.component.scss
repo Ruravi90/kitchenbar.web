@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.login-wrapper {
+  background: 
+    linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%),
+    radial-gradient(circle at top left, rgba(255, 81, 47, 0.3) 0%, transparent 70%),
+    radial-gradient(circle at bottom right, rgba(221, 36, 118, 0.3) 0%, transparent 70%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.glass-login-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-strong);
+  border-radius: 2rem;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 450px;
+}
+
+/* Override PrimeNG Input Styles for Glass Theme */
+::ng-deep .login-wrapper .p-inputtext {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: var(--glass-text) !important;
+  transition: all 0.3s ease;
+  
+  &:enabled:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+  }
+  
+  &::placeholder {
+    color: var(--glass-text-subtle);
+  }
+}
+
+/* Password Field */
+::ng-deep .login-wrapper .p-password {
+  width: 100%;
+  
+  .p-password-show-icon, .p-password-hide-icon {
+    color: var(--glass-text-subtle) !important;
+    
+    &:hover {
+      color: var(--glass-text) !important;
+    }
+  }
+}
+
+/* Link Buttons */
+::ng-deep .login-wrapper .p-button.p-button-link {
+  color: var(--glass-text-secondary) !important;
+  
+  &:hover {
+    color: var(--glass-text) !important;
+  }
+}

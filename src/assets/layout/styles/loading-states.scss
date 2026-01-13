@@ -1,0 +1,123 @@
+/* You can add global styles to this file, and also import other style files */
+$gutter: 1rem; //for primeflex grid system
+@import "assets/layout/styles/layout/layout.scss";
+@import "assets/layout/styles/kitchen.scss";
+
+/* Glassmorphism variables, animations, toasts already defined above... */
+
+/* ========================================
+   Loading Skeletons & Progress
+   ======================================== */
+
+/* Skeleton base */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-200) 0%,
+    var(--surface-300) 50%,
+    var(--surface-200) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-rounded {
+  border-radius: 12px;
+}
+
+/* Skeleton text */
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-title {
+  height: 2rem;
+  width: 60%;
+  margin-bottom: 1rem;
+}
+
+/* Skeleton card */
+.skeleton-card {
+  padding: 1.5rem;
+  background: var(--surface-card);
+  border-radius: 12px;
+}
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.skeleton-avatar {
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+/* Progress bar */
+.progress-bar-glass {
+  height: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-400), var(--primary-600));
+  border-radius: 1rem;
+  transition: width 0.3s ease;
+}
+
+/* Spinner */
+.spinner-glass {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--primary-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-sm {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 2px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.loading-content {
+  text-align: center;
+  color: white;
+}

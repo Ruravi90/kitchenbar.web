@@ -1,0 +1,251 @@
+/* Account Component - Glassmorphism Styles */
+
+.account-container {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+/* Glass Card Styles */
+::ng-deep .p-card {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 60, 114, 0.7) 0%,
+    rgba(42, 82, 152, 0.7) 100%
+  ) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+
+  .p-card-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 1.5rem !important;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff !important;
+  }
+
+  .p-card-body,
+  .p-card-content {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+
+    // Ensure all text is visible
+    p, span, div {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    // Stronger text for important content
+    .font-bold,
+    .font-semibold {
+      color: #ffffff !important;
+    }
+  }
+}
+
+/* Avatar Section */
+.p-avatar {
+  width: 5rem !important;
+  height: 5rem !important;
+  font-size: 2.5rem !important;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Form Fields */
+.field {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  input[type="text"],
+  ::ng-deep .p-inputtext {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: var(--primary-300) !important;
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    &:disabled {
+      background: rgba(255, 255, 255, 0.03) !important;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  small {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+}
+
+/* Notifications Card */
+.notifications-card {
+  ::ng-deep .p-inputswitch {
+    &.p-inputswitch-checked {
+      .p-inputswitch-slider {
+        background-color: #4caf50 !important;
+      }
+    }
+
+    .p-inputswitch-slider {
+      background: rgba(255, 255, 255, 0.2) !important;
+    }
+  }
+
+  // Status indicators - FIXED CONTRAST
+  .surface-100 {
+    background: rgba(255, 255, 255, 0.95) !important; // Light background
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    
+    span {
+      color: #1a1a1a !important; // Dark text on light background
+      font-weight: 600;
+    }
+    
+    .text-sm {
+      color: #2c2c2c !important; // Dark text
+    }
+  }
+
+  .bg-yellow-50 {
+    background: rgba(255, 193, 7, 0.2) !important;
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    
+    span {
+      color: #ffffff !important;
+    }
+  }
+
+  .text-600 {
+    color: #ffffff !important;
+  }
+
+  .text-sm {
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  .text-yellow-800,
+  .text-yellow-900 {
+    color: #ffffff !important;
+  }
+
+  .text-green-500 {
+    color: #4caf50 !important;
+  }
+
+  .text-yellow-600 {
+    color: #ffa726 !important;
+  }
+
+  .pi-bell {
+    color: var(--primary-300);
+  }
+
+  .pi-check-circle {
+    color: #66bb6a !important;
+  }
+
+  .pi-exclamation-triangle {
+    color: #ffb74d !important;
+  }
+}
+
+/* Buttons */
+::ng-deep .p-button {
+  font-weight: 700;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 10px !important;
+  transition: all 0.3s ease;
+
+  &:not(.p-button-outlined) {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600)) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Loading State */
+.pi-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Warning/Info boxes */
+.border-round {
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .account-container {
+    padding: 1rem;
+  }
+
+  ::ng-deep .p-card {
+    .p-card-header {
+      font-size: 1.25rem;
+      padding: 1rem !important;
+    }
+  }
+
+  .p-avatar {
+    width: 4rem !important;
+    height: 4rem !important;
+    font-size: 2rem !important;
+  }
+
+  .field {
+    margin-bottom: 1.25rem;
+
+    label {
+      font-size: 0.8125rem;
+    }
+  }
+}

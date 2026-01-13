@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Branch, User } from '../../../models';
 import { AuthInterface, BranchesInterface, UsersInterface, DashboardInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -11,14 +12,35 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 })
 export class UsersComponent {
 
-  constructor( private confirmationService: ConfirmationService,
+  userForm!: FormGroup;
+  
+  constructor(
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private _serviceAuth: AuthInterface,
     private _serviceBranch: BranchesInterface,
     private usersServices: UsersInterface,
-    private dashboardService: DashboardInterface){}
+    private dashboardService: DashboardInterface
+  ){}
+
+  initForm() {
+    this.userForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      user_name: ['', [Validators.required, Validators.pattern(/^[a-z0-9_]+$/)]],
+      email: ['', [Validators.email]],
+      phone_number: [''],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      branchId: [null, [Validators.required]],
+      role: [null, [Validators.required]]
+    });
+  }
 
   items: User[] = [];
+  filteredItems: User[] = []; // For search results
+  searchTerm: string = '';
+  highlightedUserId: number | null = null; // For visual feedback
+  
   branches:Branch[] =[];
   selectedBranche:any;
   user: User = new User();
@@ -38,6 +60,7 @@ export class UsersComponent {
   selectedRol:any;
 
   ngOnInit(): void {
+    this.initForm();
     this.getUsers();
     this.getBranches();
     this.current = this._serviceAuth.getCurrentUser();
@@ -50,12 +73,28 @@ export class UsersComponent {
     this.usersServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.items = data;
+        this.filteredItems = data; // Initialize filtered list
+        this.filterUsers(); // Apply any existing search
         this.checkLicenseLimit();
       },
       error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
     });
+  }
+
+  // Search functionality
+  filterUsers(): void {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      this.filteredItems = this.items;
+    } else {
+      const search = this.searchTerm.toLowerCase().trim();
+      this.filteredItems = this.items.filter(user =>
+        user.name?.toLowerCase().includes(search) ||
+        user.user_name?.toLowerCase().includes(search) ||
+        user.email?.toLowerCase().includes(search)
+      );
+    }
   }
 
   checkLicenseLimit() {
@@ -99,12 +138,46 @@ export class UsersComponent {
   }
 
   confirmSave(){
-    this.user.user_name = this.user.user_name +'@'+ this.current.instance!.name_kitchen!.toLowerCase();
-    this.user.role = this.selectedRol.id;
-    this.user.branchId = this.selectedBranche.id;
+    // Validate form
+    if (this.userForm.invalid) {
+      Object.keys(this.userForm.controls).forEach(key => {
+        this.userForm.get(key)?.markAsTouched();
+      });
+      this.messageService.add({ 
+        severity: 'warn', 
+        summary: 'Validación', 
+        detail: 'Por favor completa todos los campos requeridos correctamente' 
+      });
+      return;
+    }
+
+    const formValue = this.userForm.value;
+    
+    // Build user object from form
+    this.user.name = formValue.name;
+    this.user.user_name = formValue.user_name + '@' + this.current.instance!.name_kitchen!.toLowerCase();
+    this.user.email = formValue.email;
+    this.user.phone_number = formValue.phone_number;
+    this.user.role = formValue.role;
+    this.user.branchId = formValue.branchId;
+    
+    // Only include password if provided
+    if (formValue.password) {
+      this.user.password = formValue.password;
+    }
+    
     if(this.isEdit){
       this.usersServices.updateItem(this.user!.id!,this.user).subscribe({
-        next: (data) => this.getUsers(),
+        next: (data) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: '¡Éxito!', 
+            detail: 'Usuario actualizado correctamente' 
+          });
+          this.highlightedUserId = this.user.id ?? null;
+          this.getUsers();
+          setTimeout(() => this.highlightedUserId = null, 2000);
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -112,7 +185,16 @@ export class UsersComponent {
     }
     else{
       this.usersServices.createItem(this.user).subscribe({
-        next: (data) => this.getUsers(),
+        next: (data) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: '¡Éxito!', 
+            detail: 'Usuario creado correctamente' 
+          });
+          this.highlightedUserId = data.id ?? null;
+          this.getUsers();
+          setTimeout(() => this.highlightedUserId = null, 2000);
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -125,13 +207,24 @@ export class UsersComponent {
 
   confirmDeleted(item:User) {
     this.confirmationService.confirm({
-        header: 'Estas seguro de eliminar?',
-        message: 'Por favor de confirmar.',
+        header: '¿Confirmar eliminación?',
+        message: `¿Estás seguro de eliminar a <strong>${item.name}</strong>?<br>Esta acción no se puede deshacer.`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptButtonStyleClass: 'p-button-danger',
+        acceptLabel: 'Sí, eliminar',
+        rejectLabel: 'Cancelar',
         accept: () => {
-          this.usersServices.deleteItem(this.user.id!).subscribe({
-            next: (data) => this.getUsers(),
+          this.usersServices.deleteItem(item.id!).subscribe({
+            next: (data) => {
+              this.messageService.add({ 
+                severity: 'success', 
+                summary: 'Eliminado', 
+                detail: `Usuario ${item.name} eliminado correctamente` 
+              });
+              this.getUsers();
+            },
             error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
             }
           });
         }

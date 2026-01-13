@@ -1,3 +1,4 @@
+<div class="categories-container">
 <div class="flex flex-wrap justify-content-center ">
     <div class="w-full">
         <p-card header="Categorias"  class="">
@@ -6,12 +7,26 @@
                     <p-inputGroupAddon>
                         <i class="pi pi-search"></i>
                     </p-inputGroupAddon>
-                    <input type="text" pInputText placeholder="Buscar categoria" pTooltip="Escribe para buscar"/>
-                    <button type="button" pButton icon="pi pi-plus" size="small" 
-                    class="p-button-success" (click)="showModal()"  pTooltip="Nueva categoria" ></button>
+                    <input type="text" 
+                           pInputText 
+                           placeholder="Buscar categoría..." 
+                           [(ngModel)]="searchTerm"
+                           (input)="filterCategories()"
+                           pTooltip="Escribe para buscar"/>
+                    <button type="button" 
+                            pButton 
+                            icon="pi pi-plus" 
+                            size="small" 
+                            class="p-button-success" 
+                            (click)="showModal()"  
+                            pTooltip="Nueva categoria" ></button>
                 </p-inputGroup>
 
-                <p-table [value]="categories" [paginator]="true" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm">
+                <p-table [value]="filteredCategories" 
+                         [paginator]="true" 
+                         [rows]="5" 
+                         responsiveLayout="scroll" 
+                         styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>Nombre</th>
@@ -19,19 +34,39 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-item>
-                        <tr>
+                        <tr [class.highlighted-row]="item.id === highlightedCategoryId">
                             <td>{{item.name}}</td>
                             <td class="text-center">
                                 <div class="flex justify-content-center gap-2">
-                                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="warning" pTooltip="Editar" (click)="showModal(true,item)"/>
-                                    <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" pTooltip="Eliminar" (click)="confirmDeleted(item)"/>
+                                    <p-button icon="pi pi-pencil" 
+                                              [rounded]="true" 
+                                              [outlined]="false" 
+                                              severity="warning" 
+                                              pTooltip="Editar categoría" 
+                                              (click)="showModal(true,item)"/>
+                                    <p-button icon="pi pi-trash" 
+                                              [rounded]="true" 
+                                              [outlined]="false" 
+                                              severity="danger" 
+                                              pTooltip="Eliminar categoría" 
+                                              (click)="confirmDeleted(item)"/>
                                 </div>
                             </td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="2" class="text-center">Sin categorias registradas</td>
+                            <td colspan="2" class="text-center py-6">
+                                <div class="empty-state">
+                                    <i class="pi pi-tags empty-icon"></i>
+                                    <h3 class="empty-title">No hay categorías registradas</h3>
+                                    <p class="empty-subtitle">Comienza agregando tu primera categoría</p>
+                                    <p-button label="Agregar Categoría" 
+                                              icon="pi pi-plus" 
+                                              (click)="showModal()"
+                                              class="mt-3"></p-button>
+                                </div>
+                            </td>
                         </tr>
                     </ng-template>
                 </p-table>
@@ -39,14 +74,29 @@
         </p-card>
     </div>
 </div>
+</div>
 
 <p-dialog header="{{isEdit?'Editar':'Nueva'}} categoria" [modal]="true" [(visible)]="visibleModal" >
-    <div class="formgrid grid gap-3 mb-3 mt-3">
+    <form [formGroup]="categoryForm" class="formgrid grid gap-3 mb-3 mt-3">
         <div class="field col-12">
-            <label for="tableName">Nombre de la categoria</label>
-            <input id="tableName" type="text" [(ngModel)]="categorie.name" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+            <label for="categoryName">
+                Nombre de la categoría *
+                <i class="pi pi-info-circle ml-2 tooltip-icon" 
+                   pTooltip="Mínimo 2 caracteres. Ej: Bebidas, Postres" 
+                   tooltipPosition="right"></i>
+            </label>
+            <input id="categoryName" 
+                   type="text" 
+                   formControlName="name"
+                   pInputText
+                   class="w-full"
+                   placeholder="Ej: Bebidas">
+            <small class="p-error" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+                <span *ngIf="categoryForm.get('name')?.errors?.['required']">El nombre es requerido</span>
+                <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Mínimo 2 caracteres</span>
+            </small>
         </div>
-    </div>
+    </form>
     <div class="flex justify-content-end gap-2">
         <p-button label="Cancelar" severity="secondary" (click)="visibleModal = false" />
         <p-button label="Guardar" (click)="confirmSave()" />

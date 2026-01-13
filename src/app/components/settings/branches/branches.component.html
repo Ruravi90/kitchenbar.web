@@ -1,3 +1,4 @@
+<div class="branches-container">
 <div class="flex flex-wrap justify-content-center">
   <div class="w-full">
     <p-card header="Sucursales" class="">
@@ -9,9 +10,9 @@
           <input
             type="text"
             pInputText
-            placeholder="Buscar sucursal"
-            pTooltip="Escribe para buscar"
-          />
+            placeholder="Buscar sucursal..."
+            [(ngModel)]="searchTerm"
+            (input)="filterBranches()" />
           <button
             type="button"
             pButton
@@ -24,7 +25,7 @@
         </p-inputGroup>
 
         <p-table
-          [value]="branches"
+          [value]="filteredBranches"
           [paginator]="true"
           [rows]="5"
           responsiveLayout="scroll"
@@ -37,33 +38,33 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item>
-            <tr>
+            <tr [class.highlighted-row]="item.id === highlightedBranchId">
               <td>{{ item.name }}</td>
               <td class="text-center">
                 <div class="flex justify-content-center gap-2">
                   <p-button
                     icon="pi pi-qrcode"
                     [rounded]="true"
-                    [outlined]="true"
+                    [outlined]="false"
                     severity="secondary"
                     size="small"
-                    pTooltip="Descargar QR"
+                    pTooltip="Descargar QR de sucursal"
                     (click)="showQRModal(item)"
                   />
                   <p-button
                     icon="pi pi-pencil"
                     [rounded]="true"
-                    [outlined]="true"
+                    [outlined]="false"
                     severity="warning"
-                    pTooltip="Editar"
+                    pTooltip="Editar sucursal"
                     (click)="showModal(true, item)"
                   />
                   <p-button
                     icon="pi pi-trash"
                     [rounded]="true"
-                    [outlined]="true"
+                    [outlined]="false"
                     severity="danger"
-                    pTooltip="Eliminar"
+                    pTooltip="Eliminar sucursal"
                     (click)="confirmDeleted(item)"
                   />
                 </div>
@@ -72,8 +73,16 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="2" class="text-center">
-                Sin sucursales registradas
+              <td colspan="2" class="text-center py-6">
+                <div class="empty-state">
+                  <i class="pi pi-building empty-icon"></i>
+                  <h3 class="empty-title">No hay sucursales registradas</h3>
+                  <p class="empty-subtitle">Comienza agregando tu primera sucursal</p>
+                  <p-button label="Agregar Sucursal" 
+                            icon="pi pi-plus" 
+                            (click)="showModal()"
+                            class="mt-3"></p-button>
+                </div>
               </td>
             </tr>
           </ng-template>
@@ -82,23 +91,35 @@
     </p-card>
   </div>
 </div>
+</div>
 
 <p-dialog
   header="{{ isEdit ? 'Editar' : 'Nueva' }} sucursal"
   [modal]="true"
   [(visible)]="visibleModal"
 >
-  <div class="formgrid grid gap-3 mb-3 mt-3">
+  <form [formGroup]="branchForm" class="formgrid grid gap-3 mb-3 mt-3">
     <div class="field col-12">
-      <label for="tableName">Nombre de la sucursal</label>
+      <label for="branchName">
+        Nombre de la sucursal *
+        <i class="pi pi-info-circle ml-2 tooltip-icon" 
+           pTooltip="Mínimo 3 caracteres. Ej: Sucursal Centro" 
+           tooltipPosition="right"></i>
+      </label>
       <input
-        id="tableName"
+        id="branchName"
         type="text"
-        [(ngModel)]="branch.name"
-        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+        formControlName="name"
+        pInputText
+        class="w-full"
+        placeholder="Ej: Sucursal Centro"
       />
+      <small class="p-error" *ngIf="branchForm.get('name')?.invalid && branchForm.get('name')?.touched">
+        <span *ngIf="branchForm.get('name')?.errors?.['required']">El nombre es requerido</span>
+        <span *ngIf="branchForm.get('name')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+      </small>
     </div>
-  </div>
+  </form>
   <div class="flex justify-content-end gap-2">
     <p-button
       label="Cancelar"

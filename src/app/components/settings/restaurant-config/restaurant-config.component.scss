@@ -1,3 +1,285 @@
-:host {
-  display: block;
+/* Restaurant Config - Glassmorphism Styles */
+
+.config-container {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+/* Glass Card Styles */
+::ng-deep .p-card {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 60, 114, 0.7) 0%,
+    rgba(42, 82, 152, 0.7) 100%
+  ) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+
+  .p-card-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 1.5rem !important;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff !important;
+  }
+
+  .p-card-body,
+  .p-card-content {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+
+    // Ensure all text is visible
+    p, span, div {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    // Stronger text for important content
+    .font-medium,
+    .font-bold {
+      color: #ffffff !important;
+    }
+  }
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  i {
+    font-size: 1.5rem;
+    color: var(--primary-300);
+  }
+
+  h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+}
+
+/* Form Fields */
+.field {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  input[type="text"],
+  textarea,
+  ::ng-deep .p-inputnumber-input,
+  ::ng-deep .p-inputtext {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: var(--primary-300) !important;
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+/* Loading Skeleton */
+.config-skeleton {
+  padding: 2rem;
+
+  ::ng-deep .p-skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* License Card */
+.license-card {
+  ::ng-deep .p-card-content {
+    // Override all text colors to white for better visibility
+    .text-500,
+    .text-900,
+    span {
+      color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    .text-green-500 {
+      color: #4caf50 !important;
+    }
+
+    .text-blue-500 {
+      color: #42a5f5 !important;
+    }
+
+    .font-medium {
+      font-weight: 600;
+    }
+
+    .text-xl {
+      font-size: 1.25rem;
+    }
+
+    ::ng-deep .p-divider {
+      border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+      
+      .p-divider-content {
+        background: transparent !important;
+      }
+    }
+
+    // Feature list items
+    .pi-check-circle {
+      color: #4caf50 !important;
+    }
+
+    .pi-times-circle {
+      color: #ef5350 !important;
+    }
+
+    // Better contrast for labels
+    .block {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  // Icon container
+  .bg-blue-100 {
+    background: rgba(33, 150, 243, 0.2) !important;
+  }
+}
+
+/* Stripe Card */
+.stripe-card {
+  .surface-50 {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  ::ng-deep .p-progress-spinner-circle {
+    stroke: #fff !important;
+  }
+}
+
+/* Success/Error States */
+.text-green-600,
+.text-green-500 {
+  color: #4caf50 !important;
+}
+
+.border-green-200 {
+  border-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+/* Buttons */
+::ng-deep .p-button {
+  font-weight: 700;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 10px !important;
+  transition: all 0.3s ease;
+
+  &:not(.p-button-outlined) {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600)) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+    }
+  }
+
+  &.p-button-outlined {
+    background: transparent !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Icons */
+.pi {
+  &.pi-id-card,
+  &.pi-wallet,
+  &.pi-check-circle,
+  &.pi-times-circle,
+  &.pi-external-link {
+    color: inherit;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .config-container {
+    padding: 1rem;
+  }
+
+  ::ng-deep .p-card {
+    .p-card-header {
+      font-size: 1.25rem;
+      padding: 1rem !important;
+    }
+  }
+
+  .field {
+    margin-bottom: 1.25rem;
+
+    label {
+      font-size: 0.8125rem;
+    }
+  }
 }

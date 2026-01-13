@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Branch, Category } from '../../../models';
 import { BranchesInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -11,14 +12,27 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './branches.component.scss'
 })
 export class BranchesComponent {
+  branchForm!: FormGroup;
+  
   constructor(
+    private fb: FormBuilder,
     private confirmationService: ConfirmationService, 
     private messageService: MessageService,
     private branchsServices: BranchesInterface){
     this.elementType = "canvas" as QRCodeElementType;
   }
 
+  initForm() {
+    this.branchForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]]
+    });
+  }
+
   branches: Branch[] =[];
+  filteredBranches: Branch[] = [];
+  searchTerm: string = '';
+  highlightedBranchId: number | null = null;
+  
   branch: Branch = {};
   visibleModal: boolean = false;
   visibleQRModal: boolean = false;
@@ -47,31 +61,75 @@ export class BranchesComponent {
   public elementType: QRCodeElementType;
 
   ngOnInit(): void {
+    this.initForm();
     this.getbranches();
   }
   getbranches(){
     this.branchsServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.branches = data;
+        this.filteredBranches = data;
+        this.filterBranches();
       },
       error: (e) => {
         this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
       }
     })
   }
+
+ filterBranches(): void {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      this.filteredBranches = this.branches;
+    } else {
+      const search = this.searchTerm.toLowerCase().trim();
+      this.filteredBranches = this.branches.filter(branch =>
+        branch.name?.toLowerCase().includes(search)
+      );
+    }
+  }
   showModal(isEdit:boolean = false, item?:Branch){
     this.isEdit = isEdit;
-    if(isEdit)
+    
+    if(isEdit){
       this.branch = item!;
-    else
+      this.branchForm.patchValue({
+        name: item?.name || ''
+      });
+    } else {
       this.branch = new Branch();
+      this.branchForm.reset();
+    }
 
-    this.visibleModal =  true;
+    this.visibleModal = true;
   }
   confirmSave(){
+    if (this.branchForm.invalid) {
+      Object.keys(this.branchForm.controls).forEach(key => {
+        this.branchForm.get(key)?.markAsTouched();
+      });
+      this.messageService.add({ 
+        severity: 'warn', 
+        summary: 'Validación', 
+        detail: 'Por favor completa todos los campos requeridos' 
+      });
+      return;
+    }
+
+    const formValue = this.branchForm.value;
+    this.branch.name = formValue.name;
+    
     if(this.isEdit){
       this.branchsServices.updateItem(this.branch!.id!,this.branch).subscribe({
-        next: (data) => this.getbranches(),
+        next: (data) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: '¡Éxito!', 
+            detail: 'Sucursal actualizada correctamente' 
+          });
+          this.highlightedBranchId = this.branch.id ?? null;
+          this.getbranches();
+          setTimeout(() => this.highlightedBranchId = null, 2000);
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -79,7 +137,16 @@ export class BranchesComponent {
     }
     else{
       this.branchsServices.createItem(this.branch).subscribe({
-        next: (data) => this.getbranches(),
+        next: (data) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: '¡Éxito!', 
+            detail: 'Sucursal creada correctamente' 
+          });
+          this.highlightedBranchId = data.id ?? null;
+          this.getbranches();
+          setTimeout(() => this.highlightedBranchId = null, 2000);
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -87,15 +154,26 @@ export class BranchesComponent {
     }
     this.visibleModal = false;
   }
-  confirmDeleted(item:Category) {
+  confirmDeleted(item:Branch) {
     this.confirmationService.confirm({
-        header: 'Estas seguro de eliminar?',
-        message: 'Por favor de confirmar.',
+        header: '¿Confirmar eliminación?',
+        message: `¿Estás seguro de eliminar la sucursal <strong>${item.name}</strong>?<br>Esta acción no se puede deshacer.`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptButtonStyleClass: 'p-button-danger',
+        acceptLabel: 'Sí, eliminar',
+        rejectLabel: 'Cancelar',
         accept: () => {
-          this.branchsServices.deleteItem(this.branch!.id!).subscribe({
-            next: (data) => this.getbranches(),
+          this.branchsServices.deleteItem(item.id!).subscribe({
+            next: (data) => {
+              this.messageService.add({ 
+                severity: 'success', 
+                summary: 'Eliminada', 
+                detail: `Sucursal ${item.name} eliminada correctamente` 
+              });
+              this.getbranches();
+            },
             error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
             }
           });
         }

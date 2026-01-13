@@ -14,6 +14,7 @@ export class RestaurantConfigComponent implements OnInit {
 
   config: RestaurantConfig = new RestaurantConfig();
   loading: boolean = false;
+  loadingConfig: boolean = true; // For initial load skeleton
   
   stripeStatus: any = null;
   loadingStripe: boolean = false;
@@ -65,15 +66,15 @@ export class RestaurantConfigComponent implements OnInit {
   }
 
   loadConfig() {
-    this.loading = true;
+    this.loadingConfig = true;
     this.service.getConfig().subscribe({
       next: (data) => {
         this.config = data;
-        this.loading = false;
+        this.loadingConfig = false;
       },
       error: (err) => {
         console.error(err);
-        this.loading = false;
+        this.loadingConfig = false;
         // 404 is expected if not configured yet, just ignore or handle defaults
       }
     });

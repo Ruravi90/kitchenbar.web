@@ -1,3 +1,4 @@
+<div class="users-container">
 <div class="flex flex-wrap justify-content-center ">
     <div class="w-full">
         <p-card header="Usuarios"  class="">
@@ -6,11 +7,26 @@
                     <p-inputGroupAddon>
                         <i class="pi pi-search"></i>
                     </p-inputGroupAddon>
-                    <input type="text" pInputText placeholder="Buscar" />
-                    <button type="button" pButton icon="pi pi-plus" class="p-button-success" size="small" pTooltip="Nuevo usuario" (click)="showModal()" [disabled]="!canCreateUsers"></button>
+                    <input type="text" 
+                           pInputText 
+                           placeholder="Buscar por nombre, usuario o email..." 
+                           [(ngModel)]="searchTerm"
+                           (input)="filterUsers()" />
+                    <button type="button" 
+                            pButton 
+                            icon="pi pi-plus" 
+                            class="p-button-success" 
+                            size="small" 
+                            pTooltip="Nuevo usuario" 
+                            (click)="showModal()" 
+                            [disabled]="!canCreateUsers"></button>
                 </p-inputGroup>
 
-                <p-table [value]="items" [paginator]="true" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm">
+                <p-table [value]="filteredItems" 
+                         [paginator]="true" 
+                         [rows]="5" 
+                         responsiveLayout="scroll" 
+                         styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>Nombre</th>
@@ -18,19 +34,46 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-item>
-                        <tr>
+                        <tr [class.highlighted-row]="item.id === highlightedUserId">
                             <td>{{item.name}}</td>
                             <td class="text-center">
                                 <div class="flex justify-content-center gap-2">
-                                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="warning" size="small" pTooltip="Editar" (click)="showModal(true,item)"/>
-                                    <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" size="small" pTooltip="Eliminar" (click)="confirmDeleted(item)"/>
+                                    <p-button icon="pi pi-pencil" 
+                                              [rounded]="true" 
+                                              [outlined]="false" 
+                                              severity="warning" 
+                                              size="small" 
+                                              pTooltip="Editar usuario" 
+                                              (click)="showModal(true,item)"/>
+                                    <p-button icon="pi pi-trash" 
+                                              [rounded]="true" 
+                                              [outlined]="false" 
+                                              severity="danger" 
+                                              size="small" 
+                                              pTooltip="Eliminar usuario" 
+                                              (click)="confirmDeleted(item)"/>
                                 </div>
                             </td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="2" class="text-center">Usuarios no registrados</td>
+                            <td colspan="2" class="text-center py-6">
+                                <div class="empty-state">
+                                    <i class="pi pi-users empty-icon"></i>
+                                    <h3 class="empty-title">No hay usuarios registrados</h3>
+                                    <p class="empty-subtitle">Comienza agregando tu primer usuario al sistema</p>
+                                    <p-button *ngIf="canCreateUsers" 
+                                              label="Agregar Usuario" 
+                                              icon="pi pi-plus" 
+                                              (click)="showModal()"
+                                              class="mt-3"></p-button>
+                                    <p class="text-muted mt-2" *ngIf="!canCreateUsers">
+                                        <i class="pi pi-info-circle"></i> 
+                                        Has alcanzado el límite de usuarios de tu plan
+                                    </p>
+                                </div>
+                            </td>
                         </tr>
                     </ng-template>
                 </p-table>
@@ -39,51 +82,99 @@
     </div>
 </div>
 <p-dialog header="{{isEdit?'Editar':'Nuevo'}} usuario" [modal]="true" [(visible)]="visibleModal" >
-    <div class="formgrid grid gap-3 mb-3 mt-3">
+    <form [formGroup]="userForm" class="formgrid grid gap-3 mb-3 mt-3">
         <div class="field col-12">
-            <label for="name">Nombre del usuario</label>
-            <input pInputText id="name" type="text" [(ngModel)]="user.name" class="w-full">
+            <label for="name">
+                Nombre del usuario *
+                <i class="pi pi-info-circle ml-2 tooltip-icon" 
+                   pTooltip="Mínimo 3 caracteres" 
+                   tooltipPosition="right"></i>
+            </label>
+            <input pInputText id="name" type="text" formControlName="name" class="w-full">
+            <small class="p-error" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">
+                <span *ngIf="userForm.get('name')?.errors?.['required']">El nombre es requerido</span>
+                <span *ngIf="userForm.get('name')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+            </small>
         </div>
         <div class="field col-12">
             <p-divider />
         </div>
         <div class="field col-12">
-            <label for="role">Sucursal</label>
+            <label for="branchSelect">
+                Sucursal *
+                <i class="pi pi-info-circle ml-2 tooltip-icon" 
+                   pTooltip="Selecciona la sucursal donde trabajará el usuario" 
+                   tooltipPosition="right"></i>
+            </label>
             <p-dropdown 
-                id="role"
+                id="branchSelect"
                 [style]="{'width':'100%'}"
                 [options]="branches" 
-                [(ngModel)]="selectedBranche" 
+                formControlName="branchId"
                 optionLabel="name" 
+                optionValue="id"
                 placeholder="Selecciona la sucursal" />
+            <small class="p-error" *ngIf="userForm.get('branchId')?.invalid && userForm.get('branchId')?.touched">
+                La sucursal es requerida
+            </small>
         </div>
         <div class="field col-12">
             <p-divider />
         </div>
         <div class="field col-12">
-            <label for="role">Rol</label>
+            <label for="roleSelect">
+                Rol *
+                <i class="pi pi-info-circle ml-2 tooltip-icon" 
+                   pTooltip="Define los permisos del usuario" 
+                   tooltipPosition="right"></i>
+            </label>
             <p-dropdown 
-                id="role"
+                id="roleSelect"
                 [style]="{'width':'100%'}"
                 [options]="roles" 
-                [(ngModel)]="selectedRol" 
+                formControlName="role"
                 optionLabel="name" 
+                optionValue="id"
                 placeholder="Selecciona el Rol" />
-        </div>
-        <div class="field col-12" pTooltip="usuario@nombre-bar">
-            <label for="user_name">Usuario</label>
-            <p-inputGroup>
-                <input id="user_name" type="text" [(ngModel)]="user.user_name" pInputText />
-                <p-inputGroupAddon>{{'@'+ current.instance!.name_kitchen!.toLowerCase()}}</p-inputGroupAddon>
-            </p-inputGroup>
+            <small class="p-error" *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
+                El rol es requerido
+            </small>
         </div>
         <div class="field col-12">
-            <label for="password">Contraseña</label>
-            <p-password id="password" [(ngModel)]="user.password" #password="ngModel" name="password" 
-            [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
-                         [toggleMask]="true"></p-password>
+            <label for="user_name">
+                Usuario *
+                <i class="pi pi-info-circle ml-2 tooltip-icon" 
+                   pTooltip="Solo letras minúsculas, números y guiones bajos" 
+                   tooltipPosition="right"></i>
+            </label>
+            <p-inputGroup>
+                <input id="user_name" type="text" formControlName="user_name" pInputText />
+                <p-inputGroupAddon>{{'@'+ current.instance!.name_kitchen!.toLowerCase()}}</p-inputGroupAddon>
+            </p-inputGroup>
+            <small class="p-error" *ngIf="userForm.get('user_name')?.invalid && userForm.get('user_name')?.touched">
+                <span *ngIf="userForm.get('user_name')?.errors?.['required']">El usuario es requerido</span>
+                <span *ngIf="userForm.get('user_name')?.errors?.['pattern']">Solo minúsculas, números y guiones bajos</span>
+            </small>
         </div>
-    </div>
+        <div class="field col-12">
+            <label for="password">
+                Contraseña {{isEdit ? '(dejar vacío para mantener actual)' : '*'}}
+                <i class="pi pi-info-circle ml-2 tooltip-icon" 
+                   pTooltip="Mínimo 6 caracteres. Usa mayúsculas, minúsculas y números" 
+                   tooltipPosition="right"></i>
+            </label>
+            <p-password id="password" 
+                        formControlName="password"
+                        [style]="{'width':'100%'}" 
+                        [inputStyle]="{'width':'100%'}"
+                        [toggleMask]="true"
+                        [feedback]="false"></p-password>
+            <small class="p-error" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+                <span *ngIf="userForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+                <span *ngIf="userForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres</span>
+            </small>
+        </div>
+    </form>
     <div class="flex justify-content-end gap-2">
         <p-button label="Cancelar" severity="secondary" (click)="visibleModal = false" />
         <p-button label="Guardar" (click)="confirmSave()" />
@@ -116,4 +207,4 @@
             </div>
         </div>
     </ng-template>
-</p-confirmDialog>
+</p-confirmDialog></div>

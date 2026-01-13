@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Branch, Table } from '../../../models';
 import { BranchesInterface, TablesInterface, DashboardInterface } from '../../../interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -13,7 +14,10 @@ import { environment } from '../../../../environments/environment';
 })
 export class TablesComponent {
 
-  constructor( 
+  tableForm!: FormGroup;
+  
+  constructor(
+    private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private tablesServices: TablesInterface,
@@ -22,7 +26,19 @@ export class TablesComponent {
     this.elementType= "canvas" as QRCodeElementType;
   }
 
+  initForm() {
+    this.tableForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      branchId: [null, [Validators.required]],
+      additional: ['']
+    });
+  }
+
   tables: Table[] = [];
+  filteredTables: Table[] = []; // For search results
+  searchTerm: string = '';
+  highlightedTableId: number | null = null; // For visual feedback
+  
   branches: Branch[] = [];
   table: Table = {}
   visibleModal: boolean = false;
@@ -51,6 +67,7 @@ export class TablesComponent {
   public elementType: QRCodeElementType;
 
   ngOnInit(): void {
+    this.initForm();
     this.getTables();
     this.getBranches();
   }
@@ -62,12 +79,27 @@ export class TablesComponent {
     this.tablesServices.getItemsByInstance().subscribe({
       next: (data) => {
         this.tables = data;
+        this.filteredTables = data;
+        this.filterTables();
         this.checkLicenseLimit();
       },
       error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
     });
+  }
+
+  // Search functionality
+  filterTables(): void {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      this.filteredTables = this.tables;
+    } else {
+      const search = this.searchTerm.toLowerCase().trim();
+      this.filteredTables = this.tables.filter(table =>
+        table.name?.toLowerCase().includes(search) ||
+        table.branch?.name?.toLowerCase().includes(search)
+      );
+    }
   }
 
   checkLicenseLimit() {
@@ -97,25 +129,55 @@ export class TablesComponent {
 
   showModal(isEdit:boolean = false, item?:Table){
     this.isEdit = isEdit;
-    if(isEdit)
+    
+    if(isEdit){
       this.table = item!;
-    else{
+      this.tableForm.patchValue({
+        name: item?.name || '',
+        branchId: item?.branchId,
+        additional: item?.additional || ''
+      });
+    } else {
       this.table = new Table();
+      this.tableForm.reset();
     }
-      
 
-    this.visibleModal =  true;
+    this.visibleModal = true;
   }
 
   confirmSave(){
-    if(!this.table.branchId){
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Debe seleccionar una sucursal' });
+    // Validate form
+    if (this.tableForm.invalid) {
+      Object.keys(this.tableForm.controls).forEach(key => {
+        this.tableForm.get(key)?.markAsTouched();
+      });
+      this.messageService.add({ 
+        severity: 'warn', 
+        summary: 'Validación', 
+        detail: 'Por favor completa todos los campos requeridos correctamente' 
+      });
       return;
     }
 
+    const formValue = this.tableForm.value;
+    
+    // Build table object from form
+    this.table.name = formValue.name;
+    this.table.branchId = formValue.branchId;
+    this.table.additional = formValue.additional;
+
     if(this.isEdit){
       this.tablesServices.updateItem(this.table!.id!,this.table).subscribe({
-        next: (data) => this.getTables(),
+        next: (data) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: '¡Éxito!', 
+            detail: 'Mesa actualizada correctamente' 
+          });
+          this.highlightedTableId = this.table.id ?? null;
+          this.getTables();
+          setTimeout(() => this.highlightedTableId = null, 2000);
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -123,7 +185,16 @@ export class TablesComponent {
     }
     else{
       this.tablesServices.createItem(this.table).subscribe({
-        next: (data) => this.getTables(),
+        next: (data) => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: '¡Éxito!', 
+            detail: 'Mesa creada correctamente' 
+          });
+          this.highlightedTableId = data.id ?? null;
+          this.getTables();
+          setTimeout(() => this.highlightedTableId = null, 2000);
+        },
         error: (e) => {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
             }
@@ -134,13 +205,24 @@ export class TablesComponent {
 
   confirmDeleted(item:Table) {
     this.confirmationService.confirm({
-        header: 'Estas seguro de eliminar?',
-        message: 'Por favor de confirmar.',
+        header: '¿Confirmar eliminación?',
+        message: `¿Estás seguro de eliminar la mesa <strong>${item.name}</strong>?<br>Esta acción no se puede deshacer.`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptButtonStyleClass: 'p-button-danger',
+        acceptLabel: 'Sí, eliminar',
+        rejectLabel: 'Cancelar',
         accept: () => {
           this.tablesServices.deleteItem(item.id!).subscribe({
-            next: (data) => this.getTables(),
+            next: (data) => {
+              this.messageService.add({ 
+                severity: 'success', 
+                summary: 'Eliminada', 
+                detail: `Mesa ${item.name} eliminada correctamente` 
+              });
+              this.getTables();
+            },
             error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
             }
           });
         }

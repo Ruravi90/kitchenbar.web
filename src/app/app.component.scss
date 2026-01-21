@@ -1,0 +1,58 @@
+/* Global Animated Gradient Background */
+:host {
+  display: block;
+  min-height: 100vh;
+  
+  // Animated gradient background
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  position: relative;
+  
+  // Subtle pattern overlay with floating orbs
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(252, 103, 103, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(45, 212, 191, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+    animation: float 20s ease-in-out infinite;
+    z-index: 0;
+  }
+  
+  // NEW: White overlay for glass visibility
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  // Ensure content is above backgrounds
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}

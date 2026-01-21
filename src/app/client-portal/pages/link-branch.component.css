@@ -1,69 +1,103 @@
-.link-container {
+.link-branch-container {
+  padding: 20px;
   max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: 0 auto;
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.card-header i {
-  font-size: 2rem;
-}
-
-.card-header h2 {
-  margin: 0;
-  font-weight: 600;
-}
-
-.loading-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 3rem 1rem;
-}
-
-.loading-section p {
-  color: #6c757d;
-  font-size: 1.1rem;
-}
-
-.success-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
+.header {
   text-align: center;
+  margin-bottom: 30px;
 }
 
-.success-icon {
-  font-size: 4rem;
-  color: #10b981;
-  margin-bottom: 1rem;
+.header h2 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
 }
 
-.success-section h3 {
-  margin: 0 0 0.5rem 0;
-  color: #1e293b;
-  font-size: 1.5rem;
-  font-weight: 600;
+.header p {
+  color: var(--text-color-secondary);
 }
 
-.success-section p {
-  color: #64748b;
-  margin-bottom: 2rem;
+.scanner-wrapper {
+  margin: 20px 0;
 }
 
-.button-group {
+.loading-state {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  padding: 60px 20px;
+}
+
+.loading-state p {
+  margin-top: 20px;
+  color: var(--text-color-secondary);
+}
+
+.branch-preview {
+  padding: 20px 0;
+}
+
+.preview-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.preview-logo img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--surface-ground);
+  border-radius: 8px;
+}
+
+.detail-item i {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.detail-item span {
+  color: var(--text-color);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dialog-header i {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.dialog-header h3 {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .link-branch-container {
+    padding: 10px;
+  }
+  
+  .preview-logo img {
+    max-width: 120px;
+    max-height: 120px;
+  }
 }

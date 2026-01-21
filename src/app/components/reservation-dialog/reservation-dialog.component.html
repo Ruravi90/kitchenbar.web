@@ -1,0 +1,179 @@
+<p-dialog 
+  [(visible)]="visible"
+  [header]="step === 'details' ? 'Reservar Mesa' : step === 'availability' ? 'Seleccionar Mesa' : 'Confirmar Reservación'"
+  [style]="{width: '95vw', maxWidth: '600px'}"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="reservation-dialog">
+  
+  <!-- STEP 1: Details -->
+  <div *ngIf="step === 'details'" class="p-fluid">
+    <div class="field">
+      <label for="partySize">¿Cuántas personas? *</label>
+      <p-dropdown 
+        id="partySize"
+        [(ngModel)]="partySize"
+        [options]="partySizes"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona"
+        [showClear]="false"
+        appendTo="body">
+      </p-dropdown>
+    </div>
+    
+    <div class="formgrid grid">
+      <div class="field col-7">
+        <label for="reservationDate">Fecha *</label>
+        <p-calendar 
+          id="reservationDate"
+          [(ngModel)]="reservationDate"
+          [minDate]="minDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          placeholder="Selecciona fecha"
+          appendTo="body">
+        </p-calendar>
+      </div>
+      
+      <div class="field col-5">
+        <label for="reservationTime">Hora *</label>
+        <input 
+          type="time" 
+          pInputText 
+          id="reservationTime"
+          [(ngModel)]="reservationTime"
+          class="w-full">
+      </div>
+    </div>
+    
+    <div class="field">
+      <label for="preferredLocation">Ubicación Preferida (Opcional)</label>
+      <p-dropdown 
+        id="preferredLocation"
+        [(ngModel)]="preferredLocation"
+        [options]="locations"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Sin preferencia"
+        [showClear]="true"
+        appendTo="body">
+      </p-dropdown>
+    </div>
+  </div>
+  
+  <!-- STEP 2: Available Tables & Customer Info -->
+  <div *ngIf="step === 'availability'" class="availability-step">
+    <p class="mb-3 text-center">
+      <i class="pi pi-check-circle text-green-500 text-2xl mr-2"></i>
+      <span class="text-lg">{{ availabilityResult?.message }}</span>
+    </p>
+    
+    <!-- Table Selection -->
+    <div class="table-grid grid mb-4">
+      <div 
+        *ngFor="let table of availabilityResult?.availableTables"
+        class="col-12 md:col-6">
+        <div 
+          class="table-card p-3 cursor-pointer border-round"
+          [class.selected]="selectedTable?.id === table.id"
+          (click)="selectedTable = table">
+          <div class="flex justify-content-between align-items-center">
+            <div>
+              <div class="font-bold text-lg">Mesa {{ table.number }}</div>
+              <div class="text-sm text-600">{{ table.capacity }}</div>
+              <div class="text-sm text-500">{{ getLocationLabel(table.location) }}</div>
+            </div>
+            <i class="pi pi-check-circle text-primary text-3xl" 
+               *ngIf="selectedTable?.id === table.id"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Customer Information -->
+    <div class="p-fluid">
+      <div class="field">
+        <label for="customerName">Nombre Completo *</label>
+        <input 
+          type="text" 
+          pInputText 
+          id="customerName"
+          [(ngModel)]="customerName" 
+          placeholder="Ej: Juan Pérez"
+          required>
+      </div>
+      
+      <div class="field">
+        <label for="customerPhone">Teléfono *</label>
+        <input 
+          type="tel" 
+          pInputText 
+          id="customerPhone"
+          [(ngModel)]="customerPhone" 
+          placeholder="Ej: 5512345678"
+          maxlength="10"
+          required>
+      </div>
+      
+      <div class="field">
+        <label for="customerEmail">Email (Opcional)</label>
+        <input 
+          type="email" 
+          pInputText 
+          id="customerEmail"
+          [(ngModel)]="customerEmail"
+          placeholder="Ej: correo@ejemplo.com">
+      </div>
+      
+      <div class="field">
+        <label for="specialRequests">Solicitudes Especiales (Opcional)</label>
+        <textarea 
+          pInputTextarea 
+          id="specialRequests"
+          [(ngModel)]="specialRequests"
+          rows="2"
+          placeholder="Ej: Silla para bebé, cerca de ventana...">
+        </textarea>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer Buttons -->
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-content-end">
+      <!-- Step 1: Details -->
+      <button 
+        *ngIf="step === 'details'"
+        pButton 
+        label="Verificar Disponibilidad"
+        icon="pi pi-search"
+        [loading]="checking"
+        (click)="checkAvailability()"
+        class="p-button-primary">
+      </button>
+      
+      <!-- Step 2: Availability -->
+      <button 
+        *ngIf="step === 'availability'"
+        pButton 
+        label="Volver"
+        icon="pi pi-arrow-left"
+        class="p-button-text"
+        (click)="goBack()">
+      </button>
+      
+      <button 
+        *ngIf="step === 'availability'"
+        pButton 
+        label="Confirmar Reservación"
+        icon="pi pi-check"
+        [loading]="creating"
+        [disabled]="!selectedTable || !customerName || !customerPhone"
+        (click)="confirmReservation()"
+        class="p-button-success">
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>

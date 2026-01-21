@@ -31,15 +31,164 @@ $gutter: 1rem; //for primeflex grid system
   --glass-text-subtle: rgba(255, 255, 255, 0.6);
 }
 
-/* Glass Card Utility */
+/* Glass Card Utility - White Glassmorphism */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.18) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  padding: 1.5rem;
+  
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.28) 100%
+    ) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+      0 12px 40px 0 rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4) !important;
+  }
 }
+
+/* ========================================
+   GLOBAL P-CARD OVERRIDE (High Priority)
+   ======================================== */
+
+/* Ultra-specific selector to override component styles */
+:root ::ng-deep .p-card,
+body ::ng-deep .p-card,
+app-root ::ng-deep .p-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.18) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  /* Subtle hover - not completely white */
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.28) 100%
+    ) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+      0 12px 40px 0 rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4) !important;
+  }
+
+  .p-card-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    padding: 1.5rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    color: rgba(30, 30, 50, 0.9) !important;
+    text-shadow: none !important;
+  }
+
+  .p-card-body,
+  .p-card-content {
+    background: transparent !important;
+    color: rgba(30, 30, 50, 0.85) !important;
+  }
+
+  /* Table improvements */
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: rgba(0, 0, 0, 0.08) !important;
+      border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      color: rgba(30, 30, 50, 0.9) !important;
+      font-weight: 700 !important;
+      padding: 1rem !important;
+      text-shadow: none !important;
+    }
+
+    .p-datatable-tbody > tr {
+      background: transparent !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+      color: rgba(30, 30, 50, 0.85) !important;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.04) !important;
+      }
+
+      > td {
+        border: 1px solid rgba(0, 0, 0, 0.04) !important;
+        padding: 1rem !important;
+        color: rgba(30, 30, 50, 0.85) !important;
+      }
+    }
+
+    .p-paginator {
+      background: rgba(0, 0, 0, 0.04) !important;
+      border: none !important;
+      border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+      color: rgba(30, 30, 50, 0.85) !important;
+
+      .p-paginator-current,
+      .p-paginator-icon {
+        color: rgba(30, 30, 50, 0.85) !important;
+      }
+
+      .p-paginator-pages .p-paginator-page {
+        color: rgba(30, 30, 50, 0.85) !important;
+        background: transparent;
+
+        &.p-highlight {
+          background: var(--primary-500) !important;
+          color: #fff !important;
+        }
+
+        &:hover:not(.p-highlight) {
+          background: rgba(0, 0, 0, 0.08) !important;
+        }
+      }
+    }
+  }
+
+  /* Input styles */
+  .p-inputtext,
+  .p-dropdown,
+  .p-calendar input {
+    color: rgba(30, 30, 50, 0.9) !important;
+
+    &::placeholder {
+      color: rgba(30, 30, 50, 0.5) !important;
+    }
+  }
+
+  /* Button improvements */
+  .p-button {
+    transition: all 0.2s ease !important;
+
+    &:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+
 
 /* Glass Navigation */
 .glass-nav {
@@ -197,7 +346,7 @@ router-outlet ~ * {
    Modals & Confirmation Dialogs
    ======================================== */
 
-/* Dialog glassmorphism */
+/* Dialog glassmorphism - WHITE GLASS */
 ::ng-deep .p-dialog {
   .p-dialog-mask {
     backdrop-filter: blur(8px);
@@ -208,14 +357,16 @@ router-outlet ~ * {
   .p-dialog-content {
     background: linear-gradient(
       135deg,
-      rgba(30, 60, 114, 0.85) 0%,
-      rgba(42, 82, 152, 0.85) 100%
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.08) 100%
     );
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    box-shadow: 
+      0 20px 60px 0 rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
     animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: #fff;
   }
@@ -246,6 +397,7 @@ router-outlet ~ * {
     padding-top: 1.5rem;
   }
 }
+
 
 /* Confirm Dialog specific styling */
 ::ng-deep .p-confirm-dialog {
@@ -1156,18 +1308,47 @@ html {
 }
 
 /* ========================================
-   Glass Card Utility
+   Glass Card Utility - WHITE GLASS
    ======================================== */
 
 .glass-card {
   background: linear-gradient(
     135deg,
-    rgba(30, 60, 114, 0.7) 0%,
-    rgba(42, 82, 152, 0.7) 100%
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 100%
   );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+/* ========================================
+   ULTRA-SPECIFIC INPUT OVERRIDES  
+   (Must be at end to override component styles)
+   ======================================== */
+
+/* Force dark text on inputs/searches within cards */
+app-root .p-card .p-inputgroup .p-inputtext,
+app-root .p-card .p-input-icon-left .p-inputtext,
+app-root .p-card input[type="text"] {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;  
+  color: rgba(30, 30, 50, 0.9) !important;
+}
+
+app-root .p-card .p-inputtext::placeholder {
+  color: rgba(30, 30, 50, 0.5) !important;
+}
+
+app-root .p-card .p-input-icon-left i {
+  color: rgba(30, 30, 50, 0.6) !important;
+}
+
+app-root .p-card .p-inputgroup-addon {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: rgba(30, 30, 50, 0.8) !important;
 }

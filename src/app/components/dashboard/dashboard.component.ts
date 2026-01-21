@@ -217,10 +217,10 @@ export class DashboardComponent implements OnInit {
   }
 
   initChartOptions() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    // Use dark colors for white glassmorphism backgrounds
+    const textColor = '#1e1e32';
+    const textColorSecondary = 'rgba(30, 30, 50, 0.7)';
+    const surfaceBorder = 'rgba(30, 30, 50, 0.1)';
 
     this.basicOptions = {
       plugins: {

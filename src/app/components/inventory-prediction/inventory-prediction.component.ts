@@ -93,7 +93,6 @@ import { ToastModule } from 'primeng/toast';
                     icon="pi pi-pencil" 
                     pTooltip="Ajustar Stock" 
                     [rounded]="true" 
-                    [outlined]="true" 
                     (onClick)="openAdjustStock(item)">
                   </p-button>
                 </td>

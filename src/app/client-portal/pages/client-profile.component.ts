@@ -26,7 +26,7 @@ export class ClientProfileComponent implements OnInit {
     private router: Router
   ) {
     this.addressForm = this.fb.group({
-      tagName: ['Home', Validators.required],
+      tagName: ['Casa', Validators.required],
       address: ['', Validators.required],
       zipCode: ['', Validators.required],
       instructions: ['']

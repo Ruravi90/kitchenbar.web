@@ -75,10 +75,6 @@ export class ClientPortalService {
     return this.http.post(`${this.apiUrl}ClientInteraction/cancel-order/${orderId}`, {});
   }
 
-  getHistory(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}ClientInteraction/history`);
-  }
-
   getAddresses(): Observable<ClientAddress[]> {
     return this.http.get<ClientAddress[]>(`${this.apiUrl}ClientInteraction/addresses`);
   }
@@ -88,6 +84,10 @@ export class ClientPortalService {
   }
 
   // NEW: QR-based interactions
+  getBranchPreview(branchIdentity: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}ClientInteraction/branch-preview/${branchIdentity}`);
+  }
+
   linkBranch(branchIdentity: string): Observable<any> {
     return this.http.post(`${this.apiUrl}ClientInteraction/link-branch`, {
       branchIdentity
@@ -107,9 +107,32 @@ export class ClientPortalService {
     );
   }
 
+  transferSession(dinerId: number, newTableIdentity: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}ClientInteraction/transfer-session`, {
+      dinerId,
+      newTableIdentity
+    });
+  }
+
+  closeSession(dinerId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}ClientInteraction/close-session/${dinerId}`, {});
+  }
 
   getActiveSession(): Observable<any> {
     return this.http.get(`${this.apiUrl}ClientInteraction/active-session`);
+  }
+
+  getHistory(page: number = 1, pageSize: number = 20): Observable<any> {
+    return this.http.get(`${this.apiUrl}ClientInteraction/history?page=${page}&pageSize=${pageSize}`);
+  }
+
+  reorder(dinerId: number, orderDetails: {
+    instanceIdentity: string,
+    orderType: number,
+    pickupTime?: Date,
+    deliveryAddress?: string
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}ClientInteraction/reorder/${dinerId}`, orderDetails);
   }
 
   isAuthenticated(): boolean {

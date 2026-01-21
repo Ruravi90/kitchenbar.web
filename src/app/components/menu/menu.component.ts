@@ -10,12 +10,14 @@ import { RestaurantConfig } from '../../models/restaurant-config.model';
 import { RestaurantConfigService } from '../../services/restaurant-config.service';
 import { LoyaltyService } from '../../services/loyalty.service';
 import { OrderType } from '../../models/diner.model';
+import { CartService } from '../../services/cart.service';
+import { Observable } from 'rxjs';
+import { ReservationDialogComponent } from '../reservation-dialog/reservation-dialog.component';
+import { ReservationResponse } from '../../models/reservation.model';
+import { ClientPortalService } from '../../services/client-portal.service';
+import { ClientAddress } from '../../interfaces/client-portal.interface';
 
-interface CartItem {
-  meal: any;
-  quantity: number;
-  comment?: string;
-}
+// CartItem interface moved to cart.service.ts
 
 @Component({
   selector: 'app-menu',
@@ -36,7 +38,10 @@ export class MenuComponent implements OnInit {
   displayDetails: boolean = false;
   selectedMeal: any = null;
 
-  cart: CartItem[] = [];
+  // Cart now managed by CartService
+  cart$: Observable<any[]>;
+  cartTotal$: Observable<number>;
+  cartCount$: Observable<number>;
   cartVisible: boolean = false;
 
   // Add to cart dialog properties
@@ -89,10 +94,21 @@ export class MenuComponent implements OnInit {
   // Config
   enableOnlinePayments: boolean = true;
 
-  isLogin: boolean = false;
+  isLogin: boolean = false;  // Admin/staff authentication
+  isClientPortalUser: boolean = false;  // Client portal authentication
+  
+  // Reservation properties
+  currentReservationId: number | null = null;
+  showReservationPrompt: boolean = false;
+  
+  // Saved Addresses
+  savedAddresses: ClientAddress[] = [];
+  selectedAddressId: number | null = null;
+  showNewAddressInput: boolean = false;
 
   // Stripe payment properties
   @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
+  @ViewChild(ReservationDialogComponent) reservationDialog!: ReservationDialogComponent;
   paymentVisible: boolean = false;
   elementsOptions: StripeElementsOptions = {
     locale: 'es',
@@ -117,14 +133,32 @@ export class MenuComponent implements OnInit {
     private stripeService: StripeService,
     private http: HttpClient,
     private configService: RestaurantConfigService,
-    private loyaltyService: LoyaltyService
-  ) { }
+    private loyaltyService: LoyaltyService,
+    private cartService: CartService,
+    private clientPortalService: ClientPortalService
+  ) {
+    // Initialize cart observables
+    this.cart$ = this.cartService.items$;
+    this.cartTotal$ = this.cartService.total$;
+    this.cartCount$ = this.cartService.itemCount$;
+  }
 
   ngOnInit(): void {
     this.isLogin = this.authService.checkLogin();
 
     this.route.params.subscribe(params => {
       const identity = params['identity'];
+      
+      // Check if user is authenticated in client portal
+      this.clientPortalService.currentUser$.subscribe(user => {
+        if (user) {
+          this.isClientPortalUser = true;
+          console.log('✅ Client portal user authenticated:', user.email);
+        } else {
+          this.isClientPortalUser = false;
+          console.log('⚠️ No client portal user authenticated');
+        }
+      });
       if (identity) {
         this.identity = identity;
         this.loadData(identity);
@@ -154,6 +188,8 @@ export class MenuComponent implements OnInit {
       if (this.isClientPortalFlow) {
         this.orderType = OrderType.Delivery;
         console.log('Client Portal Flow detected - orderType set to Delivery');
+        // Preload saved addresses immediately since Delivery is selected by default
+        this.loadSavedAddresses();
       }
       
       if (this.dinerId) {
@@ -256,31 +292,45 @@ export class MenuComponent implements OnInit {
   confirmAddToCart() {
     if (!this.selectedMealForCart) return;
     
-    const cartItem: CartItem = {
-      meal: this.selectedMealForCart,
-      quantity: this.orderQuantity,
-      comment: this.orderComment.trim() || undefined
-    };
+    // Get branch info from categories if available
+    const branchId = this.categories[0]?.branchId;
+    const branchName = this.categories[0]?.name || 'Branch';
     
-    this.cart.push(cartItem);
-    this.messageService.add({ 
-      severity: 'success', 
-      summary: 'Agregado al Carrito', 
-      detail: this.selectedMealForCart.name 
+    this.cartService.addItem(
+      this.selectedMealForCart,
+      this.orderQuantity,
+      this.orderComment.trim() || undefined,
+      branchId,
+      branchName
+    ).subscribe({
+      next: () => {
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Agregado al Carrito', 
+          detail: `${this.selectedMealForCart.name} x${this.orderQuantity}`
+        });
+        
+        this.showAddToCartDialog = false;
+        this.selectedMealForCart = null;
+        this.orderComment = '';
+        this.orderQuantity = 1;
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message || 'No se pudo agregar al carrito'
+        });
+      }
     });
-    
-    this.showAddToCartDialog = false;
-    this.selectedMealForCart = null;
-    this.orderComment = '';
-    this.orderQuantity = 1;
   }
 
   removeFromCart(index: number) {
-    this.cart.splice(index, 1);
+    this.cartService.removeItem(index);
   }
 
-  get cartTotal() {
-    return this.cart.reduce((acc, item) => acc + (item.meal.price * item.quantity), 0);
+  get cartTotal(): number {
+    return this.cartService.getTotal();
   }
 
   // ... existing methods ...
@@ -341,7 +391,7 @@ export class MenuComponent implements OnInit {
   }
 
   placeOrder() {
-    if (this.cart.length === 0) return;
+    if (!this.cartService.hasItems()) return;
 
     if (this.isClientPortalFlow) {
       // Client Portal Flow: Create order for delivery/pickup without table
@@ -355,7 +405,7 @@ export class MenuComponent implements OnInit {
             return;
         }
 
-        const orders = this.cart.map(item => ({
+        const orders = this.cartService.getItems().map((item: any) => ({
             tableId: this.tableId,
             mealId: item.meal.id,
             quantity: item.quantity,
@@ -419,7 +469,7 @@ export class MenuComponent implements OnInit {
         this.ordersService.createPublicItem(orders).subscribe({
             next: () => {
                 this.messageService.add({ severity: 'success', summary: 'Orden Enviada', detail: 'Tu orden ha sido enviada a la cocina.' });
-                this.cart = [];
+                this.cartService.clear();
                 this.cartVisible = false;
                 // Optionally redirect to attendance/client view
                 if (this.tableIdentity) {
@@ -435,7 +485,7 @@ export class MenuComponent implements OnInit {
         // Ideally backend should support bulk, but sticking to existing pattern for now
         // We use recursion or Promise.all to handle multiple requests
         
-        const promises = this.cart.map(item => {
+        const promises = this.cartService.getItems().map((item: any) => {
             const order = {
                 mealId: item.meal.id,
                 quantity: item.quantity,
@@ -449,7 +499,7 @@ export class MenuComponent implements OnInit {
 
         Promise.all(promises).then(() => {
             this.messageService.add({ severity: 'success', summary: 'Orden Enviada', detail: 'La orden ha sido enviada.' });
-            this.cart = [];
+            this.cartService.clear();
             this.cartVisible = false;
         }).catch(err => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al enviar parte de la orden.' });
@@ -613,12 +663,13 @@ export class MenuComponent implements OnInit {
       orderType: this.orderType,
       pickupTime: this.pickupTime,
       deliveryAddress: this.deliveryAddress,
-      items: this.cart.map(item => ({
+      items: this.cartService.getItems().map((item: any) => ({
         mealId: item.meal.id,
         quantity: item.quantity,
         comment: item.comment
       })),
-      loyaltyPhoneNumber: this.loyaltyPhoneNumber || null
+      loyaltyPhoneNumber: this.loyaltyPhoneNumber || null,
+      reservationId: this.currentReservationId // Link to reservation if exists
     };
 
     this.http.post<any>(`${environment.apiBase}ClientInteraction/create-order`, orderRequest)
@@ -629,7 +680,7 @@ export class MenuComponent implements OnInit {
             summary: 'Pedido Creado', 
             detail: `Tu pedido ha sido recibido. Número de orden: ${response.dinerId}` 
           });
-          this.cart = [];
+          this.cartService.clear();
           this.cartVisible = false;
           // Redirect to client portal history
           this.router.navigate(['/client-portal/history']);
@@ -657,8 +708,69 @@ export class MenuComponent implements OnInit {
   }
   // Watch for order type changes
   onOrderTypeChange() {
+    console.log('📦 Order type changed to:', this.orderType, OrderType[this.orderType]);
+    
     if (this.orderType === OrderType.Pickup) {
       this.setDefaultPickupTime();
     }
+    
+    // Load saved addresses when Delivery is selected (will be empty if not authenticated)
+    if (this.orderType === OrderType.Delivery) {
+      console.log('🚚 Delivery selected, loading addresses...');
+      this.loadSavedAddresses();
+    }
+  }
+  
+  loadSavedAddresses() {
+    console.log('🔍 Loading saved addresses...');
+    this.clientPortalService.getAddresses().subscribe({
+      next: (addresses) => {
+        console.log('✅ Addresses loaded:', addresses);
+        this.savedAddresses = addresses;
+        // Auto-select first address if available
+        if (addresses.length > 0 && !this.selectedAddressId) {
+          this.selectedAddressId = addresses[0].id!;
+          this.deliveryAddress = addresses[0].address;
+          console.log('📍 Auto-selected first address:', addresses[0]);
+        } else if (addresses.length === 0) {
+          console.log('⚠️ No saved addresses found for this user');
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error loading addresses:', err);
+        console.error('Error details:', err.error);
+        this.savedAddresses = [];
+      }
+    });
+  }
+  
+  onAddressSelect(event: any) {
+    const selectedAddress = this.savedAddresses.find(a => a.id === event.value);
+    if (selectedAddress) {
+      this.deliveryAddress = selectedAddress.address;
+      if (selectedAddress.instructions) {
+        this.deliveryAddress += ` (${selectedAddress.instructions})`;
+      }
+    }
+  }
+
+  showReservationDialog() {
+    if (this.reservationDialog) {
+      this.reservationDialog.open();
+    }
+  }
+
+  onReservationComplete(reservationResponse: ReservationResponse) {
+    // Store the reservation ID to link with the order
+    this.currentReservationId = reservationResponse.id;
+    
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Reservación Confirmada',
+      detail: reservationResponse.message,
+      life: 5000
+    });
+    
+    // Don't automatically show cart - let user continue shopping if needed
   }
 }

@@ -81,10 +81,10 @@
 <button
   pButton
   icon="pi pi-shopping-cart"
-  label="Carrito ({{ cart.length }})"
+  label="Carrito ({{ (cartCount$ | async) || 0 }})"
   class="fixed bottom-0 right-0 m-4 z-5 shadow-4"
   (click)="cartVisible = true"
-  *ngIf="cart.length > 0"
+  *ngIf="(cartCount$ | async) && (cartCount$ | async)! > 0"
 ></button>
 
 <button
@@ -105,11 +105,11 @@
   styleClass="p-fluid"
 >
   <ng-template pTemplate="content">
-    <div *ngIf="cart.length === 0" class="text-center">
+    <div *ngIf="(cart$ | async)?.length === 0" class="text-center">
       Tu carrito está vacío.
     </div>
     <div
-      *ngFor="let item of cart; let i = index"
+      *ngFor="let item of cart$ | async; let i = index"
       class="flex align-items-center justify-content-between mb-3 border-bottom-1 surface-border pb-2"
     >
       <div class="flex-1">
@@ -132,7 +132,9 @@
 
     <!-- Order Type Selection (Client Portal Flow Only) -->
     <div
-      *ngIf="isClientPortalFlow && cart.length > 0"
+      *ngIf="
+        isClientPortalFlow && (cartCount$ | async) && (cartCount$ | async)! > 0
+      "
       class="border-top-1 surface-border pt-3 mt-3"
     >
       <div class="field">
@@ -149,20 +151,83 @@
         ></p-dropdown>
       </div>
 
+
+      <!-- Reservation Prompt for Dine-In -->
+      <div class="field" *ngIf="orderType === 0">
+        <div class="p-3 mb-3 border-round surface-100 text-center">
+          <i class="pi pi-info-circle text-blue-500 text-xl mb-2"></i>
+          <p class="m-0 text-700">¿Deseas reservar una mesa para asegurar disponibilidad?</p>
+        </div>
+        <button
+          pButton
+          label="Hacer Reservación"
+          icon="pi pi-calendar-plus"
+          class="p-button-outlined w-full"
+          (click)="showReservationDialog()"
+        ></button>
+        <p class="text-sm text-600 mt-2 text-center" *ngIf="currentReservationId">
+          <i class="pi pi-check-circle text-green-500"></i> Mesa reservada
+        </p>
+      </div>
+
       <div class="field" *ngIf="orderType === 1">
-        <label for="deliveryAddress" class="font-semibold"
+        <label for="delivery Address" class="font-semibold"
           >Dirección de Entrega *</label
         >
-        <textarea
-          id="deliveryAddress"
-          pInputTextarea
-          [(ngModel)]="deliveryAddress"
-          rows="2"
-          placeholder="Calle, número, colonia, ciudad..."
-          class="w-full"
-          required
-        ></textarea>
-        <small class="text-600">Ingresa la dirección completa de entrega</small>
+        
+        <!-- Info message for users without saved addresses -->
+        <div *ngIf="savedAddresses.length === 0" class="p-3 mb-3 border-round surface-100">
+          <p class="m-0 text-sm text-700">
+            <i class="pi pi-info-circle text-blue-500 mr-2"></i>
+            <span *ngIf="!isClientPortalUser">Inicia sesión para guardar y usar tus direcciones favoritas</span>
+            <span *ngIf="isClientPortalUser">No tienes direcciones guardadas. <a routerLink="/client-portal/profile" class="text-primary font-semibold">Agrégalas en tu perfil</a> para seleccionarlas aquí.</span>
+          </p>
+        </div>
+        
+        <!-- Saved Addresses Dropdown -->
+        <p-dropdown
+          *ngIf="savedAddresses.length > 0 && !showNewAddressInput"
+          [(ngModel)]="selectedAddressId"
+          [options]="savedAddresses"
+          optionLabel="tagName"
+          optionValue="id"
+          placeholder="Selecciona una dirección guardada"
+          (onChange)="onAddressSelect($event)"
+          styleClass="w-full mb-2"
+          appendTo="body">
+          <ng-template let-address pTemplate="item">
+            <div>
+              <div class="font-semibold">{{ address.tagName }}</div>
+              <small class="text-600">{{ address.address }}</small>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        
+        <!-- Button to add new address -->
+        <button
+          *ngIf="savedAddresses.length > 0"
+          pButton
+          type="button"
+          label="Agregar nueva dirección"
+          icon="pi pi-plus"
+          class="p-button-text p-button-sm w-full"
+          routerLink="/client-portal/profile">
+        </button>
+        
+        <!-- Manual Address Input (only when no saved addresses) -->
+        <div *ngIf="savedAddresses.length === 0">
+          <textarea
+            id="deliveryAddress"
+            pInputTextarea
+            [(ngModel)]="deliveryAddress"
+            rows="2"
+            placeholder="Calle, número, colonia, ciudad..."
+            class="w-full"
+            required
+          ></textarea>
+        </div>
+        
+        <small class="text-600">{{ savedAddresses.length > 0 && !showNewAddressInput ? 'Selecciona de tus direcciones guardadas' : 'Ingresa la dirección completa de entrega' }}</small>
       </div>
 
       <div class="field" *ngIf="orderType === 2">
@@ -182,10 +247,10 @@
 
     <div
       class="flex justify-content-between font-bold text-xl mt-4"
-      *ngIf="cart.length > 0"
+      *ngIf="(cartCount$ | async) && (cartCount$ | async)! > 0"
     >
       <span>Total:</span>
-      <span>{{ "$" + cartTotal }}</span>
+      <span>{{ "$" + ((cartTotal$ | async) || 0) }}</span>
     </div>
   </ng-template>
   <ng-template pTemplate="footer">
@@ -200,7 +265,7 @@
       pButton
       label="Ordenar"
       icon="pi pi-check"
-      [disabled]="cart.length === 0"
+      [disabled]="(cartCount$ | async) === 0 || !(cartCount$ | async)"
       (click)="initiateOrderParams()"
     ></button>
   </ng-template>
@@ -552,5 +617,12 @@
     ></button>
   </ng-template>
 </p-dialog>
+
+<!-- Reservation Dialog Component -->
+<app-reservation-dialog
+  [branchIdentity]="identity"
+  (onReservationComplete)="onReservationComplete($event)"
+>
+</app-reservation-dialog>
 
 <p-toast></p-toast>

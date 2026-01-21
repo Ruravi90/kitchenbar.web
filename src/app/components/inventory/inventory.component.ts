@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { InventoryService } from '../../services/inventory.service';
 import { MealsService } from '../../services/meals.service';
-import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +10,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
@@ -19,6 +21,7 @@ import { DropdownModule } from 'primeng/dropdown';
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule,
     TableModule,
     CardModule,
@@ -27,146 +30,27 @@ import { DropdownModule } from 'primeng/dropdown';
     DialogModule,
     ConfirmDialogModule,
     ToastModule,
+    TooltipModule,
+    RadioButtonModule,
     InputNumberModule,
     DropdownModule
   ],
   providers: [ConfirmationService, MessageService],
-  template: `
-    <div class="flex flex-wrap justify-content-center">
-      <div class="w-full">
-        <p-card header="Gestión de Inventario">
-          <div class="mb-3 flex justify-content-end">
-            <p-button label="Nuevo Item" icon="pi pi-plus" (onClick)="openNew()"></p-button>
-          </div>
-
-          <p-table [value]="inventoryItems" [rows]="10" [paginator]="true" [tableStyle]="{ 'min-width': '50rem' }">
-            <ng-template pTemplate="header">
-              <tr>
-                <th pSortableColumn="meal.name">Platillo <p-sortIcon field="meal.name"></p-sortIcon></th>
-                <th pSortableColumn="name">Nombre (Ingrediente) <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
-                <th pSortableColumn="unit_measure.name">Unidad <p-sortIcon field="unit_measure.name"></p-sortIcon></th>
-                <th>Acciones</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-item>
-              <tr>
-                <td>{{ item.meal?.name || '---' }}</td>
-                <td>{{ item.name || '---' }}</td>
-                <td>{{ item.stock }}</td>
-                <td>{{ item.unit_measure?.name || 'N/A' }}</td>
-                <td>
-                  <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="warning" (onClick)="editItem(item)" pTooltip="Editar"></p-button>
-                  <p-button icon="pi pi-trash" class="mr-2" [rounded]="true" [outlined]="true" severity="danger" (onClick)="deleteItem(item)" pTooltip="Eliminar"></p-button>
-                  <p-button icon="pi pi-exclamation-triangle" [rounded]="true" [outlined]="true" severity="help" (onClick)="openWaste(item)" pTooltip="Reportar Merma"></p-button>
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </p-card>
-      </div>
-    </div>
-
-    <!-- Edit/New Dialog -->
-    <p-dialog [(visible)]="itemDialog" [style]="{ width: '450px' }" header="Detalles de Inventario" [modal]="true" styleClass="p-fluid">
-      <ng-template pTemplate="content">
-        <div class="field">
-          <label for="type">Tipo</label>
-          <div class="flex gap-3">
-              <div class="flex align-items-center">
-                  <p-radioButton name="type" value="meal" [(ngModel)]="inventoryType" inputId="type1"></p-radioButton>
-                  <label for="type1" class="ml-2">Platillo</label>
-              </div>
-              <div class="flex align-items-center">
-                  <p-radioButton name="type" value="ingredient" [(ngModel)]="inventoryType" inputId="type2"></p-radioButton>
-                  <label for="type2" class="ml-2">Ingrediente Puro</label>
-              </div>
-          </div>
-        </div>
-
-        <div class="field" *ngIf="inventoryType === 'meal'">
-          <label for="meal">Platillo</label>
-          <p-dropdown 
-            id="meal" 
-            [options]="meals" 
-            [(ngModel)]="selectedMeal" 
-            optionLabel="name" 
-            placeholder="Selecciona un Platillo"
-            [filter]="true"
-            filterBy="name"
-            [showClear]="true"
-            appendTo="body">
-          </p-dropdown>
-        </div>
-
-        <div class="field" *ngIf="inventoryType === 'ingredient'">
-            <label for="name">Nombre del Ingrediente</label>
-            <input type="text" pInputText id="name" [(ngModel)]="item.name" required autofocus />
-        </div>
-
-        <div class="field">
-          <label for="stock">Stock Actual</label>
-          <p-inputNumber id="stock" [(ngModel)]="item.stock" [required]="true"></p-inputNumber>
-        </div>
-        
-        <div class="field">
-          <label for="cost">Costo Unitario</label>
-          <p-inputNumber id="cost" [(ngModel)]="item.cost" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-        </div>
-
-        <div class="field">
-          <label for="unitMeasure">Unidad de Medida</label>
-          <p-dropdown 
-            id="unitMeasure" 
-            [options]="unitMeasures" 
-            [(ngModel)]="selectedUnitMeasure" 
-            optionLabel="name" 
-            placeholder="Selecciona una Unidad"
-            appendTo="body"
-            [required]="true">
-          </p-dropdown>
-        </div>
-      </ng-template>
-
-      <ng-template pTemplate="footer">
-        <p-button label="Cancelar" icon="pi pi-times" [text]="true" (onClick)="hideDialog()"></p-button>
-        <p-button label="Guardar" icon="pi pi-check" [text]="true" (onClick)="saveItem()"></p-button>
-      </ng-template>
-    </p-dialog>
-
-    <!-- Waste Dialog -->
-    <p-dialog [(visible)]="wasteDialog" [style]="{ width: '400px' }" header="Reportar Merma" [modal]="true" styleClass="p-fluid">
-        <ng-template pTemplate="content">
-            <div class="field">
-                <label>Item</label>
-                <input pInputText [disabled]="true" [value]="wasteItem?.meal?.name || wasteItem?.name" />
-            </div>
-            <div class="field">
-                <label for="wasteQty">Cantidad Perdida</label>
-                <p-inputNumber id="wasteQty" [(ngModel)]="wasteQuantity" [min]="0" [max]="wasteItem?.stock"></p-inputNumber>
-            </div>
-            <div class="field">
-                <label for="reason">Razón</label>
-                <p-dropdown [options]="wasteReasons" [(ngModel)]="wasteReason" placeholder="Selecciona razón" [editable]="true"></p-dropdown>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <p-button label="Cancelar" icon="pi pi-times" [text]="true" (onClick)="hideWasteDialog()"></p-button>
-            <p-button label="Confirmar" icon="pi pi-check" severity="danger" (onClick)="confirmWaste()"></p-button>
-        </ng-template>
-    </p-dialog>
-
-    <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
-    <p-toast></p-toast>
-  `,
-  styles: []
+  templateUrl: './inventory.component.html',
+  styleUrls: ['./inventory.component.scss']
 })
 export class InventoryComponent implements OnInit {
   inventoryItems: any[] = [];
+  filteredItems: any[] = [];
+  itemForm!: FormGroup;
   item: any = {};
   itemDialog: boolean = false;
   submitted: boolean = false;
   inventoryType: 'meal' | 'ingredient' = 'meal';
+  
+  // Search
+  searchTerm: string = '';
+  highlightedItemId: number | null = null;
 
   // Waste UI
   wasteDialog: boolean = false;
@@ -188,19 +72,47 @@ export class InventoryComponent implements OnInit {
   selectedUnitMeasure: any;
 
   constructor(
+    private fb: FormBuilder,
     private inventoryService: InventoryService,
     private mealsService: MealsService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) {
+    this.initForm();
+  }
 
   ngOnInit() {
     this.loadInventory();
     this.loadMeals();
   }
+  
+  initForm() {
+    this.itemForm = this.fb.group({
+      name: [''],
+      stock: [0, [Validators.required, Validators.min(0)]],
+      cost: [0, [Validators.required, Validators.min(0)]]
+    });
+  }
+  
+  filterItems() {
+    if (!this.searchTerm.trim()) {
+      this.filteredItems = [...this.inventoryItems];
+      return;
+    }
+    
+    const term = this.searchTerm.toLowerCase();
+    this.filteredItems = this.inventoryItems.filter(item =>
+      (item.meal?.name?.toLowerCase().includes(term)) ||
+      (item.name?.toLowerCase().includes(term)) ||
+      (item.unit_measure?.name?.toLowerCase().includes(term))
+    );
+  }
 
   loadInventory() {
-    this.inventoryService.getItemsByInstance().subscribe(data => this.inventoryItems = data);
+    this.inventoryService.getItemsByInstance().subscribe(data => {
+      this.inventoryItems = data;
+      this.filteredItems = [...data];
+    });
   }
 
   loadMeals() {
@@ -209,6 +121,11 @@ export class InventoryComponent implements OnInit {
 
   openNew() {
     this.item = {};
+    this.itemForm.reset({
+      name: '',
+      stock: 0,
+      cost: 0
+    });
     this.selectedMeal = null;
     this.selectedUnitMeasure = null;
     this.submitted = false;
@@ -221,18 +138,32 @@ export class InventoryComponent implements OnInit {
     this.inventoryType = item.mealId ? 'meal' : 'ingredient';
     this.selectedMeal = this.meals.find(m => m.id === item.mealId);
     this.selectedUnitMeasure = this.unitMeasures.find(u => u.id === item.unitMeasureId);
+    
+    this.itemForm.patchValue({
+      name: item.name || '',
+      stock: item.stock || 0,
+      cost: item.cost || 0
+    });
+    
     this.itemDialog = true;
   }
 
   deleteItem(item: any) {
     this.confirmationService.confirm({
       message: '¿Estás seguro de eliminar este item?',
-      header: 'Confirmar',
+      header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.inventoryService.deleteItem(item.id).subscribe(() => {
           this.loadInventory();
-          this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item eliminado', life: 3000 });
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Exitoso', 
+            detail: 'Item eliminado', 
+            life: 3000 
+          });
         });
       }
     });
@@ -246,41 +177,110 @@ export class InventoryComponent implements OnInit {
   saveItem() {
     this.submitted = true;
 
+    // Get form values
+    const formValue = this.itemForm.value;
+
     // Validation
-    if (!this.item.stock || !this.selectedUnitMeasure) {
-         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Complete stock y unidad', life: 3000 });
-         return;
+    if (!this.selectedUnitMeasure) {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Seleccione unidad de medida', 
+        life: 3000 
+      });
+      return;
     }
+
+    if (this.itemForm.invalid) {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Complete los campos requeridos', 
+        life: 3000 
+      });
+      return;
+    }
+
     if (this.inventoryType === 'meal' && !this.selectedMeal) {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Seleccione un platillo', life: 3000 });
-        return;
-    }
-    if (this.inventoryType === 'ingredient' && !this.item.name) {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ingrese nombre del ingrediente', life: 3000 });
-        return;
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Seleccione un platillo', 
+        life: 3000 
+      });
+      return;
     }
 
+    if (this.inventoryType === 'ingredient' && !formValue.name?.trim()) {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Ingrese nombre del ingrediente', 
+        life: 3000 
+      });
+      return;
+    }
+
+    // Prepare data
+    this.item.stock = formValue.stock;
+    this.item.cost = formValue.cost;
     this.item.unitMeasureId = this.selectedUnitMeasure.id;
-    
+
     if (this.inventoryType === 'meal') {
-        this.item.mealId = this.selectedMeal.id;
-        this.item.name = null; 
+      this.item.mealId = this.selectedMeal.id;
+      this.item.name = null;
     } else {
-        this.item.mealId = null;
+      this.item.name = formValue.name;
+      this.item.mealId = null;
     }
 
+    // Save
     if (this.item.id) {
-    this.inventoryService.updateItem(this.item.id, this.item).subscribe(() => {
-        this.loadInventory();
-        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item actualizado', life: 3000 });
-        this.hideDialog();
-    });
+      this.inventoryService.updateItem(this.item.id, this.item).subscribe({
+        next: (updated) => {
+          this.loadInventory();
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Exitoso', 
+            detail: 'Item actualizado', 
+            life: 3000 
+          });
+          this.highlightedItemId = updated?.id || null;
+          setTimeout(() => this.highlightedItemId = null, 2000);
+          this.hideDialog();
+        },
+        error: () => {
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'No se pudo actualizar', 
+            life: 3000 
+          });
+        }
+      });
     } else {
-    this.inventoryService.createItem(this.item).subscribe(() => {
-        this.loadInventory();
-        this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Item creado', life: 3000 });
-        this.hideDialog();
-    });
+      this.inventoryService.createItem(this.item).subscribe({
+        next: (created) => {
+          this.loadInventory();
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Exitoso', 
+            detail: 'Item creado', 
+            life: 3000 
+          });
+          this.highlightedItemId = created?.id || null;
+          setTimeout(() => this.highlightedItemId = null, 2000);
+          this.hideDialog();
+        },
+        error: () => {
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'No se pudo crear', 
+            life: 3000 
+          });
+        }
+      });
     }
   }
 

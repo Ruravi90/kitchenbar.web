@@ -1,57 +1,161 @@
 <div class="history-container">
-    <app-client-navigation></app-client-navigation>
-    <h2>Order History</h2>
+  <app-client-navigation></app-client-navigation>
 
-    <div class="orders-list">
-        <ng-container *ngIf="orders$ | async as orders; else loading">
-            <div class="empty-state" *ngIf="orders.length === 0">
-                <p>No orders yet. Start ordering your favorite meals!</p>
-            </div>
+  <div class="history-header">
+    <h2><i class="pi pi-history"></i> Historial de Pedidos</h2>
+    <p *ngIf="totalCount > 0">{{ totalCount }} pedidos en total</p>
+  </div>
 
-            <div class="order-card" *ngFor="let order of orders">
-                <div class="order-header">
-                    <span class="order-date">{{ order.createdAt | date:'mediumDate' }}</span>
-                    <span class="order-status-badge" [ngClass]="getStatusClass(order.statusOrderId, order.isCancel)">
-                        {{ getStatusLabel(order.statusOrderId, order.isCancel) }}
-                    </span>
-                </div>
-                
-                <div class="order-body">
-                    <div class="branch-info" *ngIf="order.branch">
-                        <strong>{{ order.branch.name }}</strong>
-                    </div>
-                    
-                    <div class="items-summary" *ngIf="order.meal">
-                         <p class="meal-name">{{ order.meal.name }}</p>
-                         <div class="meal-details">
-                            <span class="quantity">Cantidad: {{ order.quantity }}</span>
-                            <span class="separator">•</span>
-                            <span class="price">{{ order.meal.price | currency }} c/u</span>
-                         </div>
-                    </div>
-                </div>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Cargando historial...</p>
+  </div>
 
-                <div class="order-footer">
-                    <span class="total-label">Total:</span>
-                    <span class="total-amount">{{ getOrderTotal(order) | currency }}</span>
-                </div>
-                
-                <!-- Cancel button for pending orders only -->
-                <div class="order-actions" *ngIf="canCancelOrder(order)">
-                    <button pButton label="Cancelar Pedido" 
-                            icon="pi pi-times" 
-                            class="p-button-danger p-button-sm w-full mt-2"
-                            (click)="cancelOrder(order)">
-                    </button>
-                </div>
-            </div>
-        </ng-container>
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && orderGroups.length === 0" class="empty-state">
+    <i class="pi pi-inbox"></i>
+    <h3>Sin pedidos anteriores</h3>
+    <p>Tus pedidos aparecerán aquí</p>
+  </div>
 
-        <ng-template #loading>
-            <div class="loading-spinner">Loading history...</div>
-        </ng-template>
+  <!-- Orders Timeline -->
+  <div *ngIf="!isLoading && orderGroups.length > 0" class="history-timeline">
+    <div class="order-group glass-card" *ngFor="let group of orderGroups">
+      <!-- Date Header -->
+      <div class="date-header">
+        <i class="pi pi-calendar"></i>
+        <span>{{ group.date | date:'fullDate' }}</span>
+      </div>
+
+      <!-- Branch Info -->
+      <div class="branch-info">
+        <h4>{{ group.branch?.name || 'Restaurante' }}</h4>
+        <div class="order-meta">
+          <p-tag 
+            [icon]="getOrderTypeIcon(group.orderType)"
+            [value]="getOrderTypeLabel(group.orderType)"
+            [severity]="'info'">
+          </p-tag>
+          <p-tag 
+            [value]="group.status"
+            [severity]="getStatusSeverity(group.status)">
+          </p-tag>
+        </div>
+      </div>
+
+      <!-- Order Items -->
+      <div class="order-items">
+        <div class="item" *ngFor="let item of group.items">
+          <div class="item-image" *ngIf="item.meal.image">
+            <img [src]="item.meal.image" [alt]="item.meal.name">
+          </div>
+          <div class="item-image placeholder" *ngIf="!item.meal.image">
+            <i class="pi pi-image"></i>
+          </div>
+          <div class="item-details">
+            <h5>{{ item.meal.name }}</h5>
+            <p class="category">{{ item.meal.category }}</p>
+            <p class="quantity">Cantidad: {{ item.quantity }}</p>
+          </div>
+          <div class="item-price">
+            <span class="price">{{ formatCurrency(item.meal.price) }}</span>
+            <span class="subtotal">{{ formatCurrency(item.subtotal) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Footer -->
+      <div class="order-footer">
+        <div class="total">
+          <span class="label">Total:</span>
+          <span class="amount">{{ formatCurrency(group.total) }}</span>
+        </div>
+        <button
+          pButton
+          *ngIf="group.canReorder"
+          label="Re-ordenar"
+          icon="pi pi-refresh"
+          class="p-button-sm p-button-outlined"
+          (click)="openReorderDialog(group)">
+        </button>
+      </div>
     </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="pagination">
+    <button
+      pButton
+      label="Anterior"
+      icon="pi pi-chevron-left"
+      [disabled]="currentPage === 1"
+      (click)="previousPage()">
+    </button>
+    <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+    <button
+      pButton
+      label="Siguiente"
+      icon="pi pi-chevron-right"
+      [disabled]="currentPage === totalPages"
+      (click)="nextPage()">
+    </button>
+  </div>
 </div>
 
-<p-confirmDialog></p-confirmDialog>
+<!-- Reorder Dialog -->
+<p-dialog
+  [(visible)]="showReorderDialog"
+  [modal]="true"
+  [style]="{width: '90vw', maxWidth: '500px'}"
+  header="Re-ordenar Pedido">
+  
+  <div class="reorder-form">
+    <div class="form-field">
+      <label>Tipo de Orden</label>
+      <p-dropdown
+        [(ngModel)]="reorderForm.orderType"
+        [options]="orderTypes"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona tipo de orden">
+      </p-dropdown>
+    </div>
+
+    <div class="form-field" *ngIf="reorderForm.orderType === 1">
+      <label>Hora de Recogida</label>
+      <p-calendar
+        [(ngModel)]="reorderForm.pickupTime"
+        [showTime]="true"
+        [minDate]="minDate"
+        placeholder="Selecciona hora">
+      </p-calendar>
+    </div>
+
+    <div class="form-field" *ngIf="reorderForm.orderType === 2">
+      <label>Dirección de Entrega</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="reorderForm.deliveryAddress"
+        placeholder="Ingresa tu dirección">
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cancelar"
+      class="p-button-text"
+      (click)="showReorderDialog = false">
+    </button>
+    <button
+      pButton
+      label="Confirmar"
+      icon="pi pi-check"
+      (click)="confirmReorder()">
+    </button>
+  </ng-template>
+</p-dialog>
+
 <p-toast></p-toast>

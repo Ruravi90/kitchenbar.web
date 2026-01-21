@@ -8,7 +8,7 @@ import { ClientHistoryComponent } from './pages/client-history.component';
 import { ClientFavoritesComponent } from './pages/client-favorites.component';
 import { LinkBranchComponent } from './pages/link-branch.component';
 import { CheckinTableComponent } from './pages/checkin-table.component';
-import { QrScannerComponent } from '../shared/components/qr-scanner/qr-scanner.component';
+import { QrScannerComponent } from './components/qr-scanner.component';
 import { SharedModule } from '../share.module';
 
 
@@ -16,7 +16,8 @@ import { SharedModule } from '../share.module';
 @NgModule({
   declarations: [
     LinkBranchComponent,
-    CheckinTableComponent
+    CheckinTableComponent,
+    QrScannerComponent
   ],
   imports: [
     CommonModule,
@@ -25,8 +26,7 @@ import { SharedModule } from '../share.module';
     ClientLoginComponent,
     ClientProfileComponent,
     ClientHistoryComponent,
-    ClientFavoritesComponent,
-    QrScannerComponent
+    ClientFavoritesComponent
   ]
 })
 

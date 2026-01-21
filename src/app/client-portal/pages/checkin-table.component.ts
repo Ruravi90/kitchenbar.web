@@ -13,6 +13,8 @@ export class CheckinTableComponent implements OnInit {
   isScanning: boolean = false;
   isProcessing: boolean = false;
   sessionData: any = null;
+  showConflictDialog: boolean = false;
+  conflictData: any = null;
   
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +34,7 @@ export class CheckinTableComponent implements OnInit {
   }
   
   onScanSuccess(decodedText: string) {
-    // Extraer tableIdentity - puede ser URL completa o solo GUID
+    // Extract tableIdentity - can be full URL or just GUID
     const match = decodedText.match(/([a-f0-9-]{36})/i);
     this.tableIdentity = match ? match[1] : decodedText;
     
@@ -66,35 +68,99 @@ export class CheckinTableComponent implements OnInit {
         });
         this.isProcessing = false;
         
-        // Auto-navegar al menú después de 2 segundos
+        // Auto-navigate to menu after 2 seconds
         setTimeout(() => {
           this.router.navigate(['/menu', this.tableIdentity]);
         }, 2000);
       },
       error: (error: any) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.message || 'No se pudo completar el check-in'
-        });
         this.isProcessing = false;
         
-        // Si ya tiene sesión activa, mostrar opción de continuar
-        if (error.error?.dinerId) {
-          this.sessionData = error.error;
+        // Check if it's a session conflict (409)
+        if (error.status === 409 && error.error?.code === 'ACTIVE_SESSION_EXISTS') {
+          this.conflictData = {
+            ...error.error,
+            newTableIdentity: this.tableIdentity
+          };
+          this.showConflictDialog = true;
         } else {
-          this.isScanning = true; // Permitir reintentar
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.message || 'No se pudo completar el check-in'
+          });
+          this.isScanning = true;
         }
       }
     });
   }
 
-  goToExistingSession() {
-    if (this.sessionData?.tableIdentity) {
-      this.router.navigate(['/client', this.sessionData.tableIdentity]);
-    } else if (this.tableIdentity) {
-      // Fallback to current tableIdentity if not provided in error
-      this.router.navigate(['/client', this.tableIdentity]);
+  handleConflictAction(action: string) {
+    switch (action) {
+      case 'continue':
+        this.continueExistingSession();
+        break;
+      case 'transfer':
+        this.transferToNewTable();
+        break;
+      case 'close':
+        this.closeAndCheckin();
+        break;
     }
+  }
+
+  continueExistingSession() {
+    this.showConflictDialog = false;
+    const tableIdentity = this.conflictData.activeSession.tableIdentity;
+    this.router.navigate(['/menu', tableIdentity]);
+  }
+
+  transferToNewTable() {
+    this.isProcessing = true;
+    this.clientPortalService.transferSession(
+      this.conflictData.activeSession.dinerId,
+      this.conflictData.newTableIdentity
+    ).subscribe({
+      next: (response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sesión transferida',
+          detail: `Ahora estás en ${response.tableName}`
+        });
+        this.showConflictDialog = false;
+        this.isProcessing = false;
+        
+        setTimeout(() => {
+          this.router.navigate(['/menu', this.conflictData.newTableIdentity]);
+        }, 1500);
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.message || 'No se pudo transferir la sesión'
+        });
+        this.isProcessing = false;
+      }
+    });
+  }
+
+  closeAndCheckin() {
+    this.isProcessing = true;
+    this.clientPortalService.closeSession(this.conflictData.activeSession.dinerId).subscribe({
+      next: () => {
+        this.showConflictDialog = false;
+        // Now attempt check-in again
+        this.attemptCheckin();
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.message || 'No se pudo cerrar la sesión anterior'
+        });
+        this.isProcessing = false;
+      }
+    });
   }
 }

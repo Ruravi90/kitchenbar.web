@@ -8,9 +8,9 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <nav class="client-nav glass-effect">
-      <a routerLink="/client-portal/profile" routerLinkActive="active">Profile</a>
-      <a routerLink="/client-portal/history" routerLinkActive="active">History</a>
-      <a routerLink="/client-portal/favorites" routerLinkActive="active">Favorites</a>
+      <a routerLink="/client-portal/profile" routerLinkActive="active">Perfil</a>
+      <a routerLink="/client-portal/history" routerLinkActive="active">Historial</a>
+      <a routerLink="/client-portal/favorites" routerLinkActive="active">Favoritos</a>
     </nav>
   `,
   styles: [`

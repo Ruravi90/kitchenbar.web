@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuRoutingModule } from './menu-routing.module';
 import { MenuComponent } from './menu.component';
+import { ReservationDialogComponent } from '../reservation-dialog/reservation-dialog.component';
 import { DataViewModule } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -16,10 +17,12 @@ import { ToastModule } from 'primeng/toast';
 import { NgxStripeModule } from 'ngx-stripe';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
-    MenuComponent
+    MenuComponent,
+    ReservationDialogComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +40,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ToastModule,
     NgxStripeModule,
     InputNumberModule,
-    InputTextareaModule
+    InputTextareaModule,
+    CalendarModule
   ]
 })
 export class MenuModule { }

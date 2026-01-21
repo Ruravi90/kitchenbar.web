@@ -1,8 +1,8 @@
 <div class="profile-container">
     <app-client-navigation></app-client-navigation>
     <header class="profile-header glass-effect">
-        <h1>My Profile</h1>
-        <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+        <h1>Mi Perfil</h1>
+        <button class="btn btn-outline-danger" (click)="logout()">Cerrar Sesión</button>
     </header>
 
     <div class="content-grid">
@@ -19,37 +19,37 @@
         <!-- Addresses -->
         <div class="card address-card">
             <div class="card-title-row">
-                <h3>Saved Addresses</h3>
+                <h3>Direcciones Guardadas</h3>
                 <button class="btn btn-sm btn-primary" (click)="toggleAddressForm()" *ngIf="!showAddressForm">
-                    + Add New
+                    + Agregar Nueva
                 </button>
             </div>
 
             <!-- Add Address Form -->
             <div class="add-address-form" *ngIf="showAddressForm">
-                <h4>New Address</h4>
+                <h4>Nueva Dirección</h4>
                 <form [formGroup]="addressForm" (ngSubmit)="onAddAddress()">
                     <div class="form-row">
                         <div class="form-group half">
-                             <label>Tag (e.g. Home)</label>
-                             <input formControlName="tagName" class="form-control" placeholder="Home">
+                             <label>Etiqueta (ej: Casa)</label>
+                             <input formControlName="tagName" class="form-control" placeholder="Casa">
                         </div>
                         <div class="form-group half">
-                            <label>Zip Code</label>
+                            <label>Código Postal</label>
                             <input formControlName="zipCode" class="form-control" placeholder="12345">
                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Address</label>
-                        <textarea formControlName="address" class="form-control" rows="2" placeholder="Street, Number, Apt..."></textarea>
+                        <label>Dirección</label>
+                        <textarea formControlName="address" class="form-control" rows="2" placeholder="Calle, Número, Depto..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Delivery Instructions</label>
-                        <input formControlName="instructions" class="form-control" placeholder="Gate code, near park...">
+                        <label>Instrucciones de Entrega</label>
+                        <input formControlName="instructions" class="form-control" placeholder="Código de portón, cerca del parque...">
                     </div>
                     <div class="form-actions right">
-                        <button type="button" class="btn btn-text" (click)="cancelAddress()">Cancel</button>
-                        <button type="submit" class="btn btn-primary" [disabled]="addressForm.invalid || loading">Save</button>
+                        <button type="button" class="btn btn-text" (click)="cancelAddress()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="addressForm.invalid || loading">Guardar</button>
                     </div>
                 </form>
             </div>
@@ -57,14 +57,14 @@
             <!-- List -->
             <div class="address-list" *ngIf="!showAddressForm">
                 <div class="empty-state" *ngIf="addresses.length === 0">
-                    No addresses saved yet.
+                    No hay direcciones guardadas aún.
                 </div>
                 <div class="address-item" *ngFor="let addr of addresses">
                     <div class="address-icon">📍</div>
                     <div class="address-details">
                         <span class="tag">{{ addr.tagName }}</span>
                         <p>{{ addr.address }}</p>
-                        <small *ngIf="addr.instructions">Note: {{ addr.instructions }}</small>
+                        <small *ngIf="addr.instructions">Nota: {{ addr.instructions }}</small>
                     </div>
                 </div>
             </div>

@@ -1,35 +1,90 @@
 <div class="favorites-container">
   <app-client-navigation></app-client-navigation>
-  <h2>My Favorites</h2>
 
-  <div *ngIf="loading" class="loading-spinner">Loading...</div>
-
-  <div class="favorites-grid" *ngIf="!loading">
-    <div class="empty-state" *ngIf="favorites.length === 0">
-      <p>You haven't added any favorites yet.</p>
+  <div class="favorites-header">
+    <div class="header-content">
+      <h2><i class="pi pi-heart-fill"></i> Mis Favoritos</h2>
+      <p *ngIf="favorites.length > 0">{{ favorites.length}} restaurantes favoritos</p>
     </div>
+    
+    <div class="sort-control" *ngIf="favorites.length > 0">
+      <label>Ordenar por:</label>
+      <p-dropdown
+        [(ngModel)]="sortBy"
+        [options]="sortOptions"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onSortChange()">
+      </p-dropdown>
+    </div>
+  </div>
 
-    <div class="branch-card" *ngFor="let branch of favorites">
-      <div class="card-image">
-        <!-- Placeholder or actual image if available -->
-        <div class="image-placeholder">{{ branch.name?.charAt(0) }}</div>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Cargando favoritos...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && favorites.length === 0" class="empty-state">
+    <i class="pi pi-heart"></i>
+    <h3>No tienes favoritos aún</h3>
+    <p>Escanea códigos QR para agregar restaurantes a favoritos</p>
+  </div>
+
+  <!-- Favorites Grid -->
+  <div *ngIf="!isLoading && favorites.length > 0" class="favorites-grid">
+    <div class="favorite-card glass-card" *ngFor="let favorite of favorites">
+      <!-- Card Header -->
+      <div class="card-header">
+        <h4>{{ favorite.name }}</h4>
+        <button
+          pButton
+          icon="pi pi-times"
+          class="p-button-text p-button-sm p-button-rounded delete-btn"
+          (click)="removeFavorite(favorite)"
+          pTooltip="Eliminar de favoritos">
+        </button>
       </div>
-      <div class="card-content">
-        <h3>{{ branch.name }}</h3>
-        <p class="address">{{ branch.address }}</p>
-        <div class="actions">
-          <button
-            class="btn btn-outline-danger btn-sm"
-            (click)="removeFavorite(branch.id)"
-          >
-            Remove
-          </button>
-          <!-- Navigate to menu -->
-          <button class="btn btn-primary btn-sm" (click)="orderNow(branch)">
-            Order Now
-          </button>
+
+      <!-- Instance Info -->
+      <div class="instance-info" *ngIf="favorite.instance">
+        <i class="pi pi-building"></i>
+        <span>{{ favorite.instance.name }}</span>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-item">
+          <i class="pi pi-clock"></i>
+          <div>
+            <span class="stat-label">Última visita</span>
+            <span class="stat-value">{{ formatLastVisit(favorite.lastVisit) }}</span>
+          </div>
         </div>
+
+        <div class="stat-item" *ngIf="favorite.orderCount > 0">
+          <i class="pi pi-shopping-cart"></i>
+          <div>
+            <span class="stat-label">Pedidos</span>
+            <span class="stat-value">{{ favorite.orderCount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button
+          pButton
+          label="Ver Menú"
+          icon="pi pi-book"
+          class="p-button-sm"
+          (click)="goToMenu(favorite)">
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

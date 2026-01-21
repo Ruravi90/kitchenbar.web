@@ -1,48 +1,76 @@
 <div class="checkin-container">
-  <p-card>
+  <div class="header">
+    <h2>Check-in en Mesa</h2>
+    <p>Escanea el código QR de tu mesa</p>
+  </div>
+
+  <!-- QR Scanner -->
+  <div *ngIf="isScanning" class="scanner-wrapper">
+    <app-qr-scanner
+      (scanSuccess)="onScanSuccess($event)"
+      (scanError)="onScanError($event)">
+    </app-qr-scanner>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isProcessing && !showConflictDialog" class="loading-state">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Procesando check-in...</p>
+  </div>
+
+  <!-- Session Conflict Dialog -->
+  <p-dialog 
+    [(visible)]="showConflictDialog" 
+    [modal]="true"
+    [style]="{width: '90vw', maxWidth: '500px'}"
+    [dismissableMask]="false"
+    [closable]="false">
+    
     <ng-template pTemplate="header">
-      <div class="card-header">
-        <i class="pi pi-qrcode"></i>
-        <h2>Check-in en Mesa</h2>
+      <div class="dialog-header">
+        <i class="pi pi-exclamation-triangle"></i>
+        <h3>Sesión Activa Detectada</h3>
       </div>
     </ng-template>
     
-    <!-- Scanner QR -->
-    <app-qr-scanner 
-      *ngIf="isScanning"
-      [allowManualInput]="true"
-      [manualPlaceholder]="'Código de la mesa'"
-      (onScanSuccess)="onScanSuccess($event)"
-      (onScanError)="onScanError($event)">
-    </app-qr-scanner>
-    
-    <!-- Loading -->
-    <div *ngIf="isProcessing" class="loading-section">
-      <p-progressSpinner></p-progressSpinner>
-      <p>Realizando check-in...</p>
+    <div class="conflict-content" *ngIf="conflictData">
+      <p class="conflict-message">{{ conflictData.message }}</p>
+      
+      <div class="active-session-info">
+        <h4>Sesión actual:</h4>
+        <div class="session-details">
+          <div class="detail-row">
+            <i class="pi pi-table"></i>
+            <span>{{ conflictData.activeSession.tableName }}</span>
+          </div>
+          <div class="detail-row">
+            <i class="pi pi-clock"></i>
+            <span>Iniciada: {{ conflictData.activeSession.createdAt | date:'short' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="action-options">
+        <h4>¿Qué deseas hacer?</h4>
+        <div class="options-list">
+          <button
+            *ngFor="let option of conflictData.options"
+            class="option-button"
+            [class.primary]="option.action === 'continue'"
+            [class.warning]="option.action === 'transfer'"
+            [class.danger]="option.action === 'close'"
+            (click)="handleConflictAction(option.action)"
+            [disabled]="isProcessing">
+            <i class="pi" 
+               [class.pi-arrow-right]="option.action === 'continue'"
+               [class.pi-sync]="option.action === 'transfer'"
+               [class.pi-times-circle]="option.action === 'close'"></i>
+            <span>{{ option.label }}</span>
+          </button>
+        </div>
+      </div>
     </div>
-    
-    <!-- Success -->
-    <div *ngIf="sessionData && !isProcessing && !sessionData.dinerId" class="success-section">
-      <i class="pi pi-check-circle success-icon"></i>
-      <h3>¡Check-in exitoso!</h3>
-      <p class="restaurant-info">
-        <strong>{{ sessionData.branchName }}</strong><br>
-        Mesa: {{ sessionData.tableName }}
-      </p>
-      <p class="redirect-info">Redirigiendo al menú...</p>
-    </div>
-
-    <!-- Sesión existente -->
-    <div *ngIf="sessionData?.dinerId && !isProcessing" class="existing-session">
-      <i class="pi pi-info-circle info-icon"></i>
-      <h3>Ya tienes una sesión activa</h3>
-      <p>Tienes un pedido pendiente en otra mesa.</p>
-      <p-button 
-        label="Ir a mi pedido" 
-        icon="pi pi-arrow-right"
-        (onClick)="goToExistingSession()">
-      </p-button>
-    </div>
-  </p-card>
+  </p-dialog>
 </div>
+
+<p-toast></p-toast>

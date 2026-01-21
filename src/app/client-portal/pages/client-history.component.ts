@@ -1,134 +1,178 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientPortalService } from '../../services/client-portal.service';
-import { Observable, Subscription } from 'rxjs';
 import { ClientNavigationComponent } from '../components/client-navigation/client-navigation.component';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService } from 'primeng/api';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { HubInterface } from '../../interfaces';
+import { CardModule } from 'primeng/card';
+import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-client-history',
   standalone: true,
-  imports: [CommonModule, ClientNavigationComponent, ConfirmDialogModule, ButtonModule, ToastModule],
+  imports: [
+    CommonModule,
+    ClientNavigationComponent,
+    ProgressSpinnerModule,
+    ButtonModule,
+    ToastModule,
+    CardModule,
+    TagModule,
+    DialogModule,
+    DropdownModule,
+    CalendarModule,
+    InputTextModule,
+    FormsModule
+  ],
   templateUrl: './client-history.component.html',
   styleUrls: ['./client-history.component.css'],
-  providers: [ConfirmationService, MessageService]
+  providers: [MessageService]
 })
-export class ClientHistoryComponent implements OnInit, OnDestroy {
-  orders$: Observable<any[]> | undefined;
-  private orderUpdateSubscription?: Subscription;
+export class ClientHistoryComponent implements OnInit {
+  orderGroups: any[] = [];
+  isLoading: boolean = false;
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
+  totalCount: number = 0;
+
+  showReorderDialog: boolean = false;
+  selectedDinerId: number | null = null;
+  selectedBranchIdentity: string = '';
+  
+  minDate: Date = new Date(); // For calendar picker
+  
+  orderTypes = [
+    { label: 'Recoger', value: 1 },
+    { label: 'Domicilio', value: 2 }
+  ];
+  
+  reorderForm = {
+    orderType: 1,
+    pickupTime: null as Date | null,
+    deliveryAddress: ''
+  };
 
   constructor(
     private clientService: ClientPortalService,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService,
-    private hub: HubInterface
+    private messageService: MessageService
   ) {}
 
-  async ngOnInit() {
-    // Connect to SignalR hub
-    this.hub.connect();
-    await this.delay(1000); // Wait for connection
-    
-    // Get instance identity from first order or localStorage
-    const clientUser = localStorage.getItem('client_user');
-    if (clientUser) {
-      const user = JSON.parse(clientUser);
-      // Join as anonymous for client portal (no instance needed)
-      this.hub.joinGroupAnonymus('client-portal');
-    }
-    
-    this.loadOrders();
-    
-    // Subscribe to SignalR order updates for real-time refresh
-    this.orderUpdateSubscription = this.hub.receiveOrderToKitchen().subscribe(() => {
-      console.log('Order update received via SignalR - refreshing history');
-      this.loadOrders();
+  ngOnInit() {
+    this.loadHistory();
+  }
+
+  loadHistory() {
+    this.isLoading = true;
+    this.clientService.getHistory(this.currentPage, this.pageSize).subscribe({
+      next: (response: any) => {
+        this.orderGroups = response.orders;
+        this.currentPage = response.pagination.page;
+        this.pageSize = response.pagination.pageSize;
+        this.totalCount = response.pagination.totalCount;
+        this.totalPages = response.pagination.totalPages;
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.message || 'No se pudo cargar el historial'
+        });
+        this.isLoading = false;
+      }
     });
   }
 
-  async delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  ngOnDestroy() {
-    // Clean up subscription
-    if (this.orderUpdateSubscription) {
-      this.orderUpdateSubscription.unsubscribe();
-    }
-    this.hub.leaveGroup();
-  }
-
-  private loadOrders() {
-    this.orders$ = this.clientService.getHistory();
-  }
-
-  getOrderStatusColor(status: string): string {
-    switch(status?.toLowerCase()) {
-        case 'completed': return 'success';
-        case 'cancelled': return 'danger';
-        case 'pending': return 'warning';
-        default: return 'secondary';
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadHistory();
     }
   }
 
-  getOrderTotal(order: any): number {
-    if (order.meal && order.quantity) {
-      return order.meal.price * order.quantity;
-    }
-    return 0;
-  }
-
-  getStatusLabel(statusId: number, isCancel: boolean): string {
-    if (isCancel) return 'Cancelado';
-    switch(statusId) {
-        case 1: return 'Pendiente';
-        case 2: return 'En Preparación';
-        case 3: return 'Listo para Recoger';
-        default: return 'Desconocido';
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadHistory();
     }
   }
 
-  getStatusClass(statusId: number, isCancel: boolean): string {
-    if (isCancel) return 'status-cancelled';
-    switch(statusId) {
-        case 1: return 'status-pending';
-        case 2: return 'status-preparing';
-        case 3: return 'status-ready';
-        default: return 'status-unknown';
+  getOrderTypeLabel(orderType: number): string {
+    switch (orderType) {
+      case 0: return 'En Mesa';
+      case 1: return 'Recoger';
+      case 2: return 'Domicilio';
+      default: return 'Desconocido';
     }
   }
 
-  canCancelOrder(order: any): boolean {
-    return order.statusOrderId === 1 && !order.isCancel;
+  getOrderTypeIcon(orderType: number): string {
+    switch (orderType) {
+      case 0: return 'pi-utensils';
+      case 1: return 'pi-shopping-bag';
+      case 2: return 'pi-car';
+      default: return 'pi-question';
+    }
   }
 
-  cancelOrder(order: any) {
-    this.confirmationService.confirm({
-      message: '¿Estás seguro que deseas cancelar este pedido?',
-      header: 'Confirmar Cancelación',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.clientService.cancelOrder(order.id).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Pedido Cancelado',
-              detail: 'Tu pedido ha sido cancelado exitosamente.'
-            });
-            // Refresh history
-            this.loadOrders();
-          },
-          error: (err) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: err.error?.message || 'No se pudo cancelar el pedido.'
-            });
-          }
+  getStatusSeverity(status: string): 'success' | 'info' | 'warning' | 'danger' {
+    switch (status.toLowerCase()) {
+      case 'pagado': return 'success';
+      case 'pendiente': return 'warning';
+      default: return 'info';
+    }
+  }
+
+  formatCurrency(amount: number): string {
+    return `$${amount.toFixed(2)}`;
+  }
+
+  openReorderDialog(group: any) {
+    this.selectedDinerId = group.dinerId;
+    this.selectedBranchIdentity = group.branch.identity;
+    this.showReorderDialog = true;
+    
+    // Reset form
+    this.reorderForm = {
+      orderType: 1,
+      pickupTime: new Date(),
+      deliveryAddress: ''
+    };
+  }
+
+  confirmReorder() {
+    if (!this.selectedDinerId || !this.selectedBranchIdentity) return;
+
+    const orderDetails = {
+      instanceIdentity: this.selectedBranchIdentity,
+      orderType: this.reorderForm.orderType,
+      pickupTime: this.reorderForm.pickupTime || undefined,
+      deliveryAddress: this.reorderForm.deliveryAddress || undefined
+    };
+
+    this.clientService.reorder(this.selectedDinerId, orderDetails).subscribe({
+      next: (response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: '¡Re-orden exitosa!',
+          detail: `Se creó una nueva orden con ${response.itemCount} items`
+        });
+        this.showReorderDialog = false;
+        this.loadHistory();
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.message || 'No se pudo crear la orden'
         });
       }
     });

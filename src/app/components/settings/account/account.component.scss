@@ -5,45 +5,8 @@
   min-height: 100vh;
 }
 
-/* Glass Card Styles */
-::ng-deep .p-card {
-  background: linear-gradient(
-    135deg,
-    rgba(30, 60, 114, 0.7) 0%,
-    rgba(42, 82, 152, 0.7) 100%
-  ) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+/* Component relies on global .p-card styling from styles.scss */
 
-  .p-card-header {
-    background: transparent !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    padding: 1.5rem !important;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #fff !important;
-  }
-
-  .p-card-body,
-  .p-card-content {
-    background: transparent !important;
-    color: rgba(255, 255, 255, 0.95) !important;
-
-    // Ensure all text is visible
-    p, span, div {
-      color: rgba(255, 255, 255, 0.9) !important;
-    }
-
-    // Stronger text for important content
-    .font-bold,
-    .font-semibold {
-      color: #ffffff !important;
-    }
-  }
-}
 
 /* Avatar Section */
 .p-avatar {
@@ -202,19 +165,7 @@
   }
 }
 
-/* Loading State */
-.pi-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Loading State - Uses global spin animation */
 
 /* Warning/Info boxes */
 .border-round {

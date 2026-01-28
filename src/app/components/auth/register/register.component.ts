@@ -305,9 +305,17 @@ export class RegisterComponent implements OnInit {
                 this.isAuthorized = false;
                 
                 let errorMsg = 'Error al registrar. Intenta nuevamente.';
-                if (e.error?.messages) {
+                
+                // Check for error message from GlobalExceptionFilter
+                if (e.error?.error) {
+                    errorMsg = e.error.error;
+                } 
+                // Legacy format
+                else if (e.error?.messages) {
                     errorMsg = e.error.messages;
-                } else if (e.status === 400) {
+                } 
+                // Fallback based on status code
+                else if (e.status === 400) {
                     errorMsg = 'Datos inválidos. Verifica la información ingresada.';
                 } else if (e.status === 403) {
                     errorMsg = 'El correo ya está registrado.';

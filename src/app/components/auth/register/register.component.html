@@ -2,333 +2,370 @@
   <div class="glass-register-card">
     <!-- Logo & Title -->
     <div class="text-center mb-4">
-      <img src="assets/layout/images/logo-white.svg" alt="Kitchen Bar logo" class="mb-3 h-4rem" />
+      <img
+        src="assets/layout/images/logo-white.svg"
+        alt="Kitchen Bar logo"
+        class="mb-3 h-4rem"
+      />
       <h2 class="text-white text-3xl font-bold mb-2">Crear Cuenta</h2>
-      <p class="text-white-alpha-70 font-normal">Completa los pasos para registrarte</p>
+      <p class="text-white-alpha-70 font-normal">
+        Completa los pasos para registrarte
+      </p>
     </div>
 
+    <form [formGroup]="registerForm">
     <p-stepper orientation="vertical" class="w-12">
-          <!-- STEP 1: PLAN SELECTION -->
-          <p-stepperPanel header="Elige tu plan">
-            <ng-template
-              pTemplate="content"
-              let-nextCallback="nextCallback"
-              let-index="index"
-            >
-              <div class="grid">
-                <div class="col-12 p-3">
-                  <div class="flex flex-column gap-3">
-                    <div
-                      *ngFor="let license of licenses"
-                      class="field-checkbox w-full card p-3 flex align-items-center justify-content-between cursor-pointer surface-hover"
-                      (click)="selectedLicenseId = license.id || 0"
-                    >
-                      <div class="flex align-items-center gap-2">
-                        <p-radioButton
-                          name="license"
-                          [value]="license.id"
-                          [(ngModel)]="selectedLicenseId"
-                        ></p-radioButton>
-                        <div class="flex flex-column">
-                          <span class="font-bold text-xl">{{
-                            license.name
-                          }}</span>
-                          <span class="text-500">{{
-                            license.description
-                          }}</span>
-                        </div>
-                      </div>
-                      <div class="flex flex-column align-items-end">
-                        <span class="text-xl font-bold text-primary">{{
-                          license.price | currency
-                        }}</span>
-                        <span class="text-sm">/ {{ license.period }} dias</span>
-                      </div>
+      <!-- STEP 1: PLAN SELECTION -->
+      <p-stepperPanel header="Elige tu plan">
+        <ng-template
+          pTemplate="content"
+          let-nextCallback="nextCallback"
+          let-index="index"
+        >
+          <div class="grid">
+            <div class="col-12 p-3">
+              <div class="flex flex-column gap-3">
+                <div
+                  *ngFor="let license of licenses"
+                  class="field-checkbox w-full card p-3 flex align-items-center justify-content-between cursor-pointer surface-hover"
+                  (click)="selectedLicenseId = license.id || 0"
+                >
+                  <div class="flex align-items-center gap-2">
+                    <p-radioButton
+                      name="license"
+                      [value]="license.id"
+                      formControlName="selectedLicenseId"
+                    ></p-radioButton>
+                    <div class="flex flex-column">
+                      <span class="font-bold text-xl">{{ license.name }}</span>
+                      <span class="text-500">{{ license.description }}</span>
                     </div>
                   </div>
+                  <div class="flex flex-column align-items-end">
+                    <span class="text-xl font-bold text-primary">{{
+                      license.price | currency
+                    }}</span>
+                    <span class="text-sm">/ {{ license.period }} dias</span>
+                  </div>
                 </div>
               </div>
-              <div class="flex py-4">
-                <p-button label="Siguiente" (onClick)="nextCallback.emit()" />
-              </div>
-            </ng-template>
-          </p-stepperPanel>
+            </div>
+          </div>
+          <div class="flex py-4">
+            <p-button
+              label="Siguiente"
+              (onClick)="nextCallback.emit()"
+              [disabled]="!validateStep1()"
+            />
+          </div>
+        </ng-template>
+      </p-stepperPanel>
 
-          <p-stepperPanel header="Datos personales">
-            <ng-template
-              pTemplate="content"
-              let-nextCallback="nextCallback"
-              let-index="index"
-            >
-              <div class="grid">
-                <div class="col-12 lg:col-6 p-2 flex flex-column">
-                  <div class="flex">
-                    <label
-                      for="name"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Nombre completo</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <input
-                      id="name"
-                      type="text"
-                      [(ngModel)]="user.name"
-                      #name="ngModel"
-                      name="name"
-                      [style]="{ width: '100%' }"
-                      pInputText
-                    />
-                  </div>
-                </div>
-                <div class="col-12 lg:col-6 p-2 flex flex-column">
-                  <div class="flex">
-                    <label
-                      for="phone"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Telefono</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <p-inputMask
-                      id="phone"
-                      type="text"
-                      [(ngModel)]="user.phone_number"
-                      mask="99-9999-9999"
-                      placeholder="99-9999-9999"
-                      #phone_number="ngModel"
-                      name="phone_number"
-                      class="w-full"
-                      [style]="{ width: '100%' }"
-                    />
-                  </div>
-                </div>
+      <p-stepperPanel header="Datos personales">
+        <ng-template
+          pTemplate="content"
+          let-nextCallback="nextCallback"
+          let-index="index"
+        >
+          <div class="grid">
+            <div class="col-12 lg:col-6 p-2 flex flex-column">
+              <div class="flex">
+                <label
+                  for="name"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Nombre completo</label
+                >
               </div>
-              <div class="grid">
-                <div class="col-12 lg:col-6 p-2 flex flex-column">
-                  <div class="flex">
-                    <label
-                      for="email"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Correo</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <input
-                      type="text"
-                      pInputText
-                      id="email"
-                      type="text"
-                      [(ngModel)]="user.email"
-                      #email="ngModel"
-                      name="email"
-                      [style]="{ width: '100%' }"
-                      placeholder="user@kitenbar.com"
-                      type="email"
-                    />
-                  </div>
-                </div>
+              <div class="flex align-items-center">
+                <input
+                  id="name"
+                  type="text"
+                  formControlName="name"
+                  [style]="{ width: '100%' }"
+                  pInputText
+                />
+                <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
               </div>
-              <div class="flex py-4">
-                <p-button
-                  label="Siguiente"
-                  (onClick)="nextCallback.emit()"
-                /></div
-            ></ng-template>
-          </p-stepperPanel>
-          <p-stepperPanel header="Datos de tu negocio">
-            <ng-template
-              pTemplate="content"
-              let-prevCallback="prevCallback"
-              let-nextCallback="nextCallback"
-              let-index="index"
-            >
-              <div class="grid">
-                <div class="col-12 lg:col-6 p-2 flex flex-column gap-2">
-                  <div class="flex">
-                    <label
-                      for="client"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Nombre del negocio</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <input
-                      type="text"
-                      pInputText
-                      [(ngModel)]="user.instance!.name_client"
-                      class="w-full"
-                    />
-                  </div>
-                </div>
-                <div class="col-12 lg:col-6 p-2 flex flex-column gap-2">
-                  <div class="flex">
-                    <label
-                      for="kitchen"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Nombre corto</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <input
-                      type="text"
-                      pInputText
-                      [(ngModel)]="user.instance!.name_kitchen"
-                      class="w-full"
-                      onkeypress="toLowerCase()"
-                      aria-describedby="kitchename-help"
-                    />
-                  </div>
-                  <div class="flex align-items-center">
-                    <small id="kitchename-help">
-                      * Ingresa el nombre corto del negocio sin espacios .
-                    </small>
-                  </div>
-                </div>
-                <div class="col-12 p-1 flex flex-column gap-2">
-                  <div class="flex">
-                    <label
-                      for="kitchen"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Sucursales</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <small id="kitchename-help">
-                      * Ingresa por lo menos una sucursal.
-                    </small>
-                  </div>
-                  <div class="flex align-items-center gap-2">
-                    <input
-                      type="text"
-                      pInputText
-                      [(ngModel)]="branch.name"
-                      placeholder="Agregar sucursal"
-                      class="w-full"
-                    />
-                    <p-button (onClick)="addBranche()"> Agregar</p-button>
-                  </div>
-                  <div class="card w-full px-2 mt-2">
-                    <p-dataView
-                      #dv
-                      [value]="user.instance!.branches"
-                      emptyMessage="Sin sucursales"
-                    >
-                      <ng-template pTemplate="list" let-items>
-                        <div class="grid grid-nogutter">
-                          <div
-                            class="col-12 p-2"
-                            *ngFor="
-                              let item of user.instance!.branches;
-                              track: item;
-                              let i = index;
-                              let first = first
-                            "
-                          >
-                            <div
-                              class="grid"
-                              [ngClass]="{
-                                'border-top-1 surface-border': !first
-                              }"
-                            >
-                              <div class="col">
-                                <div class="text-900 mt-1">{{ item.name }}</div>
-                              </div>
-                              <div class="col-fixed gap-1">
-                                <p-button
-                                  pTooltip="Eliminar"
-                                  icon="pi pi-trash"
-                                  severity="danger"
-                                  [rounded]="true"
-                                  [text]="true"
-                                  size="small"
-                                  (onClick)="deleteBranche(i)"
-                                ></p-button>
-                              </div>
-                            </div>
+            </div>
+            <div class="col-12 lg:col-6 p-2 flex flex-column">
+              <div class="flex">
+                <label
+                  for="phone"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Telefono</label
+                >
+              </div>
+              <div class="flex align-items-center">
+                <p-inputMask
+                  id="phone"
+                  formControlName="phone_number"
+                  mask="99-9999-9999"
+                  placeholder="99-9999-9999"
+                  class="w-full"
+                  [style]="{ width: '100%' }"
+                />
+                <small class="p-error" *ngIf="getFieldError('phone_number')">{{ getFieldError('phone_number') }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col-12 lg:col-6 p-2 flex flex-column">
+              <div class="flex">
+                <label
+                  for="email"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Correo</label
+                >
+              </div>
+              <div class="flex align-items-center">
+                <input
+                  type="email"
+                  pInputText
+                  id="email"
+                  formControlName="email"
+                  [style]="{ width: '100%' }"
+                  placeholder="user@kitchenbar.com"
+                />
+                <small class="p-error" *ngIf="getFieldError('email')">{{ getFieldError('email') }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="flex py-4">
+            <p-button
+              label="Siguiente"
+              (onClick)="nextCallback.emit()"
+              [disabled]="!validateStep2()"
+            /></div
+        ></ng-template>
+      </p-stepperPanel>
+      <p-stepperPanel header="Datos de tu negocio">
+        <ng-template
+          pTemplate="content"
+          let-prevCallback="prevCallback"
+          let-nextCallback="nextCallback"
+          let-index="index"
+        >
+          <div class="grid">
+            <div class="col-12 lg:col-6 p-2 flex flex-column gap-2">
+              <div class="flex">
+                <label
+                  for="client"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Nombre del negocio</label
+                >
+              </div>
+              <div class="flex align-items-center">
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="name_client"
+                  class="w-full"
+                />
+                <small class="p-error" *ngIf="getFieldError('name_client')">{{ getFieldError('name_client') }}</small>
+              </div>
+            </div>
+            <div class="col-12 lg:col-6 p-2 flex flex-column gap-2">
+              <div class="flex">
+                <label
+                  for="kitchen"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Nombre corto</label
+                >
+              </div>
+              <div class="flex align-items-center">
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="name_kitchen"
+                  class="w-full"
+                  (keyup)="toLowerCase()"
+                  aria-describedby="kitchename-help"
+                />
+                <small class="p-error" *ngIf="getFieldError('name_kitchen')">{{ getFieldError('name_kitchen') }}</small>
+              </div>
+              <div class="flex align-items-center">
+                <small id="kitchename-help">
+                  * Ingresa el nombre corto del negocio sin espacios .
+                </small>
+              </div>
+            </div>
+            <div class="col-12 p-1 flex flex-column gap-2">
+              <div class="flex">
+                <label
+                  for="kitchen"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Sucursales</label
+                >
+              </div>
+              <div class="flex align-items-center">
+                <small id="kitchename-help">
+                  * Ingresa por lo menos una sucursal.
+                </small>
+              </div>
+              <div class="flex align-items-center gap-2">
+                <input
+                  type="text"
+                  pInputText
+                  [(ngModel)]="branch.name"
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="Agregar sucursal"
+                  class="w-full"
+                />
+                <p-button (onClick)="addBranche()"> Agregar</p-button>
+              </div>
+              <div class="card w-full px-2 mt-2">
+                <p-dataView
+                  #dv
+                  [value]="branchesArray"
+                  emptyMessage="Sin sucursales"
+                >
+                  <ng-template pTemplate="list" let-items>
+                    <div class="grid grid-nogutter">
+                      <div
+                        class="col-12 p-2"
+                        *ngFor="
+                          let item of branchesArray;
+                          let i = index;
+                          let first = first
+                        "
+                      >
+                        <div
+                          class="grid"
+                          [ngClass]="{
+                            'border-top-1 surface-border': !first,
+                          }"
+                        >
+                          <div class="col">
+                            <div class="text-900 mt-1">{{ item.name }}</div>
+                          </div>
+                          <div class="col-fixed gap-1">
+                            <p-button
+                              pTooltip="Eliminar"
+                              icon="pi pi-trash"
+                              severity="secondary"
+                              [rounded]="true"
+                              size="small"
+                              (onClick)="deleteBranche(i)"
+                            ></p-button>
                           </div>
                         </div>
-                      </ng-template>
-                    </p-dataView>
-                  </div>
-                </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dataView>
               </div>
-              <div class="flex py-4 gap-2">
-                <p-button
-                  label="Volver"
-                  severity="secondary"
-                  (onClick)="prevCallback.emit()"
+            </div>
+          </div>
+          <div class="flex py-4 gap-2">
+            <p-button
+              label="Volver"
+              severity="secondary"
+              (onClick)="prevCallback.emit()"
+            />
+            <p-button
+              label="Siguiente"
+              (onClick)="nextCallback.emit()"
+              [disabled]="!validateStep3()"
+            />
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+      <p-stepperPanel header="Usuario">
+        <ng-template
+          pTemplate="content"
+          let-prevCallback="prevCallback"
+          let-index="index"
+        >
+          <div class="grid">
+            <div class="col-12 lg:col-6 p-2 flex flex-column">
+              <div class="flex">
+                <label
+                  for="kitchen"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Usuario</label
+                >
+              </div>
+              <p-inputGroup>
+                <input
+                  id="user_name"
+                  type="text"
+                  formControlName="user_name"
+                  pInputText
                 />
-                <p-button label="Siguiente" (onClick)="nextCallback.emit()" />
+                <p-inputGroupAddon>{{
+                  "@" +
+                    (registerForm.get('name_kitchen')?.value
+                      ? registerForm.get('name_kitchen')?.value
+                      : "kitchenbar")
+                }}</p-inputGroupAddon>
+              </p-inputGroup>
+              <small class="p-error" *ngIf="getFieldError('user_name')">{{ getFieldError('user_name') }}</small>
+            </div>
+            <div class="col-12 lg:col-6 p-2 flex flex-column">
+              <div class="flex">
+                <label
+                  for="kitchen"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Contraseña</label
+                >
               </div>
-            </ng-template>
-          </p-stepperPanel>
-          <p-stepperPanel header="Usuario">
-            <ng-template
-              pTemplate="content"
-              let-prevCallback="prevCallback"
-              let-index="index"
-            >
-              <div class="grid">
-                <div class="col-12 lg:col-6 p-2 flex flex-column">
-                  <div class="flex">
-                    <label
-                      for="kitchen"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Usuario</label
-                    >
-                  </div>
-                  <p-inputGroup>
-                    <input
-                      id="user_name"
-                      type="text"
-                      [(ngModel)]="user.user_name"
-                      pInputText
-                    />
-                    <p-inputGroupAddon>{{
-                      "@" +
-                        (user.instance?.name_kitchen
-                          ? user.instance?.name_kitchen?.toLowerCase()
-                          : "kitchenbar")
-                    }}</p-inputGroupAddon>
-                  </p-inputGroup>
-                </div>
-                <div class="col-12 lg:col-6 p-2 flex flex-column">
-                  <div class="flex">
-                    <label
-                      for="kitchen"
-                      class="block text-900 text-xl font-medium mb-2"
-                      >Contraseña</label
-                    >
-                  </div>
-                  <div class="flex align-items-center">
-                    <p-password
-                      id="password"
-                      [(ngModel)]="user.password"
-                      #password="ngModel"
-                      name="password"
-                      class="w-full"
-                      [style]="{ width: '100%' }"
-                      [inputStyle]="{ width: '100%' }"
-                      [toggleMask]="true"
-                      promptLabel="Elegir una contraseña"
-                      weakLabel="Contraseña simple"
-                      mediumLabel="Contraseña aceptable"
-                      strongLabel="Contraseña fuerte"
-                    ></p-password>
-                  </div>
-                </div>
+              <div class="flex align-items-center">
+                <p-password
+                  id="password"
+                  formControlName="password"
+                  class="w-full"
+                  [style]="{ width: '100%' }"
+                  [inputStyle]="{ width: '100%' }"
+                  [toggleMask]="true"
+                  promptLabel="Elegir una contraseña"
+                  weakLabel="Contraseña simple"
+                  mediumLabel="Contraseña aceptable"
+                  strongLabel="Contraseña fuerte"
+                ></p-password>
+                <small class="p-error" *ngIf="getFieldError('password')">{{ getFieldError('password') }}</small>
               </div>
-              <div class="flex py-4 gap-3">
-                <p-button
-                  label="Volver"
-                  severity="secondary"
-                  (onClick)="prevCallback.emit()"
-                />
-                <p-button label="Registrarme" (onClick)="register()" />
+            </div>
+            <div class="col-12 lg:col-6 p-2 flex flex-column">
+              <div class="flex">
+                <label
+                  for="confirmPassword"
+                  class="block text-900 text-xl font-medium mb-2"
+                  >Confirmar Contraseña *</label
+                >
               </div>
-            </ng-template>
-          </p-stepperPanel>
-        </p-stepper>
+              <div class="flex align-items-center">
+                <p-password
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  [toggleMask]="true"
+                  [feedback]="false"
+                  class="w-full"
+                  [style]="{ width: '100%' }"
+                  [inputStyle]="{ width: '100%' }"
+                ></p-password>
+              </div>
+              <small class="p-error" *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched">
+                Las contraseñas no coinciden
+              </small>
+            </div>
+          </div>
+          <div class="flex py-4 gap-3">
+            <p-button
+              label="Volver"
+              severity="secondary"
+              (onClick)="prevCallback.emit()"
+              [disabled]="isBusy"
+            />
+            <p-button
+              label="Registrarme"
+              (onClick)="register()"
+              [loading]="isBusy"
+              [disabled]="isBusy || !validateStep4()"
+            />
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+    </p-stepper>
+    </form>
   </div>
 </div>

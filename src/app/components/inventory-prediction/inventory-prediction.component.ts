@@ -30,11 +30,18 @@ import { ToastModule } from 'primeng/toast';
   ],
   providers: [MessageService],
   template: `
-    <div class="flex flex-wrap justify-content-center">
-      <div class="w-full">
-        <p-card header="Predicción de Inventario">
-          
-          <div class="flex align-items-center gap-3 mb-4">
+    <div class="inventory-container">
+      <!-- Page Header -->
+      <div class="page-header glass-card mb-4">
+        <div class="page-title">
+          <h1>Predicción de Inventario</h1>
+          <p class="page-subtitle">Predict demanda y optimiza tu stock basado en consumo histórico</p>
+        </div>
+      </div>
+
+      <!-- Content Card -->
+      <div class="content-card glass-card">
+        <div class="flex align-items-center gap-3 mb-4">
             <label for="days" class="font-medium">Días a predecir:</label>
             <p-inputNumber 
               [(ngModel)]="daysToPredict" 
@@ -99,15 +106,19 @@ import { ToastModule } from 'primeng/toast';
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="6" class="text-center">No hay predicciones disponibles.</td>
-                </tr>
+              <tr>
+                <td colspan="6" class="text-center py-6">
+                  <div class="empty-state">
+                    <i class="pi pi-chart-line empty-icon"></i>
+                    <h3 class="empty-title">No hay predicciones disponibles</h3>
+                    <p class="empty-subtitle">Ajusta los días y actualiza para ver predicciones</p>
+                  </div>
+                </td>
+              </tr>
             </ng-template>
           </p-table>
-
-        </p-card>
+        </div>
       </div>
-    </div>
 
     <p-dialog [(visible)]="adjustDialog" header="Ajustar Stock" [modal]="true" [style]="{width: '300px'}">
       <div class="field">
@@ -121,7 +132,81 @@ import { ToastModule } from 'primeng/toast';
     </p-dialog>
     <p-toast></p-toast>
   `,
-  styles: []
+  styles: [`
+    .inventory-container {
+      padding: 2rem;
+      background: var(--surface-ground);
+      min-height: calc(100vh - 4rem);
+    }
+    
+    .page-header {
+      padding: 2rem;
+      margin-bottom: 2rem !important;
+    }
+    
+    .page-title h1 {
+      font-size: 2.25rem;
+      color: var(--coffee-espresso);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .page-subtitle {
+      font-size: 1.0625rem;
+      color: var(--coffee-roasted);
+      margin: 0;
+    }
+    
+    .content-card {
+      padding: 2rem;
+      border: 2px solid rgba(111, 78, 55, 0.15);
+      border-radius: 18px;
+      background: #FFFFFF;
+    }
+    
+    .empty-state {
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      color: var(--coffee-light);
+      margin-bottom: 1.5rem;
+    }
+    
+    .empty-title {
+      font-size: 1.5rem;
+      color: var(--coffee-espresso);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    
+    .empty-subtitle {
+      font-size: 1rem;
+      color: var(--coffee-roasted);
+      margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .inventory-container {
+        padding: 1rem;
+      }
+      
+      .page-header {
+        padding: 1.5rem;
+      }
+      
+      .page-title h1 {
+        font-size: 1.75rem;
+      }
+      
+      .content-card {
+        padding: 1.5rem;
+      }
+    }
+  `]
 })
 export class InventoryPredictionComponent implements OnInit {
   predictions: InventoryPrediction[] = [];

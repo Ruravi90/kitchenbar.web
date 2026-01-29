@@ -1,98 +1,110 @@
 <div class="account-container">
-<div class="grid justify-content-center">
-    <div class="col-12 md:col-8 lg:col-6">
-        <p-card header="Mi Perfil" styleClass="mb-3">
-            <div class="flex flex-column gap-4">
-                <!-- Avatar Section -->
-                <div class="flex justify-content-center mb-3">
-                    <p-avatar 
-                        [label]="user.name ? user.name.charAt(0).toUpperCase() : 'U'" 
-                        shape="circle" 
-                        size="xlarge" 
-                        [style]="{'background-color': '#2196F3', 'color': '#ffffff'}">
-                    </p-avatar>
-                </div>
-
-                <!-- Form Fields -->
-                <div class="p-fluid">
-                    <div class="field">
-                        <label htmlFor="name">Nombre Completo</label>
-                        <input pInputText id="name" [(ngModel)]="user.name" />
-                    </div>
-
-                    <div class="field">
-                        <label htmlFor="username">Usuario</label>
-                        <input pInputText id="username" [(ngModel)]="user.user_name" [disabled]="true" />
-                        <small class="text-500">El nombre de usuario no se puede cambiar.</small>
-                    </div>
-
-                    <div class="field">
-                        <label htmlFor="email">Correo Electrónico</label>
-                        <input pInputText id="email" [(ngModel)]="user.email" />
-                    </div>
-
-                    <div class="field">
-                        <label htmlFor="phone">Teléfono</label>
-                        <input pInputText id="phone" [(ngModel)]="user.phone_number" />
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="flex justify-content-end">
-                    <p-button 
-                        label="Guardar Cambios" 
-                        icon="pi pi-save" 
-                        (onClick)="saveProfile()" 
-                        [loading]="loading">
-                    </p-button>
-                </div>
-            </div>
-        </p-card>
-
-        <p-card header="Notificaciones" styleClass="mb-3">
-            <div class="flex flex-column gap-3">
-                <!-- Push Notifications Toggle -->
-                <div class="flex align-items-center justify-content-between">
-                    <div class="flex-1">
-                        <div class="flex align-items-center gap-2 mb-1">
-                            <i class="pi pi-bell" style="font-size: 1.2rem"></i>
-                            <span class="font-bold">Notificaciones Push</span>
-                        </div>
-                        <span class="text-500 text-sm block">
-                            Recibe alertas en tiempo real sobre pedidos, actualizaciones de estado y solicitudes de mesas, incluso cuando la app está cerrada.
-                        </span>
-                    </div>
-                    <p-inputSwitch 
-                        [(ngModel)]="IsActiveNotification" 
-                        (onChange)="activeNotification($event)"
-                        [disabled]="checkingSubscription">
-                    </p-inputSwitch>
-                </div>
-
-                <!-- Status Indicator -->
-                <div *ngIf="!checkingSubscription && IsActiveNotification" class="flex align-items-center gap-2 p-2 surface-100 border-round">
-                    <i class="pi pi-check-circle text-green-500"></i>
-                    <span class="text-sm text-600">Notificaciones activadas correctamente</span>
-                </div>
-
-                <div *ngIf="checkingSubscription" class="flex align-items-center gap-2 p-2 surface-100 border-round">
-                    <i class="pi pi-spin pi-spinner"></i>
-                    <span class="text-sm text-600">Verificando estado de notificaciones...</span>
-                </div>
-
-                <!-- Browser Support Warning -->
-                <div *ngIf="permission() === 'denied'" class="flex align-items-start gap-2 p-3 bg-yellow-50 border-round">
-                    <i class="pi pi-exclamation-triangle text-yellow-600 mt-1"></i>
-                    <div class="flex-1">
-                        <span class="font-semibold text-yellow-900 block mb-1">Permisos bloqueados</span>
-                        <span class="text-sm text-yellow-800">
-                            Las notificaciones están bloqueadas en tu navegador. Ve a la configuración del navegador para permitirlas.
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </p-card>
+  <!-- Page Header -->
+  <div class="page-header glass-card mb-4">
+    <div class="page-title">
+      <h1>Mi Cuenta</h1>
+      <p class="page-subtitle">Gestiona tu perfil y preferencias de notificaciones</p>
     </div>
-</div>
+  </div>
+
+  <div class="grid justify-content-center">
+    <div class="col-12 md:col-8 lg:col-6">
+      <!-- Profile Card -->
+      <div class="content-card glass-card mb-4">
+        <h2 class="card-section-title">Mi Perfil</h2>
+        <div class="flex flex-column gap-4">
+          <!-- Avatar Section -->
+          <div class="flex justify-content-center mb-3">
+            <p-avatar 
+              [label]="user.name ? user.name.charAt(0).toUpperCase() : 'U'" 
+              shape="circle" 
+              size="xlarge" 
+              [style]="{'background-color': '#2196F3', 'color': '#ffffff'}">
+            </p-avatar>
+          </div>
+
+          <!-- Form Fields -->
+          <div class="p-fluid">
+            <div class="field">
+              <label htmlFor="name">Nombre Completo</label>
+              <input pInputText id="name" [(ngModel)]="user.name" />
+            </div>
+
+            <div class="field">
+              <label htmlFor="username">Usuario</label>
+              <input pInputText id="username" [(ngModel)]="user.user_name" [disabled]="true" />
+              <small class="text-500">El nombre de usuario no se puede cambiar.</small>
+            </div>
+
+            <div class="field">
+              <label htmlFor="email">Correo Electrónico</label>
+              <input pInputText id="email" [(ngModel)]="user.email" />
+            </div>
+
+            <div class="field">
+              <label htmlFor="phone">Teléfono</label>
+              <input pInputText id="phone" [(ngModel)]="user.phone_number" />
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex justify-content-end">
+            <p-button 
+              label="Guardar Cambios" 
+              icon="pi pi-save" 
+              (onClick)="saveProfile()" 
+              [loading]="loading">
+            </p-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Card -->
+      <div class="content-card glass-card mb-4">
+        <h2 class="card-section-title">Notificaciones</h2>
+        <div class="flex flex-column gap-3">
+          <!-- Push Notifications Toggle -->
+          <div class="flex align-items-center justify-content-between">
+            <div class="flex-1">
+              <div class="flex align-items-center gap-2 mb-1">
+                <i class="pi pi-bell" style="font-size: 1.2rem"></i>
+                <span class="font-bold">Notificaciones Push</span>
+              </div>
+              <span class="text-500 text-sm block">
+                Recibe alertas en tiempo real sobre pedidos, actualizaciones de estado y solicitudes de mesas, incluso cuando la app está cerrada.
+              </span>
+            </div>
+            <p-inputSwitch 
+              [(ngModel)]="IsActiveNotification" 
+              (onChange)="activeNotification($event)"
+              [disabled]="checkingSubscription">
+            </p-inputSwitch>
+          </div>
+
+          <!-- Status Indicator -->
+          <div *ngIf="!checkingSubscription && IsActiveNotification" class="flex align-items-center gap-2 p-2 surface-100 border-round">
+            <i class="pi pi-check-circle text-green-500"></i>
+            <span class="text-sm text-600">Notificaciones activadas correctamente</span>
+          </div>
+
+          <div *ngIf="checkingSubscription" class="flex align-items-center gap-2 p-2 surface-100 border-round">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span class="text-sm text-600">Verificando estado de notificaciones...</span>
+          </div>
+
+          <!-- Browser Support Warning -->
+          <div *ngIf="permission() === 'denied'" class="flex align-items-start gap-2 p-3 bg-yellow-50 border-round">
+            <i class="pi pi-exclamation-triangle text-yellow-600 mt-1"></i>
+            <div class="flex-1">
+              <span class="font-semibold text-yellow-900 block mb-1">Permisos bloqueados</span>
+              <span class="text-sm text-yellow-800">
+                Las notificaciones están bloqueadas en tu navegador. Ve a la configuración del navegador para permitirlas.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <p-toast></p-toast>

@@ -1,17 +1,12 @@
 <div class="register-wrapper">
   <div class="glass-register-card">
     <!-- Logo & Title -->
-    <div class="text-center mb-4">
-      <img
-        src="assets/layout/images/logo-white.svg"
-        alt="Kitchen Bar logo"
-        class="mb-3 h-4rem"
-      />
-      <h2 class="text-white text-3xl font-bold mb-2">Crear Cuenta</h2>
-      <p class="text-white-alpha-70 font-normal">
-        Completa los pasos para registrarte
-      </p>
+    <div class="register-logo">
+      <img src="assets/layout/images/logo-dark.svg" alt="KitchenBar Logo">
     </div>
+    
+    <h2 class="register-title">Crear Cuenta</h2>
+    <p class="register-subtitle">Completa los pasos para registrarte</p>
 
     <form [formGroup]="registerForm">
     <p-stepper orientation="vertical" class="w-12">

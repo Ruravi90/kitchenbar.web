@@ -1,154 +1,35 @@
+/* Sidebar/Menu - Warm Coffee Theme */
+
 .layout-sidebar {
-    position: fixed;
-    width: 300px;
-    height: calc(100vh - 9rem);
-    z-index: 999;
-    overflow-y: auto;
-    user-select: none;
-    top: 7rem;
-    left: 2rem;
-    transition: transform $transitionDuration, left $transitionDuration;
-    background: 
-        linear-gradient(135deg, rgba(30, 60, 114, 0.75) 0%, rgba(42, 82, 152, 0.75) 100%),
-        radial-gradient(circle at bottom right, rgba(221, 36, 118, 0.2) 0%, transparent 70%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: $borderRadius;
-    padding: 0.5rem 1.5rem;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.4);
+  background: #FFFFFF !important;
+  border: 1px solid rgba(111, 78, 55, 0.15) !important;
+  box-shadow: 0 4px 16px rgba(62, 39, 35, 0.08) !important;
 }
 
 .layout-menu {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-
-    .layout-root-menuitem {
-        >.layout-menuitem-root-text {
-            font-size: .857rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.9);
-            margin: .75rem 0;
-        }
-
-        >a {
-            display: none;
-        }
+  .layout-root-menuitem {
+    > .layout-menuitem-root-text {
+      color: var(--coffee-roasted) !important;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
     }
-
-    a {
-        user-select: none;
-
-        &.active-menuitem {
-            >.layout-submenu-toggler {
-                transform: rotate(-180deg);
-            }
-        }
+  }
+  
+  ul a {
+    color: var(--coffee-espresso) !important;
+    border-radius: 12px;
+    
+    &.active-route {
+      background: linear-gradient(135deg, var(--coffee-caramel), var(--coffee-roasted)) !important;
+      color: #FFFFFF !important;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(193, 154, 107, 0.3);
     }
-
-    li.active-menuitem {
-        >a {
-            .layout-submenu-toggler {
-                transform: rotate(-180deg);
-            }
-        }
+    
+    &:hover:not(.active-route) {
+      background: rgba(193, 154, 107, 0.1) !important;
+      color: var(--coffee-roasted) !important;
     }
-
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-
-        a {
-            display: flex;
-            align-items: center;
-            position: relative;
-            outline: 0 none;
-            color: rgba(255, 255, 255, 0.85);
-            cursor: pointer;
-            padding: .75rem 1rem;
-            border-radius: $borderRadius;
-            transition: background-color $transitionDuration, box-shadow $transitionDuration;
-
-            .layout-menuitem-icon {
-                margin-right: .5rem;
-            }
-
-            .layout-submenu-toggler {
-                font-size: 75%;
-                margin-left: auto;
-                transition: transform $transitionDuration;
-            }
-
-            &.active-route {
-                font-weight: 700;
-                color: #ffffff;
-                background-color: rgba(255, 255, 255, 0.15);
-            }
-
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.12);
-                color: #ffffff;
-            }
-
-            &:focus {
-                @include focused-inset();
-            }
-        }
-
-        ul {
-            overflow: hidden;
-            border-radius: $borderRadius;
-            animation: slideDown 0.3s ease-out;
-
-            li {
-                a {
-                    margin-left: 1rem;
-                }
-
-                li {
-                    a {
-                        margin-left: 2rem;
-                    }
-
-                    li {
-                        a {
-                            margin-left: 2.5rem;
-                        }
-
-                        li {
-                            a {
-                                margin-left: 3rem;
-                            }
-
-                            li {
-                                a {
-                                    margin-left: 3.5rem;
-                                }
-
-                                li {
-                                    a {
-                                        margin-left: 4rem;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  }
 }

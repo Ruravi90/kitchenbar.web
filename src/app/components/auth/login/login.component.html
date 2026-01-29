@@ -1,16 +1,17 @@
 <div class="login-wrapper">
     <div class="glass-login-card">
         <!-- Logo & Title -->
-        <div class="text-center mb-4">
-            <img src="assets/layout/images/logo-white.svg" alt="Kitchen Bar logo" class="mb-3 h-4rem">
-            <h2 class="text-white text-3xl font-bold mb-2">Bienvenido</h2>
-            <p class="text-white-alpha-70 font-normal">Inicia sesión para continuar</p>
+        <div class="login-logo">
+            <img src="assets/layout/images/logo-dark.svg" alt="KitchenBar Logo">
         </div>
+        
+        <h2 class="login-title">Bienvenido</h2>
+        <p class="login-subtitle">Inicia sesión para continuar</p>
 
         <!-- Login Form -->
         <form [formGroup]="formLogin" (submit)="login()">
             <div class="mb-4">
-                <label for="user_name" class="block text-white font-medium mb-2">Usuario</label>
+                <label for="user_name">Usuario</label>
                 <input id="user_name" type="text"
                     formControlName="user_name"
                     class="w-full"
@@ -21,7 +22,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="password1" class="block text-white font-medium mb-2">Contraseña</label>
+                <label for="password1">Contraseña</label>
                 <p-password id="password1" 
                     formControlName="password" 
                     class="w-full"
@@ -36,12 +37,12 @@
             </div>
 
             <button pButton pRipple label="Iniciar Sesión" type="submit" 
-                class="w-full p-3 text-lg font-bold bg-primary-500 border-none hover:bg-primary-600 transition-all transition-duration-200">
+                class="w-full">
             </button>
         </form>
 
         <!-- Footer Links -->
-        <div class="flex align-items-center justify-content-between mt-4">
+        <div class="flex align-items-center justify-content-between footer-links">
             <p-button label="Registrar" [link]="true" (click)="register()" styleClass="p-0" />
             <p-button label="¿Olvidaste tu contraseña?" [link]="true" styleClass="p-0" />
         </div>

@@ -1,9 +1,100 @@
-/* Tables Component - Glassmorphism Styles */
+/* Settings - Warm Coffee Theme - Impecable */
 
 .tables-container {
   padding: 2rem;
+  background: var(--surface-ground);
+  min-height: calc(100vh - 4rem);
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 }
 
-/* =================================================================
-   ALL PRIMENG STYLES COMMENTED OUT - USING GLOBALS
-   ================================================================= */
+/* Page Header */
+.page-header {
+  padding: 2rem;
+  margin-bottom: 2rem !important;
+  
+  .page-title {
+    h1 {
+      font-size: 2.25rem;
+      color: var(--coffee-espresso);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .page-subtitle {
+      font-size: 1.0625rem;
+      color: var(--coffee-roasted);
+      margin: 0;
+    }
+  }
+}
+
+/* Content Card */
+.content-card {
+  padding: 2rem;
+  border: 2px solid rgba(111, 78, 55, 0.15);
+  border-radius: 18px;
+  background: #FFFFFF;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+}
+
+/* Empty State */
+.empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  
+  .empty-icon {
+    font-size: 4rem;
+    color: var(--coffee-light);
+    margin-bottom: 1.5rem;
+  }
+  
+  .empty-title {
+    font-size: 1.5rem;
+    color: var(--coffee-espresso);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  
+  .empty-subtitle {
+    font-size: 1rem;
+    color: var(--coffee-roasted);
+    margin-bottom: 2rem;
+  }
+  
+  .text-muted {
+    color: var(--coffee-roasted);
+    opacity: 0.7;
+  }
+}
+
+/* Highlighted Row */
+.highlighted-row {
+  animation: highlightPulse 2s ease-in-out 3;
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(193, 154, 107, 0.2);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1.5rem;
+    
+    .page-title h1 {
+      font-size: 1.75rem;
+    }
+  }
+}

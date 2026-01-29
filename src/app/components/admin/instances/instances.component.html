@@ -1,37 +1,57 @@
-<div class="grid">
-    <div class="col-12">
-        <p-card header="Instancias" [style]="{'width':'100%'}">
-            <!-- Used Table instead of DataView for better columnar data -->
-            <p-table [value]="items" [tableStyle]="{'min-width': '60rem'}">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Cocina</th>
-                        <th>Plan Actual</th>
-                        <th>Vencimiento</th>
-                        <th>Acciones</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-item>
-                    <tr>
-                        <td>{{ item.name_client }}</td>
-                        <td>{{ item.name_kitchen }}</td>
-                        <td>{{ item.license?.name || 'Sin Plan' }}</td>
-                        <td>
-                            <span [ngClass]="{'text-red-500 font-bold': !getActiveExpiration(item)}">
-                                {{ getActiveExpiration(item) ? (getActiveExpiration(item) | date) : 'Expirado' }}
-                            </span>
-                        </td>
-                        <td>
-                            <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="warning" size="small" pTooltip="Editar" class="mr-2"/>
-                            <p-button icon="pi pi-refresh" [rounded]="true" [outlined]="true" severity="success" size="small" pTooltip="Renovar Suscripción" label="Renovar" class="mr-2" (click)="openRenew(item)"/>
-                            <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" size="small" pTooltip="Eliminar"/>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-card>
+<div class="instances-container">
+  <!-- Page Header -->
+  <div class="page-header glass-card mb-4">
+    <div class="page-title">
+      <h1>Gestión de Instancias</h1>
+      <p class="page-subtitle">Administra las instancias de clientes y sus planes de licencia</p>
     </div>
+  </div>
+
+  <!-- Content Card -->
+  <div class="content-card glass-card">
+    <!-- Table -->
+    <p-table [value]="items" [tableStyle]="{'min-width': '60rem'}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cliente</th>
+          <th>Cocina</th>
+          <th>Plan Actual</th>
+          <th>Vencimiento</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.name_client }}</td>
+          <td>{{ item.name_kitchen }}</td>
+          <td>{{ item.license?.name || 'Sin Plan' }}</td>
+          <td>
+            <span [ngClass]="{'text-red-500 font-bold': !getActiveExpiration(item)}">
+              {{ getActiveExpiration(item) ? (getActiveExpiration(item) | date) : 'Expirado' }}
+            </span>
+          </td>
+          <td>
+            <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="warning" size="small" pTooltip="Editar" class="mr-2"/>
+            <p-button icon="pi pi-refresh" [rounded]="true" [outlined]="true" severity="success" size="small" pTooltip="Renovar Suscripción" label="Renovar" class="mr-2" (click)="openRenew(item)"/>
+            <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" size="small" pTooltip="Eliminar"/>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <!-- Empty State -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center py-6">
+            <div class="empty-state">
+              <i class="pi pi-building empty-icon"></i>
+              <h3 class="empty-title">No hay instancias registradas</h3>
+              <p class="empty-subtitle">Agrega una nueva instancia para comenzar</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
 
 <p-dialog [(visible)]="renewDialog" [style]="{width: '450px'}" header="Renovar Suscripción" [modal]="true" styleClass="p-fluid">

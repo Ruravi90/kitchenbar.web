@@ -20,9 +20,7 @@
 }
 
 .glass-nav {
-  background: rgba(111, 78, 55, 0.95) !important;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 16px rgba(62, 39, 35, 0.15);
+  @extend .glass-nav-effect;
 
   .text-white {
     color: #FFF !important;
@@ -39,7 +37,7 @@
 
 .hero-section {
   padding: 10rem 2rem 8rem;
-  background: linear-gradient(135deg, #6F4E37 0%, #5D4037 100%);
+  @extend .coffee-gradient-bg;
   position: relative;
   overflow: hidden;
 
@@ -82,6 +80,7 @@
     p { font-size: 1.25rem; }
   }
 
+  /* Button styles defer to global .p-button overrides in styles.scss if possible, or use simplified local overrides */
   ::ng-deep .p-button {
     font-size: 1.125rem;
     padding: 1.125rem 3rem !important;
@@ -89,28 +88,7 @@
     font-weight: 700;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.3px;
-
-    &.bg-white {
-      background: #FFF !important;
-      color: var(--coffee-roasted) !important;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-
-      &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3) !important;
-      }
-    }
-
-    &.p-button-outlined {
-      border: 2.5px solid #FFF !important;
-      color: #FFF !important;
-      background: transparent !important;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        transform: translateY(-3px);
-      }
-    }
+    /* Other properties removed as they are duplicates of global styles */
   }
 }
 

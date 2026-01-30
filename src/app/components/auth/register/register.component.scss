@@ -1,6 +1,7 @@
 /* Flattened & Optimized Register Styles */
 .register-wrapper {
-  background: linear-gradient(135deg, #6F4E37 0%, #5D4037 100%);
+  background: var(--surface-ground); /* Fallback */
+  @extend .coffee-gradient-bg; /* Uses global gradient */
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -21,9 +22,7 @@
 }
 
 .glass-register-card {
-  background: #FFF;
-  border-radius: 28px;
-  box-shadow: 0 20px 60px rgba(62, 39, 35, 0.4);
+  @extend .glass-card-effect;
   padding: 3rem 2.5rem;
   width: 100%;
   max-width: 680px;
@@ -215,16 +214,11 @@
     font-size: 1rem;
     font-weight: 700;
     border-radius: 12px !important;
-    background: linear-gradient(135deg, var(--coffee-caramel), var(--coffee-roasted)) !important;
+    /* Styles are now inherited from global .p-button overrides or utility classes */
+    background: linear-gradient(135deg, var(--coffee-caramel), var(--coffee-roasted)) !important; /* Kept for specific gradient not in global yet */
     border: none !important;
     color: #FFF !important;
     box-shadow: 0 4px 12px rgba(193, 154, 107, 0.4);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(193, 154, 107, 0.5) !important;
-    }
     
     &:disabled {
       opacity: 0.5;

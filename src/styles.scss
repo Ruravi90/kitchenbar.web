@@ -84,3 +84,49 @@ $gutter: 1rem;
     transform: translateY(0);
   }
 }
+
+/* Global Utilities & Extract */
+.coffee-gradient-bg {
+  background: linear-gradient(135deg, #6F4E37 0%, #5D4037 100%);
+}
+
+.coffee-gradient-header {
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+}
+
+.glass-card-effect {
+  background: #FFF;
+  border: 1px solid rgba(111, 78, 55, 0.08);
+  box-shadow: 0 20px 60px rgba(62, 39, 35, 0.4);
+}
+
+.glass-nav-effect {
+    background: rgba(111, 78, 55, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(62, 39, 35, 0.15);
+}
+
+/* Global Button Overrides (reduces component repetition) */
+.p-button.p-button-coffee-primary {
+    background: #FFF !important;
+    color: var(--coffee-roasted) !important;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3) !important;
+    }
+}
+
+.p-button.p-button-coffee-outlined {
+    border: 2.5px solid #FFF !important;
+    color: #FFF !important;
+    background: transparent !important;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-3px);
+    }
+}

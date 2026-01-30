@@ -66,4 +66,21 @@ $gutter: 1rem;
   &:hover {
     background: var(--surface-hover) !important;
   }
-}/* Force recompile */
+}
+
+/* Global Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

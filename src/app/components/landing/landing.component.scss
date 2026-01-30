@@ -20,8 +20,6 @@
 }
 
 .glass-nav {
-  @extend .glass-nav-effect;
-
   .text-white {
     color: #FFF !important;
   }
@@ -37,7 +35,6 @@
 
 .hero-section {
   padding: 10rem 2rem 8rem;
-  @extend .coffee-gradient-bg;
   position: relative;
   overflow: hidden;
 
@@ -258,7 +255,6 @@
 
 .cta-section {
   padding: 6rem 2rem;
-  background: linear-gradient(135deg, #6F4E37 0%, #5D4037 100%);
   position: relative;
   overflow: hidden;
 

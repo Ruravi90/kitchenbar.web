@@ -130,3 +130,18 @@ $gutter: 1rem;
         transform: translateY(-3px);
     }
 }
+
+/* Map Global Utilities into Components (Budget Optimization) */
+.register-wrapper,
+.hero-section,
+.cta-section {
+    @extend .coffee-gradient-bg;
+}
+
+.glass-register-card {
+    @extend .glass-card-effect;
+}
+
+.glass-nav {
+    @extend .glass-nav-effect;
+}

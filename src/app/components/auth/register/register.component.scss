@@ -1,7 +1,5 @@
 /* Flattened & Optimized Register Styles */
 .register-wrapper {
-  background: var(--surface-ground); /* Fallback */
-  @extend .coffee-gradient-bg; /* Uses global gradient */
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -22,7 +20,6 @@
 }
 
 .glass-register-card {
-  @extend .glass-card-effect;
   padding: 3rem 2.5rem;
   width: 100%;
   max-width: 680px;

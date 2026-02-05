@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LandingRoutingModule } from './landing-routing.module';
-import { StyleClassModule } from 'primeng/styleclass';
-import { DividerModule } from 'primeng/divider';
-import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
 import { LandingComponent } from './landing.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
@@ -12,11 +10,10 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     imports: [
         CommonModule,
         LandingRoutingModule,
-        DividerModule,
-        StyleClassModule,
-        PanelModule,
-        ButtonModule
+        ButtonModule,
+        RippleModule
     ],
     declarations: [LandingComponent, TranslatePipe]
 })
 export class LandingModule { }
+

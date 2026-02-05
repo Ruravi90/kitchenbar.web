@@ -1,7 +1,7 @@
 <div class="landing-wrapper min-h-screen flex flex-column">
   <!-- Navbar -->
   <div
-    class="glass-nav py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3 border-round-2xl"
+    class="glass-nav py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3 border-round-2xl z-5"
   >
     <a class="flex align-items-center" href="#">
       <img
@@ -17,16 +17,15 @@
     <a
       pRipple
       class="cursor-pointer block lg:hidden text-700"
-      pStyleClass="@next"
-      enterClass="hidden"
-      leaveToClass="hidden"
-      [hideOnOutsideClick]="true"
+      (click)="toggleMobileMenu()"
     >
       <i class="pi pi-bars text-4xl"></i>
     </a>
     <div
-      class="align-items-center bg-transparent flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2"
-      style="top: 120px"
+      id="mobileMenu"
+      [ngClass]="{'mobile-menu-hidden': !mobileMenuVisible}"
+      class="align-items-center surface-900 lg:bg-transparent flex-grow-1 justify-content-between flex flex-column lg:flex-row absolute lg:static w-full left-0 px-6 lg:px-0 z-2 shadow-2 lg:shadow-none border-round-bottom-2xl lg:border-round-none py-3 lg:py-0"
+      style="top: 100%; margin-top: 0.5rem;"
     >
       <ul
         class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row cursor-pointer"
@@ -127,12 +126,7 @@
           (click)="router.navigate(['/auth/register'])"
           class="p-button-lg p-button-rounded bg-white text-primary-600 border-none font-bold"
         ></button>
-        <button
-          pButton
-          pRipple
-          [label]="'LANDING.HERO.DEMO' | translate"
-          class="p-button-lg p-button-rounded p-button-outlined text-white border-white font-bold"
-        ></button>
+
       </div>
     </div>
   </div>

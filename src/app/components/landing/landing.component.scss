@@ -20,6 +20,8 @@
 }
 
 .glass-nav {
+  overflow: visible !important;
+
   .text-white {
     color: #FFF !important;
   }
@@ -30,6 +32,13 @@
 
   .bg-primary-500 {
     background: var(--coffee-caramel) !important;
+  }
+}
+
+// Mobile-only menu hiding (doesn't affect desktop)
+.mobile-menu-hidden {
+  @media (max-width: 991px) {
+    display: none !important;
   }
 }
 
@@ -77,7 +86,6 @@
     p { font-size: 1.25rem; }
   }
 
-  /* Button styles defer to global .p-button overrides in styles.scss if possible, or use simplified local overrides */
   ::ng-deep .p-button {
     font-size: 1.125rem;
     padding: 1.125rem 3rem !important;
@@ -85,7 +93,6 @@
     font-weight: 700;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.3px;
-    /* Other properties removed as they are duplicates of global styles */
   }
 }
 

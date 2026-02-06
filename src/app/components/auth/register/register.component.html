@@ -23,6 +23,9 @@
                 <div
                   *ngFor="let license of licenses"
                   class="field-checkbox w-full card p-3 flex align-items-center justify-content-between cursor-pointer surface-hover"
+                  (click)="selectLicense(license.id)"
+                  role="button"
+                  tabindex="0"
                 >
                   <div class="flex align-items-center gap-2">
                     <p-radioButton

@@ -42,15 +42,35 @@ export class WebPushNotificationService {
       // Wait for service worker to be ready
       const registration = await navigator.serviceWorker.ready;
 
+      console.debug('Service Worker ready. scope=', registration.scope);
+
+      // Debug: VAPID key and converted Uint8Array
+      try {
+        const keyArray = this.urlBase64ToUint8Array(environment.vapidPublicKey);
+        console.debug('VAPID public key (env):', environment.vapidPublicKey);
+        console.debug('VAPID key Uint8Array length:', keyArray.length);
+      } catch (e) {
+        console.error('Error converting VAPID key to Uint8Array:', e);
+      }
+
       // Check if already subscribed
       let subscription = await registration.pushManager.getSubscription();
       
       if (!subscription) {
         // Subscribe to push notifications
-        subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: this.urlBase64ToUint8Array(environment.vapidPublicKey) as BufferSource
-        });
+        try {
+          const applicationServerKey = this.urlBase64ToUint8Array(environment.vapidPublicKey);
+          console.debug('Attempting pushManager.subscribe with key length', applicationServerKey.length);
+          subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey
+          });
+        } catch (err) {
+          console.error('PushManager.subscribe failed:', err);
+          console.error('Navigator userAgent:', navigator.userAgent);
+          console.error('Service Worker registration scope:', registration.scope);
+          throw err;
+        }
       }
 
       // Send subscription to backend

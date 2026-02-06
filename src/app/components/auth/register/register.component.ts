@@ -120,6 +120,12 @@ export class RegisterComponent implements OnInit {
         });
     }
 
+    selectLicense(id: number) {
+        const licenseId = id || 0;
+        this.selectedLicenseId = licenseId;
+        this.registerForm.get('selectedLicenseId')?.setValue(licenseId);
+    }
+
     toLowerCase() {
         const nameKitchen = this.registerForm.get('name_kitchen')?.value;
         if (nameKitchen) {

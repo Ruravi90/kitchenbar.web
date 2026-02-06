@@ -23,13 +23,13 @@
                 <div
                   *ngFor="let license of licenses"
                   class="field-checkbox w-full card p-3 flex align-items-center justify-content-between cursor-pointer surface-hover"
-                  (click)="selectedLicenseId = license.id || 0"
                 >
                   <div class="flex align-items-center gap-2">
                     <p-radioButton
-                      name="license"
+                      name="selectedLicenseId"
                       [value]="license.id"
                       formControlName="selectedLicenseId"
+                      [inputId]="'license-' + (license.id || 0)"
                     ></p-radioButton>
                     <div class="flex flex-column">
                       <span class="font-bold text-xl">{{ license.name }}</span>

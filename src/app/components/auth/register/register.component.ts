@@ -109,9 +109,11 @@ export class RegisterComponent implements OnInit {
                     return (a.price || 0) - (b.price || 0);
                 });
 
-                // Auto-select the first plan (Free Trial)
-                if(this.licenses.length > 0) {
-                     this.selectedLicenseId = this.licenses[0].id || 0;
+                // Auto-select the first plan (Free Trial) and set form control
+                if (this.licenses.length > 0) {
+                    const firstId = this.licenses[0].id || 0;
+                    this.selectedLicenseId = firstId;
+                    this.registerForm.get('selectedLicenseId')?.setValue(firstId);
                 }
             },
             error: (e) => console.error(e)

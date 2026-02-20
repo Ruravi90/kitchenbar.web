@@ -7,7 +7,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AdminService } from '../../services/admin.service';
+import { AdminService } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-package-list',
@@ -34,11 +34,11 @@ export class PackageListComponent implements OnInit {
   loadPackages() {
     this.loading = true;
     this.adminService.getPackages().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.packages = data;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load packages' });
         this.loading = false;
       }
@@ -56,7 +56,7 @@ export class PackageListComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Package Deleted', life: 3000 });
             this.loadPackages();
           },
-          error: (error) => {
+          error: (error: any) => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete package' });
           }
         });

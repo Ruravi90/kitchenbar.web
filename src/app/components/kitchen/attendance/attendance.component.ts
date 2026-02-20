@@ -1,7 +1,7 @@
 
 import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Diner, Meal, Order, Table } from '../../../models';
-import { AuthInterface, DinersInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface } from '../../../interfaces';
+import { Diner, Meal, Order, Table } from '@kitchenbar/shared-data-access';
+import { AuthInterface, DinersInterface, HubInterface, MealsInterface, OrdersInterface, TablesInterface } from '@kitchenbar/shared-data-access';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { loadStripe, Stripe, StripeElements, StripePaymentElement } from '@stripe/stripe-js';
@@ -121,7 +121,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   getTable(){
     this._serviceTable.getByIdentity(this.tableIdentity).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         console.log(data);
         this.table = data;
         this.instanceIdentity = data.instance.identity;
@@ -138,7 +138,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   getOrders(){
     this.totalOrder =0;
     this._serviceOrder.getItemsByTable(this.diner.id!).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.items = data;
         this.items.forEach(i=>{
           if(!i.isCancel)
@@ -196,7 +196,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   }
   getMeals(){
     this._serviceMeal.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.meals = data;
       },
       error: (e) => {
@@ -254,7 +254,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       return;
     this.order.dinerId = this.diner.id;
     this._serviceOrder.createItem(this.order!).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.hub.sendOrder(this.diner, this.instanceIdentity);
         this.order = {};
         this.order.quantity = 1;
@@ -270,7 +270,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   cancelOrder(order:Order){
     order.isCancel = true;
     this._serviceOrder.updateItem(order.id!,order).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.hub.sendOrder(this.diner, this.instanceIdentity);
       },
       error: (e) => {
@@ -296,7 +296,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         accept: () => {
           order.statusOrderId = 4;
           this._serviceOrder.updateItem(order.id!,order).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.hub.sendOrder(this.diner, this.instanceIdentity);
             },
             error: (e) => {
@@ -362,7 +362,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   closeTicket() {
     this._serviceDiner.closeTicket(this.diner.id!).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.hub.sendOrder(this.diner, this.instanceIdentity);
         this.getDiner();
       },
@@ -378,7 +378,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
     this.dinerForm.tableId = this.table.id;
     this._serviceDiner.createItem(this.dinerForm).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         console.log("Diner --> ",data);
         this.diner = data;
         this.order = {};
@@ -461,7 +461,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           }
           this.paying = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error(err);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo iniciar el pago.' });
           this.paying = false;
@@ -496,7 +496,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
             this.hub.sendOrder(this.diner, this.instanceIdentity);
             this.getDiner();
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error(err);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Pago exitoso pero error al cerrar ticket. Contacta al mesero.' });
           }

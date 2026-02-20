@@ -10,21 +10,27 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { TokenInterceptor } from './utilities/token.interceptor';
-import { OfflineInterceptor } from './utilities/offline.interceptor';
+import { TokenInterceptor, OfflineInterceptor } from '@kitchenbar/shared-data-access';
 
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: OfflineInterceptor, multi: true }
 ];
 
-import {AuthService,CategoriesService,OrderHubService,MealsService,OrdersService,TablesService,UsersService, DinersService, BranchesService, NotificationsService, InvoicesService, DashboardService, InventoryService, RecipesService} from './services'
-import { AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface, HubInterface, InvoicesInterface, MealsInterface, NotificationsInterface, OrdersInterface, TablesInterface, UsersInterface, DashboardInterface, InventoryInterface, RecipesInterface } from './interfaces';
+import {
+    AuthService, CategoriesService, OrderHubService, MealsService, OrdersService, TablesService, 
+    UsersService, DinersService, BranchesService, NotificationsService, InvoicesService, 
+    DashboardService, InventoryService, RecipesService,
+    AuthInterface, BranchesInterface, CategoriesInterface, DinersInterface, HubInterface, 
+    InvoicesInterface, MealsInterface, NotificationsInterface, OrdersInterface, TablesInterface, 
+    UsersInterface, DashboardInterface, InventoryInterface, RecipesInterface
+} from '@kitchenbar/shared-data-access';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppUpdateService } from "./utilities/AppUpdateService"
 
 import { NgxStripeModule } from 'ngx-stripe';
 import { environment } from '../environments/environment';
+import { ENVIRONMENT_TOKEN } from '@kitchenbar/shared-data-access';
 
 @NgModule({ declarations: [AppComponent, NotfoundComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -56,6 +62,7 @@ import { environment } from '../environments/environment';
         { provide: DashboardInterface, useClass: DashboardService },
         { provide: InventoryInterface, useClass: InventoryService },
         { provide: RecipesInterface, useClass: RecipesService },
+        { provide: ENVIRONMENT_TOKEN, useValue: environment },
         httpInterceptorProviders,
         ConfirmationService,
         MessageService,

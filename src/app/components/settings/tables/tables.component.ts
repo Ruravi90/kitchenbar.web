@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Branch, Table } from '../../../models';
-import { BranchesInterface, TablesInterface, DashboardInterface } from '../../../interfaces';
+import { Branch, Table } from '@kitchenbar/shared-data-access';
+import { BranchesInterface, TablesInterface, DashboardInterface } from '@kitchenbar/shared-data-access';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FixMeLater, QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
@@ -77,7 +77,7 @@ export class TablesComponent {
 
   getTables(): void {
     this.tablesServices.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.tables = data;
         this.filteredTables = data;
         this.filterTables();
@@ -118,7 +118,7 @@ export class TablesComponent {
 
   getBranches(): void {
     this.branchesService.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.branches = data;
       },
       error: (e) => {
@@ -168,7 +168,7 @@ export class TablesComponent {
 
     if(this.isEdit){
       this.tablesServices.updateItem(this.table!.id!,this.table).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -185,7 +185,7 @@ export class TablesComponent {
     }
     else{
       this.tablesServices.createItem(this.table).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -213,7 +213,7 @@ export class TablesComponent {
         rejectLabel: 'Cancelar',
         accept: () => {
           this.tablesServices.deleteItem(item.id!).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.messageService.add({ 
                 severity: 'success', 
                 summary: 'Eliminada', 

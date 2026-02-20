@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { RestaurantConfigService } from '../../../services/restaurant-config.service';
-import { RestaurantConfig } from '../../../models/restaurant-config.model';
+import { RestaurantConfigService } from '@kitchenbar/shared-data-access';
+import { RestaurantConfig } from '@kitchenbar/shared-data-access';
 import { ActivatedRoute } from '@angular/router';
-import { DashboardInterface } from '../../../interfaces';
+import { DashboardInterface } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-restaurant-config',
@@ -56,7 +56,7 @@ export class RestaurantConfigComponent implements OnInit {
   }
 
   loadLicenseStatus() {
-      this.dashboardService.getLicenseStatus().subscribe(data => {
+      this.dashboardService.getLicenseStatus().subscribe((data: any) => {
           this.licenseData = data;
       });
   }
@@ -68,11 +68,11 @@ export class RestaurantConfigComponent implements OnInit {
   loadConfig() {
     this.loadingConfig = true;
     this.service.getConfig().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.config = data;
         this.loadingConfig = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         this.loadingConfig = false;
         // 404 is expected if not configured yet, just ignore or handle defaults
@@ -83,12 +83,12 @@ export class RestaurantConfigComponent implements OnInit {
   save() {
     this.loading = true;
     this.service.updateConfig(this.config).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.config = data;
         this.loading = false;
         this.messageService.add({severity: 'success', summary: 'Guardado', detail: 'Configuración actualizada.'});
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         this.loading = false;
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo guardar la configuración.'});
@@ -103,7 +103,7 @@ export class RestaurantConfigComponent implements OnInit {
               this.stripeStatus = status;
               this.loadingStripe = false;
           },
-          error: (err) => {
+          error: (err: any) => {
               console.error(err);
               this.loadingStripe = false;
           }
@@ -117,7 +117,7 @@ export class RestaurantConfigComponent implements OnInit {
               // Redirect to Stripe
               window.location.href = response.url;
           },
-          error: (err) => {
+          error: (err: any) => {
               console.error(err);
               this.loadingStripe = false;
               const msg = err.error?.message || 'No se pudo iniciar la conexión con Stripe.';

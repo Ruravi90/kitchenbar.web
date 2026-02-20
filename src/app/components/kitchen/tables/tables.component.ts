@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Table } from '../../../models';
-import { HubInterface, TablesInterface } from '../../../interfaces';
+import { Table } from '@kitchenbar/shared-data-access';
+import { HubInterface, TablesInterface } from '@kitchenbar/shared-data-access';
 import { MessageService } from 'primeng/api';
 import { QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
@@ -116,7 +116,7 @@ export class TablesComponent {
 
     this.isBusyTableService = true;
     this.tableServices.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.isBusyTableService = false;
         this.tables = data;
       },

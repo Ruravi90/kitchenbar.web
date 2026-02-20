@@ -7,7 +7,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AdminService } from '../../services/admin.service';
+import { AdminService } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-promotion-list',
@@ -34,11 +34,11 @@ export class PromotionListComponent implements OnInit {
   loadPromotions() {
     this.loading = true;
     this.adminService.getPromotions().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.promotions = data;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load promotions' });
         this.loading = false;
       }
@@ -56,7 +56,7 @@ export class PromotionListComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Promotion Deleted', life: 3000 });
             this.loadPromotions();
           },
-          error: (error) => {
+          error: (error: any) => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete promotion' });
           }
         });

@@ -2,10 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import {SwPush, SwUpdate} from '@angular/service-worker';
 import { WebNotificationService } from './utilities/WebNotificationService';
-import { NotificationsInterface } from './interfaces';
+import { NotificationsInterface, OfflineService } from '@kitchenbar/shared-data-access';
 import { AppUpdateService } from "./utilities/AppUpdateService"
 import { environment } from '../environments/environment';
-import { OfflineService } from './services/offline.service';
 
 @Component({
   selector: 'app-root',

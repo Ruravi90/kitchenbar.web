@@ -6,8 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AdminService } from '../../services/admin.service';
-import { Membership } from '../../../../models';
+import { AdminService } from '@kitchenbar/shared-data-access';
+import { Membership } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-membership-detail',
@@ -39,11 +39,11 @@ export class MembershipDetailComponent implements OnInit {
   loadMembership(id: number) {
     this.loading = true;
     this.adminService.getMembership(id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.membership = data;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load membership details' });
         this.loading = false;
       }
@@ -67,7 +67,7 @@ export class MembershipDetailComponent implements OnInit {
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Membership Cancelled', life: 3000 });
                 if (updatedMembership.id) this.loadMembership(updatedMembership.id);
             },
-            error: (error) => {
+            error: (error: any) => {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to cancel membership' });
             }
             });

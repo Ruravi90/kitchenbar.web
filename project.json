@@ -69,6 +69,9 @@
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "port": 4200
+      },
       "configurations": {
         "production": {
           "buildTarget": "kitchenbar.web:build:production"

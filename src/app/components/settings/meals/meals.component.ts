@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Meal, User, Inventory, Recipe } from '../../../models';
-import { CategoriesInterface, MealsInterface, InventoryInterface, RecipesInterface } from '../../../interfaces';
+import { Meal, User, Inventory, Recipe } from '@kitchenbar/shared-data-access';
+import { CategoriesInterface, MealsInterface, InventoryInterface, RecipesInterface } from '@kitchenbar/shared-data-access';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 // Interface for pending recipes (before meal is saved)
@@ -73,7 +73,7 @@ export class MealsComponent {
 
   getMeals(): void {
     this.iMeal.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.items = data;
         this.filteredItems = data;
         this.filterMeals();
@@ -97,7 +97,7 @@ export class MealsComponent {
 
   getCategories(){
     this.categoriesServices.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.categories = data;
       },
       error: (e) => {
@@ -108,14 +108,14 @@ export class MealsComponent {
 
   getInventory() {
     this.inventoryService.getItemsByInstance().subscribe({
-        next: (data) => this.inventoryItems = data,
+        next: (data: any) => this.inventoryItems = data,
         error: (e) => console.error(e)
     });
   }
 
   getRecipesForMeal(mealId: number) {
     this.recipesService.getByMeal(mealId).subscribe({
-        next: (data) => this.currentRecipes = data,
+        next: (data: any) => this.currentRecipes = data,
         error: (e) => console.error(e)
     });
   }
@@ -361,7 +361,7 @@ export class MealsComponent {
         rejectLabel: 'Cancelar',
         accept: () => {
           this.iMeal.deleteItem(item.id!).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.messageService.add({ 
                 severity: 'success', 
                 summary: 'Eliminado', 

@@ -13,7 +13,7 @@ import { AppFooterComponent } from './app.footer.component';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { CommonModule } from '@angular/common';
-import { HubInterface } from '../interfaces';
+import { HubInterface } from '@kitchenbar/shared-data-access';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 @NgModule({

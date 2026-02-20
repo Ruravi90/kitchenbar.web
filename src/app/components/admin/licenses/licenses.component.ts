@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AdminService } from '../services/admin.service';
+import { AdminService } from '@kitchenbar/shared-data-access';
 
 
 @Component({
@@ -26,11 +26,11 @@ export class LicensesComponent implements OnInit {
   loadLicenses() {
     this.loading = true;
     this.adminService.getLicenses().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.licenses = data;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load licenses' });
         this.loading = false;
       }
@@ -48,7 +48,7 @@ export class LicensesComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'License Deleted', life: 3000 });
             this.loadLicenses();
           },
-          error: (error) => {
+          error: (error: any) => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete license' });
           }
         });

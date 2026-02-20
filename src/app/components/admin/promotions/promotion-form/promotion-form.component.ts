@@ -9,7 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
-import { AdminService } from '../../services/admin.service';
+import { AdminService } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-promotion-form',
@@ -59,14 +59,14 @@ export class PromotionFormComponent implements OnInit {
   loadPromotion(id: number) {
     this.loading = true;
     this.adminService.getPromotion(id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         // Convert dates to Date objects for Calendar component
         if (data.validFrom) data.validFrom = new Date(data.validFrom);
         if (data.validTo) data.validTo = new Date(data.validTo);
         this.promotionForm.patchValue(data);
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load promotion' });
         this.loading = false;
       }
@@ -89,7 +89,7 @@ export class PromotionFormComponent implements OnInit {
             this.router.navigate(['/admin/promotions']);
           }, 1000);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update promotion' });
           this.loading = false;
         }
@@ -102,7 +102,7 @@ export class PromotionFormComponent implements OnInit {
             this.router.navigate(['/admin/promotions']);
           }, 1000);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create promotion' });
           this.loading = false;
         }

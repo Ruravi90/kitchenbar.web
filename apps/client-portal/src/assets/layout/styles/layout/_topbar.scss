@@ -1,0 +1,35 @@
+/* Topbar - Warm Coffee Theme */
+
+.layout-topbar {
+  background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%) !important;
+  border-bottom: 2px solid rgba(111, 78, 55, 0.1);
+  
+  .layout-topbar-logo {
+    color: var(--coffee-espresso) !important;
+    font-weight: 700;
+  }
+  
+  .layout-topbar-button {
+    color: var(--coffee-roasted) !important;
+    
+    &:hover {
+      background: rgba(193, 154, 107, 0.15) !important;
+      color: var(--coffee-espresso) !important;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .layout-topbar {
+    .layout-topbar-menu {
+      background: #FFFFFF !important;
+      border: 1px solid rgba(111, 78, 55, 0.15) !important;
+      
+      .layout-topbar-button {
+        &:hover {
+          background: var(--surface-hover) !important;
+        }
+      }
+    }
+  }
+}

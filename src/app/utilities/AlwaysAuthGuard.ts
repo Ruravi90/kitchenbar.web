@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { CanActivateFn, CanActivateChildFn, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { AuthService } from '../services';
+import { AuthService } from '@kitchenbar/shared-data-access';
 
 export const canActivate: CanActivateFn = (
     route: ActivatedRouteSnapshot,

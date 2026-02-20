@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { DinersInterface, InvoicesInterface } from '../../interfaces';
+import { DinersInterface, InvoicesInterface } from '@kitchenbar/shared-data-access';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
@@ -62,7 +62,7 @@ export class InvoicingComponent implements OnInit {
              }
           }
         },
-        error: (err) => {
+        error: (err: any) => {
           this.loading = false;
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al buscar tickets.' });
         }
@@ -90,7 +90,7 @@ export class InvoicingComponent implements OnInit {
             window.open(invoice.pdfUrl, '_blank');
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading = false;
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar la factura.' });
       }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardInterface, InventoryInterface } from '../../interfaces';
-import { AuthService } from '../../services/auth.service';
+import { DashboardInterface, InventoryInterface } from '@kitchenbar/shared-data-access';
+import { AuthService } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-dashboard',
@@ -77,7 +77,7 @@ export class DashboardComponent implements OnInit {
     // Simulate loading - In production, these would be real API calls
     setTimeout(() => {
       // Mock KPI data - replace with actual API calls
-      this.dashboardService.getDailySales(this.branchId).subscribe(data => {
+      this.dashboardService.getDailySales(this.branchId).subscribe((data: any) => {
         this.todayRevenue = data.today || 0;
         this.revenueTrend = data.lastWeek > 0 
           ? Math.round(((data.today - data.lastWeek) / data.lastWeek) * 100) 
@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
     // 1. Daily Sales
     this.loadingDailySales = true;
     this.dashboardService.getDailySales(this.branchId).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.basicData = {
           labels: ['Hoy', 'Semana Pasada'],
           datasets: [
@@ -113,7 +113,7 @@ export class DashboardComponent implements OnInit {
         };
         this.loadingDailySales = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading daily sales:', err);
         this.loadingDailySales = false;
       }
@@ -122,12 +122,12 @@ export class DashboardComponent implements OnInit {
     // 2. Top Selling Items
     this.loadingTopItems = true;
     this.dashboardService.getTopSellingItems(this.branchId).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.topItemsData = {
-          labels: data.map(item => item.name),
+          labels: data.map((item: any) => item.name),
           datasets: [
             {
-              data: data.map(item => item.quantity),
+              data: data.map((item: any) => item.quantity),
               backgroundColor: [
                   "#42A5F5",
                   "#66BB6A",
@@ -147,7 +147,7 @@ export class DashboardComponent implements OnInit {
         };
         this.loadingTopItems = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading top items:', err);
         this.loadingTopItems = false;
       }
@@ -156,13 +156,13 @@ export class DashboardComponent implements OnInit {
     // 3. Peak Hours
     this.loadingPeakHours = true;
     this.dashboardService.getPeakHours(this.branchId).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.peakHoursData = {
-          labels: data.map(item => `${item.hour}:00`),
+          labels: data.map((item: any) => `${item.hour}:00`),
           datasets: [
             {
               label: 'Órdenes',
-              data: data.map(item => item.count),
+              data: data.map((item: any) => item.count),
               backgroundColor: '#42A5F5',
               borderColor: '#1E88E5',
               borderWidth: 1
@@ -171,7 +171,7 @@ export class DashboardComponent implements OnInit {
         };
         this.loadingPeakHours = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading peak hours:', err);
         this.loadingPeakHours = false;
       }
@@ -180,36 +180,36 @@ export class DashboardComponent implements OnInit {
     // 4. Inventory Prediction
     this.loadingPredictions = true;
     this.inventoryService.predict(7).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         // Sort by suggested reorder descending to show most critical first
-        const sortedData = data.sort((a, b) => b.suggestedReorder - a.suggestedReorder).slice(0, 10);
+        const sortedData = data.sort((a: any, b: any) => b.suggestedReorder - a.suggestedReorder).slice(0, 10);
 
         this.predictionData = {
-            labels: sortedData.map(item => item.mealName),
+            labels: sortedData.map((item: any) => item.mealName),
             datasets: [
                 {
                     type: 'bar',
                     label: 'Stock Actual',
                     backgroundColor: '#66BB6A',
-                    data: sortedData.map(item => item.currentStock)
+                    data: sortedData.map((item: any) => item.currentStock)
                 },
                 {
                     type: 'bar',
                     label: 'Consumo Predicho (7d)',
                     backgroundColor: '#FFA726',
-                    data: sortedData.map(item => item.predictedConsumption)
+                    data: sortedData.map((item: any) => item.predictedConsumption)
                 },
                 {
                     type: 'bar',
                     label: 'Sugerencia Compra',
                     backgroundColor: '#EF5350',
-                    data: sortedData.map(item => item.suggestedReorder)
+                    data: sortedData.map((item: any) => item.suggestedReorder)
                 }
             ]
         };
         this.loadingPredictions = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading inventory predictions:', err);
         this.loadingPredictions = false;
       }

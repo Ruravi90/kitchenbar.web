@@ -1,21 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoriesInterface, MealsInterface, OrdersInterface, DinersInterface, InvoicesInterface, AuthInterface } from '../../interfaces';
+import { CategoriesInterface, MealsInterface, OrdersInterface, DinersInterface, InvoicesInterface, AuthInterface } from '@kitchenbar/shared-data-access';
 import { MessageService } from 'primeng/api';
 import { StripeService, StripePaymentElementComponent } from 'ngx-stripe';
 import { StripeElementsOptions, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { RestaurantConfig } from '../../models/restaurant-config.model';
-import { RestaurantConfigService } from '../../services/restaurant-config.service';
-import { LoyaltyService } from '../../services/loyalty.service';
-import { OrderType } from '../../models/diner.model';
-import { CartService } from '../../services/cart.service';
+import { RestaurantConfig } from '@kitchenbar/shared-data-access';
+import { RestaurantConfigService } from '@kitchenbar/shared-data-access';
+import { LoyaltyService } from '@kitchenbar/shared-data-access';
+import { OrderType } from '@kitchenbar/shared-data-access';
+import { CartService } from '@kitchenbar/shared-data-access';
 import { Observable } from 'rxjs';
 import { ReservationDialogComponent } from '../reservation-dialog/reservation-dialog.component';
-import { ReservationResponse } from '../../models/reservation.model';
-import { ClientPortalService } from '../../services/client-portal.service';
-import { ClientAddress } from '../../interfaces/client-portal.interface';
+import { ReservationResponse } from '@kitchenbar/shared-data-access';
+import { ClientPortalService } from '@kitchenbar/shared-data-access';
+import { ClientAddress } from '@kitchenbar/shared-data-access';
 
 // CartItem interface moved to cart.service.ts
 
@@ -219,7 +219,7 @@ export class MenuComponent implements OnInit {
         this.selectedCategory = this.categoryOptions[0];
         this.groupMeals();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar categorías' });
       }
     });
@@ -230,7 +230,7 @@ export class MenuComponent implements OnInit {
         this.filteredMeals = meals;
         this.groupMeals();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar platillos' });
       }
     });
@@ -315,7 +315,7 @@ export class MenuComponent implements OnInit {
         this.orderComment = '';
         this.orderQuantity = 1;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -476,7 +476,7 @@ export class MenuComponent implements OnInit {
                     this.router.navigate(['/client', this.tableIdentity]);
                 }
             },
-            error: (err) => {
+            error: (err: any) => {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al enviar la orden.' });
             }
         });
@@ -514,7 +514,7 @@ export class MenuComponent implements OnInit {
         meal.ratingCount = response.ratingCount;
         this.messageService.add({ severity: 'success', summary: 'Gracias', detail: 'Tu calificación ha sido guardada.' });
       },
-      error: (err) => {
+      error: (err: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar tu calificación.' });
       }
     });
@@ -526,7 +526,7 @@ export class MenuComponent implements OnInit {
       next: (diner) => {
         this.dinerDetails = diner;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading diner details', err);
       }
     });
@@ -574,7 +574,7 @@ export class MenuComponent implements OnInit {
       next: (res) => {
         this.elementsOptions.clientSecret = res.clientSecret;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo iniciar el pago.' });
         this.paymentVisible = false;
       }
@@ -603,7 +603,7 @@ export class MenuComponent implements OnInit {
           }
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.paying = false;
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al procesar el pago.' });
       }
@@ -617,7 +617,7 @@ export class MenuComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Pago Exitoso', detail: 'Tu cuenta ha sido pagada.' });
         this.loadDinerDetails(); // Reload to update status
       },
-      error: (err) => {
+      error: (err: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo procesar el pago.' });
       }
     });
@@ -640,7 +640,7 @@ export class MenuComponent implements OnInit {
             window.open(invoice.pdfUrl, '_blank');
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar la factura. Verifique sus datos.' });
       }
     });
@@ -685,7 +685,7 @@ export class MenuComponent implements OnInit {
           // Redirect to client portal history
           this.router.navigate(['/client-portal/history']);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.messageService.add({ 
             severity: 'error', 
             summary: 'Error', 
@@ -736,7 +736,7 @@ export class MenuComponent implements OnInit {
           console.log('⚠️ No saved addresses found for this user');
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('❌ Error loading addresses:', err);
         console.error('Error details:', err.error);
         this.savedAddresses = [];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../../../layout/service/app.layout.service';
-import { User } from '../../../models';
-import { AuthService } from '../../../services';
+import { User } from '@kitchenbar/shared-data-access';
+import { AuthService } from '@kitchenbar/shared-data-access';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';

@@ -7,7 +7,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { AdminService } from '../../services/admin.service';
+import { AdminService } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-package-form',
@@ -51,11 +51,11 @@ export class PackageFormComponent implements OnInit {
   loadPackage(id: number) {
     this.loading = true;
     this.adminService.getPackage(id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.packageForm.patchValue(data);
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load package' });
         this.loading = false;
       }
@@ -78,7 +78,7 @@ export class PackageFormComponent implements OnInit {
             this.router.navigate(['/admin/packages']);
           }, 1000);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update package' });
           this.loading = false;
         }
@@ -91,7 +91,7 @@ export class PackageFormComponent implements OnInit {
             this.router.navigate(['/admin/packages']);
           }, 1000);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create package' });
           this.loading = false;
         }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslationService } from '../../services/translation.service';
+import { TranslationService } from '@kitchenbar/shared-data-access';
 
 @Component({
     selector: 'app-landing',

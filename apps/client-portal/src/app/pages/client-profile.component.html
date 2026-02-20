@@ -1,0 +1,147 @@
+<div class="profile-container p-4">
+  <app-client-navigation></app-client-navigation>
+
+  <header
+    class="profile-header flex justify-content-between align-items-center mb-4"
+  >
+    <h1>Mi Perfil</h1>
+    <button
+      pButton
+      label="Cerrar Sesión"
+      icon="pi pi-sign-out"
+      class="p-button-outlined p-button-danger"
+      (click)="logout()"
+    ></button>
+  </header>
+
+  <div class="grid">
+    <!-- User Info -->
+    <div class="col-12 md:col-4">
+      <p-card styleClass="user-card text-center">
+        <div
+          class="avatar-placeholder mb-3 flex align-items-center justify-content-center mx-auto"
+          style="
+            width: 80px;
+            height: 80px;
+            background: var(--primary-100);
+            border-radius: 50%;
+            font-size: 2rem;
+            color: var(--primary-700);
+          "
+        >
+          {{ user?.name?.charAt(0) || 'U' }}
+        </div>
+        <h2 class="m-0">{{ user?.name }}</h2>
+        <p class="text-secondary">{{ user?.email }}</p>
+        <p class="text-secondary" *ngIf="user?.phoneNumber">
+          {{ user?.phoneNumber }}
+        </p>
+      </p-card>
+    </div>
+
+    <!-- Addresses -->
+    <div class="col-12 md:col-8">
+      <p-card>
+        <ng-template pTemplate="title">
+          <div class="flex justify-content-between align-items-center">
+            <span class="text-xl font-bold">Direcciones Guardadas</span>
+            <button
+              *ngIf="!showAddressForm"
+              pButton
+              label="Agregar Nueva"
+              icon="pi pi-plus"
+              class="p-button-sm"
+              (click)="toggleAddressForm()"
+            ></button>
+          </div>
+        </ng-template>
+
+        <!-- Add Address Form -->
+        <div class="add-address-form p-fluid" *ngIf="showAddressForm">
+          <h4 class="mt-0">Nueva Dirección</h4>
+          <form [formGroup]="addressForm" (ngSubmit)="onAddAddress()">
+            <div class="grid">
+              <div class="col-12 md:col-6 field">
+                <label class="block mb-2">Etiqueta (ej: Casa)</label>
+                <input
+                  pInputText
+                  formControlName="tagName"
+                  placeholder="Casa"
+                />
+              </div>
+              <div class="col-12 md:col-6 field">
+                <label class="block mb-2">Código Postal</label>
+                <input
+                  pInputText
+                  formControlName="zipCode"
+                  placeholder="12345"
+                />
+              </div>
+            </div>
+            <div class="field mb-3">
+              <label class="block mb-2">Dirección</label>
+              <textarea
+                pInputTextarea
+                formControlName="address"
+                rows="2"
+                placeholder="Calle, Número, Depto..."
+              ></textarea>
+            </div>
+            <div class="field mb-4">
+              <label class="block mb-2">Instrucciones de Entrega</label>
+              <input
+                pInputText
+                formControlName="instructions"
+                placeholder="Código de portón, cerca del parque..."
+              />
+            </div>
+            <div class="flex justify-content-end gap-2">
+              <button
+                pButton
+                type="button"
+                label="Cancelar"
+                class="p-button-text"
+                (click)="cancelAddress()"
+              ></button>
+              <button
+                pButton
+                type="submit"
+                label="Guardar"
+                icon="pi pi-check"
+                [disabled]="addressForm.invalid || loading"
+              ></button>
+            </div>
+          </form>
+        </div>
+
+        <!-- List -->
+        <div class="address-list" *ngIf="!showAddressForm">
+          <div
+            class="empty-state text-center py-4 text-secondary"
+            *ngIf="addresses.length === 0"
+          >
+            <i class="pi pi-map-marker text-4xl mb-2"></i>
+            <p>No hay direcciones guardadas aún.</p>
+          </div>
+          <div
+            class="address-item flex align-items-center p-3 border-bottom-1 surface-border last:border-none"
+            *ngFor="let addr of addresses"
+          >
+            <div class="address-icon mr-3 text-2xl text-primary">
+              <i class="pi pi-map-marker"></i>
+            </div>
+            <div class="address-details">
+              <div class="flex align-items-center gap-2 mb-1">
+                <span class="font-bold">{{ addr.tagName }}</span>
+              </div>
+              <p class="m-0 text-secondary">{{ addr.address }}</p>
+              <small class="text-secondary" *ngIf="addr.instructions"
+                >Note: {{ addr.instructions }}</small
+              >
+            </div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

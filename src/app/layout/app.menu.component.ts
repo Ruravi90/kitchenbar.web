@@ -1,7 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
-import { AuthInterface, HubInterface, DashboardInterface } from '../interfaces';
+import { AuthInterface, HubInterface, DashboardInterface } from '@kitchenbar/shared-data-access';
 
 @Component({
     selector: 'app-menu',

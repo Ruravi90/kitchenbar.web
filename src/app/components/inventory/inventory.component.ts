@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { InventoryService } from '../../services/inventory.service';
-import { MealsService } from '../../services/meals.service';
+import { InventoryService } from '@kitchenbar/shared-data-access';
+import { MealsService } from '@kitchenbar/shared-data-access';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -109,14 +109,14 @@ export class InventoryComponent implements OnInit {
   }
 
   loadInventory() {
-    this.inventoryService.getItemsByInstance().subscribe(data => {
+    this.inventoryService.getItemsByInstance().subscribe((data: any) => {
       this.inventoryItems = data;
       this.filteredItems = [...data];
     });
   }
 
   loadMeals() {
-    this.mealsService.getItemsByInstance().subscribe(data => this.meals = data);
+    this.mealsService.getItemsByInstance().subscribe((data: any) => this.meals = data);
   }
 
   openNew() {

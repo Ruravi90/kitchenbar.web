@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Category } from '../../../models';
-import { CategoriesInterface } from '../../../interfaces';
+import { Category } from '@kitchenbar/shared-data-access';
+import { CategoriesInterface } from '@kitchenbar/shared-data-access';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -40,7 +40,7 @@ export class CategoriesComponent {
 
   getCategories(){
     this.categoriesServices.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.categories = data;
         this.filteredCategories = data;
         this.filterCategories();
@@ -95,7 +95,7 @@ export class CategoriesComponent {
     
     if(this.isEdit){
       this.categoriesServices.updateItem(this.categorie!.id!,this.categorie).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -112,7 +112,7 @@ export class CategoriesComponent {
     }
     else{
       this.categoriesServices.createItem(this.categorie).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -140,7 +140,7 @@ export class CategoriesComponent {
         rejectLabel: 'Cancelar',
         accept: () => {
           this.categoriesServices.deleteItem(item.id!).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.messageService.add({ 
                 severity: 'success', 
                 summary: 'Eliminada', 

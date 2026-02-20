@@ -2,10 +2,10 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { InputSwitchChangeEvent } from 'primeng/inputswitch';
 import { WebNotificationService } from '../../../utilities/WebNotificationService';
-import { AuthService } from '../../../services/auth.service';
-import { UsersService } from '../../../services/users.service';
-import { User } from '../../../models/user.model';
-import { WebPushNotificationService } from '../../../services/web-push-notification.service';
+import { AuthService } from '@kitchenbar/shared-data-access';
+import { UsersService } from '@kitchenbar/shared-data-access';
+import { User } from '@kitchenbar/shared-data-access';
+import { WebPushNotificationService } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-account',
@@ -75,11 +75,11 @@ export class AccountComponent implements OnInit {
       this.loading = true;
       // Fetch full details from API to ensure we have the latest
       this.usersService.getItem(currentUser.id).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.user = data;
           this.loading = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error(err);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la información del usuario' });
           this.loading = false;
@@ -98,7 +98,7 @@ export class AccountComponent implements OnInit {
         this.loading = false;
         // Optionally update local storage if needed
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el perfil' });
         this.loading = false;

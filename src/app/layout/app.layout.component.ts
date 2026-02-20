@@ -4,8 +4,8 @@ import { filter, Subscription } from 'rxjs';
 import { LayoutService } from "./service/app.layout.service";
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppTopBarComponent } from './app.topbar.component';
-import { AuthInterface, HubInterface } from '../interfaces';
-import { WebPushNotificationService } from '../services/web-push-notification.service';
+import { AuthInterface, HubInterface } from '@kitchenbar/shared-data-access';
+import { WebPushNotificationService } from '@kitchenbar/shared-data-access';
 import { BreadcrumbService } from './service/breadcrumb.service';
 
 @Component({

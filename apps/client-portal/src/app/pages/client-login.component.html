@@ -1,0 +1,109 @@
+<div class="login-wrapper">
+  <div class="background-overlay"></div>
+  
+  <div class="login-container">
+    <div class="login-card glass-effect">
+      <div class="card-header">
+        <div class="logo-placeholder">
+          <i class="pi pi-coffee"></i>
+        </div>
+        <h1>{{ isLoginMode ? '¡Bienvenido!' : 'Crear Cuenta' }}</h1>
+        <p class="subtitle">{{ isLoginMode ? 'Inicia sesión para gestionar tus pedidos y favoritos' : 'Únete a nosotros para obtener beneficios exclusivos' }}</p>
+      </div>
+
+      <div class="card-body">
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="alert-message animate-fade-in">
+          <i class="pi pi-exclamation-circle"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Login Form -->
+        <form *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+          <div class="input-group">
+            <label for="login-email">Correo Electrónico</label>
+            <div class="input-wrapper">
+              <i class="pi pi-envelope"></i>
+              <input id="login-email" type="email" formControlName="email" placeholder="Ingresa tu correo">
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <label for="login-password">Contraseña</label>
+            <div class="input-wrapper">
+              <i class="pi pi-lock"></i>
+              <input id="login-password" type="password" formControlName="password" placeholder="Ingresa tu contraseña">
+            </div>
+          </div>
+
+          <button type="submit" class="prime-btn btn-coffee" [disabled]="loginForm.invalid || loading">
+            <span *ngIf="!loading">Iniciar Sesión</span>
+            <span *ngIf="loading" class="loader-dots">
+              <span>.</span><span>.</span><span>.</span>
+            </span>
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
+          <div class="input-group">
+            <label for="reg-name">Nombre Completo</label>
+            <div class="input-wrapper">
+              <i class="pi pi-user"></i>
+              <input id="reg-name" type="text" formControlName="name" placeholder="Tu Nombre">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-email">Correo Electrónico</label>
+            <div class="input-wrapper">
+              <i class="pi pi-envelope"></i>
+              <input id="reg-email" type="email" formControlName="email" placeholder="correo@ejemplo.com">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-phone">Número de Teléfono</label>
+            <div class="input-wrapper">
+              <i class="pi pi-phone"></i>
+              <input id="reg-phone" type="tel" formControlName="phoneNumber" placeholder="Teléfono">
+            </div>
+          </div>
+
+          <div class="grid-inputs">
+            <div class="input-group">
+              <label for="reg-pass">Contraseña</label>
+              <div class="input-wrapper">
+                <i class="pi pi-lock"></i>
+                <input id="reg-pass" type="password" formControlName="password" placeholder="Contraseña">
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="reg-confirm">Confirmar</label>
+              <div class="input-wrapper">
+                <i class="pi pi-lock"></i>
+                <input id="reg-confirm" type="password" formControlName="confirmPassword" placeholder="Confirmar">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="prime-btn btn-coffee" [disabled]="registerForm.invalid || loading">
+            <span *ngIf="!loading">Registrarse</span>
+            <span *ngIf="loading" class="loader-dots">
+              <span>.</span><span>.</span><span>.</span>
+            </span>
+          </button>
+        </form>
+      </div>
+
+      <div class="card-footer">
+        <p *ngIf="isLoginMode">
+          ¿No tienes una cuenta? <button type="button" class="link-btn" (click)="toggleMode()">Regístrate</button>
+        </p>
+        <p *ngIf="!isLoginMode">
+          ¿Ya tienes una cuenta? <button type="button" class="link-btn" (click)="toggleMode()">Inicia Sesión</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

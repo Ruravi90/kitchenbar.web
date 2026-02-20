@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Branch, User } from '../../../models';
-import { AuthInterface, BranchesInterface, UsersInterface, DashboardInterface } from '../../../interfaces';
+import { Branch, User } from '@kitchenbar/shared-data-access';
+import { AuthInterface, BranchesInterface, UsersInterface, DashboardInterface } from '@kitchenbar/shared-data-access';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 
@@ -71,7 +71,7 @@ export class UsersComponent {
 
   getUsers(): void {
     this.usersServices.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.items = data;
         this.filteredItems = data; // Initialize filtered list
         this.filterUsers(); // Apply any existing search
@@ -111,7 +111,7 @@ export class UsersComponent {
   }
   getBranches(): void {
     this._serviceBranch.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.branches = data;
       },
       error: (e) => {
@@ -168,7 +168,7 @@ export class UsersComponent {
     
     if(this.isEdit){
       this.usersServices.updateItem(this.user!.id!,this.user).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -185,7 +185,7 @@ export class UsersComponent {
     }
     else{
       this.usersServices.createItem(this.user).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -215,7 +215,7 @@ export class UsersComponent {
         rejectLabel: 'Cancelar',
         accept: () => {
           this.usersServices.deleteItem(item.id!).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.messageService.add({ 
                 severity: 'success', 
                 summary: 'Eliminado', 

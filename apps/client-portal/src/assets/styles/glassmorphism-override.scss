@@ -1,0 +1,48 @@
+/* ========================================================================
+   GLASSMORPHISM OVERRIDE - FORCES ALL MODULES TO USE SAME STYLES
+   ======================================================================== */
+
+/* This file contains ultra-specific selectors with !important to override
+   all component-level styles and ensure consistent glassmorphism across app */
+
+/* Force dark text on ALL inputs within cards */
+:root .p-card .p-inputtext,
+:root .p-card .p-dropdown-label,
+:root .p-card .p-calendar input,
+:root .p-card input,
+:root .p-card textarea {
+  color: rgba(30, 30, 50, 0.9) !important;
+  
+  &::placeholder {
+    color: rgba(30, 30, 50, 0.5) !important;
+  }
+}
+
+/* Force styling on input groups */
+:root .p-card .p-inputgroup {
+  .p-inputtext {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: rgba(30, 30, 50, 0.9) !important;
+
+    &::placeholder {
+      color: rgba(30, 30, 50, 0.5) !important;
+    }
+
+    &:focus {
+      background: rgba(0, 0, 0, 0.08) !important;
+      border-color: var(--primary-400) !important;
+    }
+  }
+
+  .p-inputgroup-addon {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: rgba(30, 30, 50, 0.8) !important;
+  }
+}
+
+/* Force search input icon color */
+:root .p-card .p-input-icon-left i {
+  color: rgba(30, 30, 50, 0.6) !important;
+}

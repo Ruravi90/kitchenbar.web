@@ -10,8 +10,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { MessageService } from 'primeng/api';
-import { AdminService } from '../../services/admin.service';
-import { Membership, Instance, License } from '../../../../models';
+import { AdminService } from '@kitchenbar/shared-data-access';
+import { Membership, Instance, License } from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-membership-list',
@@ -57,7 +57,7 @@ export class MembershipListComponent implements OnInit {
   loadData() {
     this.loading = true;
     this.adminService.getMemberships().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.memberships = data;
         this.loading = false;
       },
@@ -67,8 +67,8 @@ export class MembershipListComponent implements OnInit {
       }
     });
 
-    this.adminService.getInstances().subscribe(data => this.instances = data);
-    this.adminService.getLicenses().subscribe(data => this.licenses = data);
+    this.adminService.getInstances().subscribe((data: any) => this.instances = data);
+    this.adminService.getLicenses().subscribe((data: any) => this.licenses = data);
   }
 
   openNew() {
@@ -106,7 +106,7 @@ export class MembershipListComponent implements OnInit {
                 this.membershipDialog = false;
                 this.loadData(); // To refresh relations if needed
             },
-            error: (err) => {
+            error: (err: any) => {
                 const errorMsg = err.error || 'Failed to create membership';
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMsg });
             }

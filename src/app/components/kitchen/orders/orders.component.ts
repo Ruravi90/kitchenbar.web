@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Order } from '../../../models';
-import { HubInterface, OrdersInterface } from '../../../interfaces';
+import { Order } from '@kitchenbar/shared-data-access';
+import { HubInterface, OrdersInterface } from '@kitchenbar/shared-data-access';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
@@ -51,21 +51,21 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   retrieveOrders(): void {
     this._serviceOrder.getItemsAllPerDay().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.items = data;
         
         // Filter active orders (Status 1 or 2)
-        const activeOrders = data.filter((i) => !i.isCancel && (i.statusOrderId == 1 || i.statusOrderId == 2));
+        const activeOrders = data.filter((i: any) => !i.isCancel && (i.statusOrderId == 1 || i.statusOrderId == 2));
         
         // Separate Kitchen vs Bar
-        this.kitchenItems = activeOrders.filter(i => !i.meal?.category?.isDrink);
-        this.barItems = activeOrders.filter(i => i.meal?.category?.isDrink);
+        this.kitchenItems = activeOrders.filter((i: any) => !i.meal?.category?.isDrink);
+        this.barItems = activeOrders.filter((i: any) => i.meal?.category?.isDrink);
 
         // Group for Expo
         this.groupOrdersByTable(activeOrders);
 
         // History (Completed orders)
-        this.historyItems = data.filter(i => !i.isCancel && i.statusOrderId == 3).sort((a, b) => {
+        this.historyItems = data.filter((i: any) => !i.isCancel && i.statusOrderId == 3).sort((a: any, b: any) => {
             const timeA = new Date(a.createdAt!).getTime();
             const timeB = new Date(b.createdAt!).getTime();
             return timeB - timeA;
@@ -136,7 +136,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
         accept: () => {
           order.statusOrderId = statusId;
           this._serviceOrder.updateItem(order.id!,order).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.hub.sendOrder(order);
               
               // Show success message
@@ -175,7 +175,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       accept: () => {
         order.isCancel = true;
         this._serviceOrder.updateItem(order.id!, order).subscribe({
-          next: (data) => {
+          next: (data: any) => {
             this.messageService.add({ 
               severity: 'success', 
               summary: 'Orden Cancelada', 

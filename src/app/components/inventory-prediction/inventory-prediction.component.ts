@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InventoryService } from '../../services/inventory.service';
-import { InventoryPrediction } from '../../models/inventory.model';
+import { InventoryService } from '@kitchenbar/shared-data-access';
+import { InventoryPrediction } from '@kitchenbar/shared-data-access';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
@@ -227,10 +227,10 @@ export class InventoryPredictionComponent implements OnInit {
 
   loadPredictions(): void {
     this.inventoryService.predict(this.daysToPredict).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.predictions = data;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading predictions', err);
       }
     });

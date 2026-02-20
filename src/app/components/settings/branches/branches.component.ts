@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Branch, Category } from '../../../models';
-import { BranchesInterface } from '../../../interfaces';
+import { Branch, Category } from '@kitchenbar/shared-data-access';
+import { BranchesInterface } from '@kitchenbar/shared-data-access';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FixMeLater, QRCodeElementType, QRCodeErrorCorrectionLevel } from 'angularx-qrcode';
 import { environment } from '../../../../environments/environment';
@@ -66,7 +66,7 @@ export class BranchesComponent {
   }
   getbranches(){
     this.branchsServices.getItemsByInstance().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.branches = data;
         this.filteredBranches = data;
         this.filterBranches();
@@ -120,7 +120,7 @@ export class BranchesComponent {
     
     if(this.isEdit){
       this.branchsServices.updateItem(this.branch!.id!,this.branch).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -137,7 +137,7 @@ export class BranchesComponent {
     }
     else{
       this.branchsServices.createItem(this.branch).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.messageService.add({ 
             severity: 'success', 
             summary: '¡Éxito!', 
@@ -164,7 +164,7 @@ export class BranchesComponent {
         rejectLabel: 'Cancelar',
         accept: () => {
           this.branchsServices.deleteItem(item.id!).subscribe({
-            next: (data) => {
+            next: (data: any) => {
               this.messageService.add({ 
                 severity: 'success', 
                 summary: 'Eliminada', 

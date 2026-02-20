@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { ReservationService } from '../../services/reservation.service';
+import { ReservationService } from '@kitchenbar/shared-data-access';
 import {
   AvailabilityResponse,
   ReservationResponse,
   TableLocation,
   TableOption
-} from '../../models/reservation.model';
+} from '@kitchenbar/shared-data-access';
 
 @Component({
   selector: 'app-reservation-dialog',
@@ -139,7 +139,7 @@ export class ReservationDialogComponent implements OnInit {
           this.showWaitlistDialog(result);
         }
       },
-      error: (error) => {
+      error: (error: any) => {
         this.checking = false;
         this.messageService.add({
           severity: 'error',
@@ -220,7 +220,7 @@ export class ReservationDialogComponent implements OnInit {
         this.onReservationComplete.emit(response);
         this.resetForm();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.creating = false;
         this.messageService.add({
           severity: 'error',

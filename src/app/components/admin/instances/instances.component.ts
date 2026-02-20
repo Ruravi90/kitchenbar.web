@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Instance, License, Membership } from '../../../models';
-import { InstancesService } from '../../../services';
-import { AdminService } from '../services/admin.service';
+import { Instance, License, Membership } from '@kitchenbar/shared-data-access';
+import { InstancesService } from '@kitchenbar/shared-data-access';
+import { AdminService } from '@kitchenbar/shared-data-access';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -29,12 +29,12 @@ export class InstancesComponent {
 
   ngOnInit(): void {
     this.retrieveTables();
-    this.adminService.getLicenses().subscribe(data => this.licenses = data);
+    this.adminService.getLicenses().subscribe((data: any) => this.licenses = data);
   }
 
   retrieveTables(): void {
     this.instanceServices.getItems().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.items = data;
         // console.log(data);
       },
@@ -74,7 +74,7 @@ export class InstancesComponent {
                   this.renewDialog = false;
                   this.retrieveTables(); // Refresh to see new date
               },
-              error: (err) => {
+              error: (err: any) => {
                   this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to renew' });
               }
           });

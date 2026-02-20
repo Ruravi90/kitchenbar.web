@@ -1,0 +1,35 @@
+/* Sidebar/Menu - Warm Coffee Theme */
+
+.layout-sidebar {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(111, 78, 55, 0.15) !important;
+  box-shadow: 0 4px 16px rgba(62, 39, 35, 0.08) !important;
+}
+
+.layout-menu {
+  .layout-root-menuitem {
+    > .layout-menuitem-root-text {
+      color: var(--coffee-roasted) !important;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  ul a {
+    color: var(--coffee-espresso) !important;
+    border-radius: 12px;
+    
+    &.active-route {
+      background: linear-gradient(135deg, var(--coffee-caramel), var(--coffee-roasted)) !important;
+      color: #FFFFFF !important;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(193, 154, 107, 0.3);
+    }
+    
+    &:hover:not(.active-route) {
+      background: rgba(193, 154, 107, 0.1) !important;
+      color: var(--coffee-roasted) !important;
+    }
+  }
+}

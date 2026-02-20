@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormArray } from '@angular/forms';
 import { LayoutService } from '../../../layout/service/app.layout.service';
-import { Branch, Instance, User, License } from '../../../models';
-import { AuthService } from '../../../services';
+import { Branch, Instance, User, License } from '@kitchenbar/shared-data-access';
+import { AuthService } from '@kitchenbar/shared-data-access';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { UsersInterface } from '../../../interfaces';
+import { UsersInterface } from '@kitchenbar/shared-data-access';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
@@ -98,12 +98,12 @@ export class RegisterComponent implements OnInit {
 
     getLicenses() {
         this.http.get<License[]>(`${environment.apiBase}Licenses`).subscribe({
-            next: (data) => {
+            next: (data: any) => {
                 // Filter out internal "Cortesia" plan (ID 1)
-                const publicLicenses = data.filter(l => l.id !== 1);
+                const publicLicenses = data.filter((l: any) => l.id !== 1);
 
                 // Sort: Price 0 (Free Trial) first, then by Price ascending
-                this.licenses = publicLicenses.sort((a, b) => {
+                this.licenses = publicLicenses.sort((a: any, b: any) => {
                     if (a.price === 0) return -1;
                     if (b.price === 0) return 1;
                     return (a.price || 0) - (b.price || 0);

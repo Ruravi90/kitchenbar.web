@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { TranslationService } from '../services/translation.service';
+import { TranslationService } from '@kitchenbar/shared-data-access';
 import { Subscription } from 'rxjs';
 
 @Pipe({

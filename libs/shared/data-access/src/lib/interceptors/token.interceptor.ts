@@ -13,14 +13,21 @@ export class TokenInterceptor implements HttpInterceptor {
 
 
   private handleAuthError(err: HttpErrorResponse): Observable<any> {
-    //handle your auth error or rethrow
-    if (!err.url?.includes("Login") && (err.status === 401) ) {
-        //navigate /delete cookies or whatever
-        this.router.navigateByUrl(`/auth/access`);
-        // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
-        return of(err.message); // or EMPTY may be appropriate here
+    // Check if we are already on a login page to avoid infinite redirect loops
+    const isLoginPage = this.router.url.includes('/auth/login') || this.router.url.includes('/login');
+    
+    if (err.status === 401 && !isLoginPage) {
+        // Clear expired session
+        this.auth.logout();
+        
+        // Redirect to login
+        // Using /auth/login as it seems to be the main login for Admin
+        this.router.navigateByUrl(`/auth/login`);
+        
+        // Return throwError so downstream code (components, services) doesn't try to continue with bad data
+        return throwError(() => err);
     }
-    return throwError((() => err));
+    return throwError(() => err);
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {

@@ -1,80 +1,168 @@
-/* ========================================
-   Warm Coffee Theme - Paleta Café Cálido
-   ======================================== */
+/* ============================================================
+   KitchenBar Design System — Global Styles
+   Fuente oficial: kitchenbar.vercel.app/landing
+   Paleta: Imagen de marca Pantone (Marzo 2026)
+   ============================================================ */
+
+/* Google Fonts — Outfit (Modern Sans, alineada a guía tipográfica) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 $gutter: 1rem;
 @import "assets/layout/styles/layout/layout.scss";
 
-:root {
-  /* Warm Coffee Palette */
-  --coffee-roasted: #6F4E37;     /* Marrón Tostado - Principal */
-  --coffee-cream: #F5E6D3;       /* Crema - Fondos claros */
-  --coffee-caramel: #C19A6B;     /* Caramelo - Acentos */
-  --coffee-espresso: #3E2723;    /* Espresso - Textos oscuros */
-  --coffee-light: #E8D5C4;       /* Café claro */
-  --coffee-dark: #5D4037;        /* Café oscuro */
+/* ============================================================
+   Utility classes — Brand
+   ============================================================ */
 
-  /* PrimeNG Theme Variables Override */
-  --surface-ground: #FAF6F1;
-  --surface-section: #F5E6D3;
-  --surface-card: #FFFFFF;
-  --surface-overlay: #FFFFFF;
-  --surface-border: rgba(111, 78, 55, 0.2);
-  --surface-hover: rgba(193, 154, 107, 0.1);
-  
-  --text-color: #3E2723;
-  --text-color-secondary: #6F4E37;
-  
-  --primary-color: #C19A6B;
-  --primary-color-text: #FFFFFF;
-  
-  --highlight-bg: rgba(193, 154, 107, 0.15);
-  --highlight-text-color: #3E2723;
+/* Gradients */
+.kb-gradient-bg {
+  background: var(--kb-gradient-hero) !important;
 }
 
-/* Global PrimeNG Card Styling */
+.kb-gradient-gold {
+  background: var(--kb-gradient-gold) !important;
+}
+
+.kb-gradient-warm {
+  background: var(--kb-gradient-warm) !important;
+}
+
+/* Text Color Utilities */
+.text-kb-gold     { color: var(--kb-gold) !important; }
+.text-kb-teal     { color: var(--kb-teal) !important; }
+.text-kb-yellow   { color: var(--kb-yellow) !important; }
+.text-kb-red      { color: var(--kb-red) !important; }
+.text-kb-brown    { color: var(--kb-brown) !important; }
+.text-kb-burgundy { color: var(--kb-burgundy) !important; }
+
+/* Background Color Utilities */
+.bg-kb-gold     { background-color: var(--kb-gold) !important; }
+.bg-kb-teal     { background-color: var(--kb-teal) !important; }
+.bg-kb-yellow   { background-color: var(--kb-yellow) !important; }
+.bg-kb-red      { background-color: var(--kb-red) !important; }
+.bg-kb-brown    { background-color: var(--kb-brown) !important; }
+
+/* Glassmorphism Effects */
+.glass-card-effect {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: var(--kb-shadow-lg);
+}
+
+.glass-nav-effect {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--kb-shadow-sm);
+}
+
+/* Semantic layout aliases */
+.register-wrapper,
+.login-wrapper,
+.access-wrapper,
+.error-wrapper,
+.hero-section,
+.cta-section {
+  @extend .kb-gradient-bg;
+}
+
+.glass-register-card { @extend .glass-card-effect; }
+.glass-nav           { @extend .glass-nav-effect; }
+
+/* ============================================================
+   Global Base Styles
+   ============================================================ */
+
+body {
+  font-family: var(--kb-font-family) !important;
+  color: var(--text-color);
+  background-color: var(--surface-ground);
+  line-height: var(--kb-line-height-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   PrimeNG Component Overrides
+   ============================================================ */
+
+/* Cards */
 ::ng-deep .p-card {
   background: var(--surface-card) !important;
   border: 1px solid var(--surface-border) !important;
-  box-shadow: 0 2px 8px rgba(62, 39, 35, 0.08) !important;
-  
+  box-shadow: var(--kb-shadow-sm) !important;
+  border-radius: var(--kb-radius-lg) !important;
+
   .p-card-header {
-    color: var(--coffee-espresso) !important;
     border-bottom: 1px solid var(--surface-border) !important;
   }
-  
-  .p-card-content {
-    color: var(--text-color) !important;
-  }
 }
 
-/* Buttons */
+/* Primary Buttons (gold) */
 ::ng-deep .p-button:not(.p-button-text):not(.p-button-outlined) {
-  background: var(--coffee-caramel) !important;
-  border-color: var(--coffee-caramel) !important;
-  
-  &:hover {
-    background: var(--coffee-roasted) !important;
-    border-color: var(--coffee-roasted) !important;
+  background: var(--kb-gold) !important;
+  border-color: var(--kb-gold) !important;
+  font-family: var(--kb-font-family);
+  font-weight: var(--kb-font-weight-semibold);
+  border-radius: var(--kb-radius-md);
+  transition: var(--kb-transition-smooth);
+
+  &:hover:not(:disabled) {
+    background: var(--kb-gold-light) !important;
+    border-color: var(--kb-gold-light) !important;
+    transform: translateY(-1px);
+    box-shadow: var(--kb-shadow-gold) !important;
+  }
+
+  &:active:not(:disabled) {
+    background: var(--kb-gold-dark) !important;
+    border-color: var(--kb-gold-dark) !important;
+    transform: translateY(0);
+  }
+
+  /* Secondary variant — Teal */
+  &.p-button-secondary {
+    background: var(--kb-teal) !important;
+    border-color: var(--kb-teal) !important;
+
+    &:hover:not(:disabled) {
+      background: var(--kb-teal-light) !important;
+      border-color: var(--kb-teal-light) !important;
+      box-shadow: var(--kb-shadow-teal) !important;
+    }
   }
 }
 
+/* Outlined Buttons */
 ::ng-deep .p-button.p-button-outlined {
-  border-color: var(--coffee-roasted) !important;
-  color: var(--coffee-roasted) !important;
-  
-  &:hover {
-    background: var(--surface-hover) !important;
+  border-color: var(--kb-gold) !important;
+  color: var(--kb-gold) !important;
+
+  &:hover:not(:disabled) {
+    background: var(--kb-gold-10) !important;
   }
 }
 
-/* Global Animations */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+/* Input Focus */
+::ng-deep .p-inputtext:focus,
+::ng-deep .p-dropdown:focus,
+::ng-deep .p-multiselect:focus {
+  border-color: var(--kb-gold) !important;
+  box-shadow: 0 0 0 4px var(--kb-gold-10) !important;
 }
 
-@keyframes slideInUp {
+/* ============================================================
+   Global Animations
+   ============================================================ */
+
+@keyframes kb-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.75; }
+}
+
+@keyframes kb-slide-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -85,63 +173,36 @@ $gutter: 1rem;
   }
 }
 
-/* Global Utilities & Extract */
-.coffee-gradient-bg {
-  background: linear-gradient(135deg, #6F4E37 0%, #5D4037 100%);
+@keyframes kb-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-.coffee-gradient-header {
-    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+@keyframes kb-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.glass-card-effect {
-  background: #FFF;
-  border: 1px solid rgba(111, 78, 55, 0.08);
-  box-shadow: 0 20px 60px rgba(62, 39, 35, 0.4);
-}
+/* ============================================================
+   Special Brand Button
+   ============================================================ */
 
-.glass-nav-effect {
-    background: rgba(111, 78, 55, 0.95) !important;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(62, 39, 35, 0.15);
-}
+.p-button.p-button-brand-primary {
+  background: var(--kb-gold) !important;
+  color: var(--kb-white) !important;
+  font-weight: var(--kb-font-weight-bold);
+  border-radius: var(--kb-radius-xl);
+  transition: var(--kb-transition-smooth);
 
-/* Global Button Overrides (reduces component repetition) */
-.p-button.p-button-coffee-primary {
-    background: #FFF !important;
-    color: var(--coffee-roasted) !important;
-    font-weight: 700;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    
-    &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3) !important;
-    }
-}
-
-.p-button.p-button-coffee-outlined {
-    border: 2.5px solid #FFF !important;
-    color: #FFF !important;
-    background: transparent !important;
-
-    &:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        transform: translateY(-3px);
-    }
-}
-
-/* Map Global Utilities into Components (Budget Optimization) */
-.register-wrapper,
-.hero-section,
-.cta-section {
-    @extend .coffee-gradient-bg;
-}
-
-.glass-register-card {
-    @extend .glass-card-effect;
-}
-
-.glass-nav {
-    @extend .glass-nav-effect;
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--kb-shadow-gold) !important;
+    background: var(--kb-gold-light) !important;
+  }
 }

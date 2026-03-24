@@ -1,31 +1,34 @@
+@import 'design-tokens';
+
 /* General */
-$scale:14px;                    /* main font size */ 
-$borderRadius:12px;             /* border radius of layout element e.g. card, sidebar */ 
-$transitionDuration:.2s;        /* transition duration of layout elements e.g. sidebar, overlay menus */ 
+$scale: 14px;                   /* main font size */
+$borderRadius: 12px;            /* border radius of layout element e.g. card, sidebar */
+$transitionDuration: .2s;       /* transition duration of layout elements e.g. sidebar, overlay menus */
 
 /* Kitchen order status colors */
-$status-new: #ff6347;           /* Rojo para nuevos pedidos */
-$status-in-progress: #ffd700;   /* Amarillo para en preparación */
-$status-ready: #32cd32;         /* Verde para listos */
+$status-new:         #E53E3E;   /* Rojo — nuevos pedidos */
+$status-in-progress: #D4AF37;   /* Gold — en preparación */
+$status-ready:       #38A169;   /* Verde — listos */
 
 :root {
-  /* Orange color palette based on #f59e0b */
-  --primary-50: #fffbf5;
-  --primary-100: #fef3e2;
-  --primary-200: #fde6c5;
-  --primary-300: #fcd9a8;
-  --primary-400: #fbcc8b;
-  --primary-500: #f59e0b;
-  --primary-600: #d18609;
-  --primary-700: #ad6f08;
-  --primary-800: #895706;
-  --primary-900: #654005;
+  /* KitchenBar Primary Gold Palette
+     Derivada de --kb-gold: #BA9626 (color oficial de marca) */
+  --primary-50:  #FAF5E4;
+  --primary-100: #F4EAC3;
+  --primary-200: #EDD99A;
+  --primary-300: #E2C36A;
+  --primary-400: #D4AF37;
+  --primary-500: #BA9626;   /* ← color oficial de la imagen de marca */
+  --primary-600: #9E7D1A;
+  --primary-700: #826612;
+  --primary-800: #65500C;
+  --primary-900: #4A3A08;
 
-  --attendance: #0f478f;
-  --attendance-focus: #2f588d;
+  --attendance:           #0f478f;
+  --attendance-focus:     #2f588d;
   --attendance-highlight: #003c8a;
 
-  --check: #ff5400;
-  --check-focus: #ff6000;
+  --check:           #ff5400;
+  --check-focus:     #ff6000;
   --check-highlight: #ff4800;
 }

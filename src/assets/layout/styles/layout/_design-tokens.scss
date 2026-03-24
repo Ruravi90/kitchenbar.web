@@ -1,0 +1,189 @@
+/* ============================================================
+   KitchenBar — Design Tokens (Fuente Única de Verdad)
+   Paleta oficial extraída de la imagen de marca Pantone.
+   ============================================================
+   NUNCA hardcodear colores en los componentes.
+   Usar SIEMPRE las variables --kb-* definidas aquí.
+   ============================================================ */
+
+:root {
+
+  /* ----------------------------------------------------------
+     1. BRAND COLOR PALETTE
+     Fuente: Guía de marca KitchenBar (kitchenbar.vercel.app/landing)
+     ---------------------------------------------------------- */
+
+  /* Primary — Gold (color dominante de botones y CTAs) */
+  --kb-gold:            #BA9626;
+  --kb-gold-light:      #D4AF37;   /* hover state */
+  --kb-gold-dark:       #8A6E1A;   /* pressed / active */
+  --kb-gold-rgb:        186, 150, 38;
+  --kb-gold-10:         rgba(186, 150, 38, 0.10);
+  --kb-gold-20:         rgba(186, 150, 38, 0.20);
+
+  /* Secondary — Teal (fondos hero, gradientes, iconografía) */
+  --kb-teal:            #00818A;
+  --kb-teal-light:      #009CA6;   /* hover state */
+  --kb-teal-dark:       #005a61;   /* pressed / active */
+  --kb-teal-rgb:        0, 129, 138;
+  --kb-teal-10:         rgba(0, 129, 138, 0.10);
+  --kb-teal-20:         rgba(0, 129, 138, 0.20);
+
+  /* Accent — Yellow (elementos destacados, badges, tooltips) */
+  --kb-yellow:          #FFF080;
+  --kb-yellow-rgb:      255, 240, 128;
+
+  /* Accent — Lime (alerts de éxito, elementos "listo") */
+  --kb-lime:            #88F640;
+  --kb-lime-rgb:        136, 246, 64;
+
+  /* Status — Red (errores, alertas críticas, stock bajo) */
+  --kb-red:             #900000;
+  --kb-red-light:       #B00000;
+  --kb-red-rgb:         144, 0, 0;
+  --kb-red-10:          rgba(144, 0, 0, 0.10);
+
+  /* Status — Burgundy (acciones destructivas, tags especiales) */
+  --kb-burgundy:        #6A2434;
+  --kb-burgundy-rgb:    106, 36, 52;
+
+  /* Neutral — Brown (textos sobre fondo claro, footer, bordes cálidos) */
+  --kb-brown:           #54350E;
+  --kb-brown-rgb:       84, 53, 14;
+
+  /* Neutrals */
+  --kb-white:           #FFFFFF;
+  --kb-off-white:       #FAFAF8;
+  --kb-light-gray:      #F5F4F1;
+  --kb-mid-gray:        #E8E6E0;
+  --kb-dark-gray:       #4A4640;
+  --kb-black:           #1A1714;
+
+  /* ----------------------------------------------------------
+     2. SEMANTIC TOKENS (PrimeNG overrides)
+     ---------------------------------------------------------- */
+
+  --primary-color:            var(--kb-gold);
+  --primary-color-text:       var(--kb-white);
+  --highlight-bg:             var(--kb-gold-10);
+  --highlight-text-color:     var(--kb-gold);
+
+  --surface-ground:           var(--kb-off-white);
+  --surface-section:          var(--kb-white);
+  --surface-card:             var(--kb-white);
+  --surface-overlay:          var(--kb-white);
+  --surface-border:           rgba(0, 129, 138, 0.15);
+  --surface-hover:            var(--kb-teal-10);
+
+  --text-color:               var(--kb-black);
+  --text-color-secondary:     var(--kb-dark-gray);
+
+  /* ----------------------------------------------------------
+     3. TYPOGRAPHY TOKENS
+     Fuente: Guía tipográfica KitchenBar — "Modern Sans"
+     Mapeada a la familia Outfit (disponible en Google Fonts)
+     ---------------------------------------------------------- */
+
+  --kb-font-family:       'Outfit', 'Helvetica Neue', Arial, sans-serif;
+
+  --kb-font-size-xs:      0.75rem;   /* 12px */
+  --kb-font-size-sm:      0.875rem;  /* 14px */
+  --kb-font-size-base:    1rem;      /* 16px */
+  --kb-font-size-md:      1.0625rem; /* 17px */
+  --kb-font-size-lg:      1.25rem;   /* 20px */
+  --kb-font-size-xl:      1.5rem;    /* 24px */
+  --kb-font-size-2xl:     2rem;      /* 32px */
+  --kb-font-size-3xl:     2.5rem;    /* 40px */
+  --kb-font-size-4xl:     3rem;      /* 48px */
+  --kb-font-size-5xl:     3.5rem;    /* 56px */
+  --kb-font-size-hero:    4rem;      /* 64px */
+
+  --kb-font-weight-light:    300;
+  --kb-font-weight-regular:  400;
+  --kb-font-weight-medium:   500;
+  --kb-font-weight-semibold: 600;
+  --kb-font-weight-bold:     700;
+  --kb-font-weight-black:    800;
+
+  --kb-line-height-tight:   1.15;
+  --kb-line-height-snug:    1.35;
+  --kb-line-height-base:    1.5;
+  --kb-line-height-relaxed: 1.7;
+
+  --kb-letter-spacing-tight: -0.5px;
+  --kb-letter-spacing-base:   0px;
+  --kb-letter-spacing-wide:   0.3px;
+  --kb-letter-spacing-wider:  0.5px;
+
+  /* ----------------------------------------------------------
+     4. SPACING SCALE (base 8px)
+     ---------------------------------------------------------- */
+
+  --kb-space-1:   0.25rem;   /* 4px */
+  --kb-space-2:   0.5rem;    /* 8px */
+  --kb-space-3:   0.75rem;   /* 12px */
+  --kb-space-4:   1rem;      /* 16px */
+  --kb-space-5:   1.25rem;   /* 20px */
+  --kb-space-6:   1.5rem;    /* 24px */
+  --kb-space-8:   2rem;      /* 32px */
+  --kb-space-10:  2.5rem;    /* 40px */
+  --kb-space-12:  3rem;      /* 48px */
+  --kb-space-16:  4rem;      /* 64px */
+  --kb-space-20:  5rem;      /* 80px */
+  --kb-space-24:  6rem;      /* 96px */
+  --kb-space-32:  8rem;      /* 128px */
+
+  /* ----------------------------------------------------------
+     5. BORDER RADIUS SCALE
+     ---------------------------------------------------------- */
+
+  --kb-radius-sm:   6px;
+  --kb-radius-md:   12px;
+  --kb-radius-lg:   16px;
+  --kb-radius-xl:   20px;
+  --kb-radius-2xl:  24px;
+  --kb-radius-full: 9999px;
+
+  /* ----------------------------------------------------------
+     6. SHADOWS
+     ---------------------------------------------------------- */
+
+  --kb-shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.06);
+  --kb-shadow-sm:   0 4px 12px rgba(0, 0, 0, 0.06);
+  --kb-shadow-md:   0 8px 24px rgba(0, 0, 0, 0.08);
+  --kb-shadow-lg:   0 15px 40px rgba(0, 0, 0, 0.12);
+  --kb-shadow-xl:   0 25px 60px rgba(0, 0, 0, 0.16);
+
+  --kb-shadow-gold:     0 6px 20px rgba(186, 150, 38, 0.30);
+  --kb-shadow-teal:     0 6px 20px rgba(0, 129, 138, 0.25);
+
+  /* ----------------------------------------------------------
+     7. GRADIENTS
+     ---------------------------------------------------------- */
+
+  --kb-gradient-hero:     linear-gradient(135deg, var(--kb-teal) 0%, var(--kb-teal-dark) 100%);
+  --kb-gradient-gold:     linear-gradient(135deg, var(--kb-gold-light) 0%, var(--kb-gold-dark) 100%);
+  --kb-gradient-warm:     linear-gradient(135deg, var(--kb-gold) 0%, var(--kb-brown) 100%);
+  --kb-gradient-feature:  linear-gradient(135deg, var(--kb-teal) 0%, var(--kb-gold) 100%);
+
+  /* ----------------------------------------------------------
+     8. TRANSITIONS
+     ---------------------------------------------------------- */
+
+  --kb-transition-fast:    all 0.15s ease;
+  --kb-transition-base:    all 0.25s ease;
+  --kb-transition-smooth:  all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --kb-transition-slow:    all 0.5s ease;
+
+  /* ----------------------------------------------------------
+     9. Z-INDEX SCALE
+     ---------------------------------------------------------- */
+
+  --kb-z-base:     0;
+  --kb-z-raised:   10;
+  --kb-z-dropdown: 100;
+  --kb-z-sticky:   200;
+  --kb-z-overlay:  500;
+  --kb-z-modal:    1000;
+  --kb-z-toast:    2000;
+}

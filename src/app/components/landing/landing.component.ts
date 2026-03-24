@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslationService } from '@kitchenbar/shared-data-access';
 
@@ -9,9 +9,15 @@ import { TranslationService } from '@kitchenbar/shared-data-access';
 })
 export class LandingComponent {
     mobileMenuVisible = false;
+    scrolled = false;
 
     constructor(public router: Router, public translationService: TranslationService) { }
-    
+
+    @HostListener('window:scroll', [])
+    onWindowScroll() {
+        this.scrolled = window.scrollY > 60;
+    }
+
     switchLanguage(lang: string) {
         this.translationService.setLanguage(lang);
     }

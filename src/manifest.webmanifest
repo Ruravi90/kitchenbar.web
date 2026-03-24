@@ -1,8 +1,8 @@
 {
   "name": "kitchenbar",
   "short_name": "kitchenbar",
-  "theme_color": "#f59e0b",
-  "background_color": "#f59e0b",
+  "theme_color": "#F7941E",
+  "background_color": "#F7941E",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

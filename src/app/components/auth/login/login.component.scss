@@ -1,7 +1,6 @@
-/* Login - Warm Coffee Theme - Impecable */
+/* Login — KitchenBar Design System */
 
 .login-wrapper {
-  background: linear-gradient(135deg, #6F4E37 0%, #5D4037 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -9,15 +8,14 @@
   padding: 2rem;
   position: relative;
   
-  /* Subtle coffee bean pattern */
   &::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
-    opacity: 0.03;
-    background-image: radial-gradient(circle, #3E2723 2px, transparent 2px);
-    background-size: 60px 60px;
+    opacity: 0.05;
+    background-image: radial-gradient(circle, var(--kb-gold) 2px, transparent 2px);
+    background-size: 50px 50px;
     pointer-events: none;
   }
 }
@@ -25,11 +23,11 @@
 .glass-login-card {
   background: #FFFFFF;
   border-radius: 28px;
-  box-shadow: 0 20px 60px rgba(62, 39, 35, 0.4);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
   padding: 3.5rem 3rem;
   width: 100%;
   max-width: 480px;
-  border: 1px solid rgba(111, 78, 55, 0.08);
+  border: 1px solid var(--surface-border);
   position: relative;
   z-index: 1;
   
@@ -43,16 +41,15 @@
   margin-bottom: 2rem;
   
   img {
-    max-width: 120px;
+    max-width: 110px;
     height: auto;
-    filter: drop-shadow(0 2px 4px rgba(193, 154, 107, 0.3));
   }
 }
 
 .login-title {
   text-align: center;
-  color: var(--coffee-espresso);
-  font-size: 2rem;
+  color: var(--kb-teal);
+  font-size: 2.25rem;
   font-weight: 800;
   margin-bottom: 0.75rem;
   letter-spacing: -0.5px;
@@ -60,7 +57,7 @@
 
 .login-subtitle {
   text-align: center;
-  color: var(--coffee-roasted);
+  color: var(--text-color-secondary);
   font-size: 1.0625rem;
   margin-bottom: 2.5rem;
   line-height: 1.5;
@@ -69,7 +66,7 @@
 /* Form styling */
 ::ng-deep .login-wrapper {
   label {
-    color: var(--coffee-espresso) !important;
+    color: var(--kb-teal) !important;
     font-weight: 700;
     font-size: 0.9375rem;
     margin-bottom: 0.625rem;
@@ -79,77 +76,73 @@
   
   .p-inputtext,
   .p-password input {
-    background: var(--coffee-light) !important;
-    border: 2px solid rgba(111, 78, 55, 0.15) !important;
-    color: var(--coffee-espresso) !important;
+    background: var(--surface-ground) !important;
+    border: 2px solid var(--surface-border) !important;
+    color: var(--text-color) !important;
     padding: 1rem 1.125rem !important;
     border-radius: 14px !important;
     font-size: 1rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     &:hover {
-      border-color: rgba(193, 154, 107, 0.4) !important;
-      background: rgba(245, 230, 211, 0.7) !important;
+      border-color: var(--kb-teal) !important;
     }
     
     &:focus {
-      border-color: var(--coffee-caramel) !important;
-      box-shadow: 0 0 0 4px rgba(193, 154, 107, 0.12) !important;
+      border-color: var(--kb-gold) !important;
+      box-shadow: 0 0 0 4px var(--kb-gold-10) !important;
       background: #FFFFFF !important;
     }
     
     &::placeholder {
-      color: rgba(111, 78, 55, 0.45);
-      font-size: 0.9375rem;
+      color: var(--text-color-secondary);
+      opacity: 0.6;
     }
   }
   
-  /* Password toggle icon */
   .p-password-toggle-icon {
-    color: var(--coffee-roasted) !important;
+    color: var(--kb-teal) !important;
   }
   
-  /* Login button - prominent */
+  /* Login button */
   .p-button:not(.p-button-link) {
     width: 100%;
     padding: 1.125rem !important;
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
     font-weight: 700;
     border-radius: 14px !important;
     margin-top: 1.5rem;
-    background: linear-gradient(135deg, var(--coffee-caramel), var(--coffee-roasted)) !important;
+    background: var(--kb-gold) !important;
     border: none !important;
     color: #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(193, 154, 107, 0.4);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: 0.3px;
+    box-shadow: var(--kb-shadow-gold);
+    transition: var(--kb-transition-smooth);
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(193, 154, 107, 0.5) !important;
+      box-shadow: 0 12px 25px rgba(186, 150, 38, 0.40) !important;
+      background: var(--kb-gold-light) !important;
     }
     
     &:active {
       transform: translateY(0);
+      background: var(--kb-gold-dark) !important;
     }
   }
   
-  /* Footer links */
   .p-button-link {
-    color: var(--coffee-roasted) !important;
+    color: var(--kb-teal) !important;
     font-weight: 600;
     font-size: 0.9375rem;
-    transition: color 0.2s ease;
     
     &:hover {
-      color: var(--coffee-caramel) !important;
-      text-decoration: underline;
+      color: var(--kb-gold) !important;
+      text-decoration: underline !important;
     }
   }
   
-  /* Divider between footer links */
   .footer-links {
-    border-top: 1px solid rgba(111, 78, 55, 0.1);
+    border-top: 1px solid var(--surface-border);
     padding-top: 1.5rem;
     margin-top: 1.5rem;
   }
@@ -158,10 +151,10 @@
 /* Invalid input states */
 ::ng-deep .login-wrapper {
   .ng-invalid.ng-dirty {
-    border-color: #E57373 !important;
+    border-color: var(--kb-red) !important;
     
     &:focus {
-      box-shadow: 0 0 0 4px rgba(229, 115, 115, 0.15) !important;
+      box-shadow: 0 0 0 4px rgba(144, 0, 0, 0.1) !important;
     }
   }
 }

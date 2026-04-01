@@ -37,7 +37,8 @@
               [class.active]="translationService.getCurrentLanguage() === 'en'">EN</button>
           </div>
 
-          <a class="kb-btn kb-btn--ghost" (click)="router.navigate(['/auth/login'])">
+          <a class="kb-btn" [class.kb-btn--ghost]="scrolled" [class.kb-btn--ghost-white]="!scrolled"
+            (click)="router.navigate(['/auth/login'])">
             {{ "LANDING.NAV.LOGIN" | translate }}
           </a>
           <a class="kb-btn kb-btn--primary" (click)="router.navigate(['/auth/register'])">

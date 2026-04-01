@@ -2,9 +2,9 @@
     <div class="glass-login-card">
         <!-- Logo & Title -->
         <div class="login-logo">
-            <img src="assets/layout/images/logo-dark.svg" alt="KitchenBar Logo">
+            <img src="assets/layout/images/logo.png" alt="KitchenBar Logo">
         </div>
-        
+
         <h2 class="login-title">Bienvenido</h2>
         <p class="login-subtitle">Inicia sesión para continuar</p>
 
@@ -12,32 +12,20 @@
         <form [formGroup]="formLogin" (submit)="login()">
             <div class="mb-4">
                 <label for="user_name">Usuario</label>
-                <input id="user_name" type="text"
-                    formControlName="user_name"
-                    class="w-full"
-                    placeholder="usuario@kitchenbar" 
-                    [ngClass]="{'ng-invalid ng-dirty':submitted && f['user_name'].invalid}"
-                    required
-                    pInputText>
+                <input id="user_name" type="text" formControlName="user_name" class="w-full"
+                    placeholder="usuario@kitchenbar"
+                    [ngClass]="{'ng-invalid ng-dirty':submitted && f['user_name'].invalid}" required pInputText>
             </div>
 
             <div class="mb-4">
                 <label for="password1">Contraseña</label>
-                <p-password id="password1" 
-                    formControlName="password" 
-                    class="w-full"
-                    [style]="{'width':'100%'}" 
-                    [inputStyle]="{'width':'100%'}"
-                    placeholder="Contraseña" 
-                    [toggleMask]="true"
-                    [ngClass]="{'ng-invalid ng-dirty':submitted && f['password'].invalid}"
-                    required
-                    [feedback]="false">
+                <p-password id="password1" formControlName="password" class="w-full" [style]="{'width':'100%'}"
+                    [inputStyle]="{'width':'100%'}" placeholder="Contraseña" [toggleMask]="true"
+                    [ngClass]="{'ng-invalid ng-dirty':submitted && f['password'].invalid}" required [feedback]="false">
                 </p-password>
             </div>
 
-            <button pButton pRipple label="Iniciar Sesión" type="submit" 
-                class="w-full">
+            <button pButton pRipple label="Iniciar Sesión" type="submit" class="w-full">
             </button>
         </form>
 

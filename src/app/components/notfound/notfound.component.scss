@@ -1,0 +1,122 @@
+/* Not Found — KitchenBar Design System */
+
+.notfound-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kb-gradient-hero);
+  padding: var(--kb-space-8);
+  animation: kb-fade-in 0.5s var(--kb-transition-smooth);
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.notfound-card {
+  text-align: center;
+  padding: var(--kb-space-16) var(--kb-space-12);
+  border-radius: var(--kb-radius-2xl);
+  max-width: 480px;
+  width: 100%;
+  animation: kb-scale-in 0.4s var(--kb-transition-smooth);
+
+  @media (max-width: 480px) {
+    padding: var(--kb-space-8) var(--kb-space-6);
+  }
+}
+
+/* ── Brand ───────────────────────────────────────────────── */
+.notfound-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kb-space-2);
+  margin-bottom: var(--kb-space-8);
+  padding: var(--kb-space-2) var(--kb-space-4);
+  background: rgba(186, 150, 38, 0.15);
+  border-radius: var(--kb-radius-full);
+  border: 1px solid rgba(186, 150, 38, 0.3);
+
+  .brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--kb-gold);
+    animation: kb-pulse 2s infinite;
+  }
+
+  .brand-name {
+    font-size: var(--kb-font-size-sm);
+    font-weight: var(--kb-font-weight-bold);
+    color: var(--kb-gold-light);
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+}
+
+/* ── 404 Code ────────────────────────────────────────────── */
+.notfound-code {
+  font-size: 8rem;
+  font-weight: var(--kb-font-weight-black);
+  font-family: 'Outfit', sans-serif;
+  line-height: 1;
+  margin-bottom: var(--kb-space-4);
+  background: var(--kb-gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -4px;
+
+  @media (max-width: 480px) {
+    font-size: 5rem;
+  }
+}
+
+/* ── Title ───────────────────────────────────────────────── */
+.notfound-title {
+  font-size: var(--kb-font-size-3xl);
+  font-weight: var(--kb-font-weight-black);
+  font-family: 'Outfit', sans-serif;
+  color: #ffffff;
+  margin: 0 0 var(--kb-space-4) 0;
+  letter-spacing: -0.5px;
+
+  @media (max-width: 480px) {
+    font-size: var(--kb-font-size-2xl);
+  }
+}
+
+/* ── Message ─────────────────────────────────────────────── */
+.notfound-message {
+  font-size: var(--kb-font-size-base);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+  margin: 0 0 var(--kb-space-8) 0;
+}
+
+/* ── CTA Button ──────────────────────────────────────────── */
+.notfound-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kb-space-2);
+  padding: var(--kb-space-4) var(--kb-space-8);
+  background: var(--kb-gradient-gold);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: var(--kb-radius-full);
+  font-weight: var(--kb-font-weight-bold);
+  font-size: var(--kb-font-size-base);
+  font-family: 'Outfit', sans-serif;
+  box-shadow: var(--kb-shadow-gold);
+  transition: var(--kb-transition-smooth);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(186, 150, 38, 0.5);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}

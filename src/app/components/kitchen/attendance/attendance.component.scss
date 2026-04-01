@@ -1,1 +1,135 @@
+/* Attendance — KitchenBar Design System */
 
+/* ── Container ───────────────────────────────────────────── */
+.attendance-container {
+  padding: var(--kb-space-4);
+  animation: kb-fade-in 0.4s var(--kb-transition-smooth);
+}
+
+/* ── Diner Tabs ──────────────────────────────────────────── */
+.diner-tabs {
+  display: flex;
+  gap: var(--kb-space-2);
+  overflow-x: auto;
+  padding-bottom: var(--kb-space-2);
+  margin-bottom: var(--kb-space-4);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+  ::ng-deep .p-button {
+    border-radius: var(--kb-radius-full) !important;
+    font-weight: var(--kb-font-weight-semibold);
+    white-space: nowrap;
+    transition: var(--kb-transition-smooth);
+
+    &:not(.p-button-outlined) {
+      background: var(--kb-gradient-feature) !important;
+      border-color: transparent !important;
+      box-shadow: var(--kb-shadow-teal);
+    }
+
+    &.p-button-outlined {
+      border-color: var(--surface-border) !important;
+      color: var(--text-color-secondary) !important;
+
+      &:hover {
+        background: rgba(0, 129, 138, 0.06) !important;
+        border-color: rgba(0, 129, 138, 0.3) !important;
+        color: var(--kb-teal) !important;
+      }
+    }
+  }
+}
+
+/* ── PrimeNG Card Override ───────────────────────────────── */
+::ng-deep .p-card {
+  border: 1.5px solid var(--surface-border) !important;
+  border-radius: var(--kb-radius-xl) !important;
+  box-shadow: var(--kb-shadow-sm) !important;
+
+  .p-card-header {
+    font-weight: var(--kb-font-weight-bold);
+    color: var(--kb-brown);
+    font-family: 'Outfit', sans-serif;
+    font-size: var(--kb-font-size-lg);
+    padding: var(--kb-space-6) var(--kb-space-6) 0;
+  }
+
+  .p-card-body {
+    padding: var(--kb-space-6);
+  }
+}
+
+/* ── Order Items ─────────────────────────────────────────── */
+.item-cancel {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+/* ── Action Buttons ──────────────────────────────────────── */
+.action-btn-primary {
+  background: var(--kb-gradient-gold) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: var(--kb-font-weight-bold);
+  border-radius: var(--kb-radius-md) !important;
+  box-shadow: var(--kb-shadow-gold);
+  transition: var(--kb-transition-smooth);
+
+  &:hover { transform: translateY(-2px); }
+}
+
+/* ── Button Flash (Attention call) ──────────────────────── */
+::ng-deep .button-flash.p-button {
+  animation: attentionFlash 1.2s ease-in-out infinite;
+}
+
+@keyframes attentionFlash {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(186, 150, 38, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(186, 150, 38, 0); }
+}
+
+/* ── Total Row ───────────────────────────────────────────── */
+.order-total-row {
+  font-size: var(--kb-font-size-lg);
+  font-weight: var(--kb-font-weight-bold);
+  color: var(--kb-brown);
+}
+
+/* ── Confirm Dialog ──────────────────────────────────────── */
+::ng-deep .p-confirmDialog {
+  .p-dialog-content {
+    border-radius: var(--kb-radius-2xl) !important;
+    padding: var(--kb-space-8) !important;
+  }
+
+  .border-circle.bg-primary {
+    background: var(--kb-gradient-feature) !important;
+    box-shadow: var(--kb-shadow-teal);
+  }
+}
+
+/* ── Spinner Dialog ──────────────────────────────────────── */
+::ng-deep .p-dialog {
+  border-radius: var(--kb-radius-xl) !important;
+  overflow: hidden;
+
+  .p-dialog-header {
+    font-weight: var(--kb-font-weight-bold);
+    color: var(--kb-brown);
+    font-family: 'Outfit', sans-serif;
+    border-bottom: 1.5px solid var(--surface-border);
+  }
+}
+
+.pi-spin.pi-spinner {
+  color: var(--kb-teal);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .attendance-container {
+    padding: var(--kb-space-2);
+  }
+}

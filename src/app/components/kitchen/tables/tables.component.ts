@@ -18,14 +18,14 @@ export class TablesComponent {
     private messageService: MessageService,
     private tableServices: TablesInterface,
     private hub: HubInterface,
-    private router: Router){
-      this.elementType= "canvas" as QRCodeElementType;
-    }
+    private router: Router) {
+    this.elementType = "canvas" as QRCodeElementType;
+  }
 
   tables?: Table[];
-  table?:Table;
+  table?: Table;
   isBusyTableService: boolean = false;
-  visibleQRModal:boolean = false;
+  visibleQRModal: boolean = false;
   public qrData = {
     allowEmptyString: true,
     alt: "A custom alt attribute",
@@ -35,7 +35,7 @@ export class TablesComponent {
     cssClass: "center",
     elementType: "canvas" as QRCodeElementType,
     errorCorrectionLevel: "M" as QRCodeErrorCorrectionLevel,
-    imageSrc: "./assets/layout/images/logo-dark.svg",
+    imageSrc: "./assets/layout/images/logo.png",
     imageHeight: 75,
     imageWidth: 150,
     margin: 4,
@@ -54,24 +54,24 @@ export class TablesComponent {
     if (table.isBusy !== undefined && table.isBusy !== null) {
       return table.isBusy;
     }
-    
+
     // Fallback: check if table has any alerts/requests
-    return !!(table.isWarnAttendace || table.isWarnCheck || 
-              table.isRequestAttendace || table.isRequestCheck ||
-              table.isDangerAttendace || table.isDangerCheck);
+    return !!(table.isWarnAttendace || table.isWarnCheck ||
+      table.isRequestAttendace || table.isRequestCheck ||
+      table.isDangerAttendace || table.isDangerCheck);
   }
 
   ngOnInit(): void {
     this.retrieveTables();
-    this.hub.notificationWarnTables().subscribe(x =>  {
-      if(x.isRequestAttendace)
+    this.hub.notificationWarnTables().subscribe(x => {
+      if (x.isRequestAttendace)
         this.messageService.add({ summary: 'Asistencia', detail: `La ${x.name} necesita ayuda`, life: 3000 });
-      if(x.isRequestCheck)
+      if (x.isRequestCheck)
         this.messageService.add({ summary: 'Cuenta', detail: `La ${x.name} solicito la cuenta`, life: 3000 });
       this.retrieveTables();
     });
 
-    this.hub.notificationDangerTables().subscribe(x =>  {
+    this.hub.notificationDangerTables().subscribe(x => {
       console.log("notificationWarnAttendace", x);
       this.messageService.add({ summary: 'Asistencia', detail: 'Se solicito asistencia', life: 3000 });
       this.retrieveTables();
@@ -79,15 +79,15 @@ export class TablesComponent {
   }
 
   async delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  requestAttendace(item:Table){
-    item.isRequestAttendace =false;
+  requestAttendace(item: Table) {
+    item.isRequestAttendace = false;
     this.tableServices.request(item).subscribe({
-      next:()=>{
+      next: () => {
         this.hub.sendNotificationTables(item);
-        this.router.navigate(["/kitchen/table/"+item.identity]);
+        this.router.navigate(["/kitchen/table/" + item.identity]);
       },
       error: (e) => {
         console.log(e);
@@ -95,12 +95,12 @@ export class TablesComponent {
       }
     });
   }
-  requestCheck(item:Table){
+  requestCheck(item: Table) {
     item.isRequestCheck = false;
     this.tableServices.request(item).subscribe({
-      next:()=>{
+      next: () => {
         this.hub.sendNotificationTables(item);
-        this.router.navigate(["/kitchen/table/"+item.identity]);
+        this.router.navigate(["/kitchen/table/" + item.identity]);
       },
       error: (e) => {
         console.log(e);
@@ -111,7 +111,7 @@ export class TablesComponent {
 
 
   retrieveTables(): void {
-    if(this.isBusyTableService)
+    if (this.isBusyTableService)
       return;
 
     this.isBusyTableService = true;
@@ -127,9 +127,9 @@ export class TablesComponent {
     });
   }
 
-  showQRModal(item:Table){
+  showQRModal(item: Table) {
     this.visibleQRModal = true;
     this.table = item!;
-    this.qrData.qrdata = environment.baseUrl+item.identity;
+    this.qrData.qrdata = environment.baseUrl + item.identity;
   }
 }

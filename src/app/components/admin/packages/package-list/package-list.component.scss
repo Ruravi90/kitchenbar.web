@@ -1,1 +1,105 @@
+/* KitchenBar Design System */
 
+.tables-container {
+  padding: var(--kb-space-8);
+  background: var(--surface-ground);
+  min-height: calc(100vh - 4rem);
+  animation: kb-fade-in 0.4s var(--kb-transition-smooth);
+
+  @media (max-width: 768px) {
+    padding: var(--kb-space-4);
+  }
+}
+
+/* ── Page Header ─────────────────────────────────────────── */
+.page-header {
+  padding: var(--kb-space-8);
+  margin-bottom: var(--kb-space-8) !important;
+  border-radius: var(--kb-radius-xl);
+
+  .page-title {
+    h1 {
+      font-size: var(--kb-font-size-4xl);
+      color: var(--kb-brown);
+      font-weight: var(--kb-font-weight-black);
+      margin-bottom: var(--kb-space-2);
+      letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+      font-size: var(--kb-font-size-base);
+      color: var(--text-color-secondary);
+      margin: 0;
+    }
+  }
+}
+
+/* ── Content Card ────────────────────────────────────────── */
+.content-card {
+  padding: var(--kb-space-8);
+  border: 1.5px solid var(--surface-border);
+  border-radius: var(--kb-radius-xl);
+  background: #ffffff;
+  box-shadow: var(--kb-shadow-sm);
+  transition: var(--kb-transition-smooth);
+
+  &:hover {
+    box-shadow: var(--kb-shadow-md);
+    border-color: rgba(0, 129, 138, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    padding: var(--kb-space-6);
+  }
+}
+
+/* ── Empty State ─────────────────────────────────────────── */
+.empty-state {
+  padding: var(--kb-space-12) var(--kb-space-8);
+  text-align: center;
+
+  .empty-icon {
+    font-size: 4rem;
+    color: rgba(0, 129, 138, 0.2);
+    margin-bottom: var(--kb-space-6);
+  }
+
+  .empty-title {
+    font-size: var(--kb-font-size-xl);
+    color: var(--kb-brown);
+    font-weight: var(--kb-font-weight-bold);
+    margin-bottom: var(--kb-space-2);
+  }
+
+  .empty-subtitle {
+    font-size: var(--kb-font-size-base);
+    color: var(--text-color-secondary);
+    margin-bottom: var(--kb-space-8);
+  }
+
+  .text-muted {
+    color: var(--text-color-secondary);
+    opacity: 0.75;
+  }
+}
+
+/* ── Highlighted Row ─────────────────────────────────────── */
+.highlighted-row {
+  animation: highlightPulse 2s ease-in-out 3;
+}
+
+@keyframes highlightPulse {
+  0%, 100% { background-color: transparent; }
+  50%       { background-color: rgba(0, 129, 138, 0.08); }
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .page-header {
+    padding: var(--kb-space-6);
+
+    .page-title h1 {
+      font-size: var(--kb-font-size-3xl);
+    }
+  }
+}

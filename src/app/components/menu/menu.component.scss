@@ -1,1 +1,165 @@
+/* Menú / Carta — KitchenBar Design System */
 
+.menu-container {
+  animation: kb-fade-in 0.4s var(--kb-transition-smooth);
+  min-height: 100vh;
+  background: var(--surface-ground);
+}
+
+/* ── Category Nav ────────────────────────────────────────── */
+.category-nav {
+  background: #ffffff !important;
+  border-bottom: 1.5px solid var(--surface-border);
+  box-shadow: var(--kb-shadow-xs);
+
+  &.sticky {
+    top: 0;
+    z-index: var(--kb-z-sticky);
+  }
+
+  /* Override PrimeNG button rounded in the nav */
+  ::ng-deep .p-button-rounded {
+    border-radius: var(--kb-radius-full) !important;
+    font-weight: var(--kb-font-weight-semibold);
+    font-family: 'Outfit', sans-serif;
+    transition: var(--kb-transition-smooth);
+
+    &.p-button-text:not(.p-button-outlined) {
+      /* Active category */
+      background: var(--kb-gradient-feature) !important;
+      color: #ffffff !important;
+      border-color: transparent !important;
+      box-shadow: var(--kb-shadow-teal);
+    }
+
+    &.p-button-outlined {
+      /* Inactive category */
+      border-color: var(--surface-border) !important;
+      color: var(--text-color-secondary) !important;
+
+      &:hover {
+        background: rgba(0, 129, 138, 0.06) !important;
+        border-color: rgba(0, 129, 138, 0.3) !important;
+        color: var(--kb-teal) !important;
+      }
+    }
+  }
+}
+
+/* ── Menu List ───────────────────────────────────────────── */
+.menu-list {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--kb-space-8) var(--kb-space-6) var(--kb-space-32);
+}
+
+/* ── Category Section ────────────────────────────────────── */
+.category-section {
+  margin-bottom: var(--kb-space-12);
+}
+
+.category-title {
+  font-size: var(--kb-font-size-3xl);
+  font-family: 'Outfit', sans-serif;
+  font-weight: var(--kb-font-weight-black);
+  color: var(--kb-brown);
+  margin: 0 0 var(--kb-space-6) 0;
+  padding-bottom: var(--kb-space-4);
+  border-bottom: 2px solid var(--surface-border);
+  letter-spacing: -0.5px;
+}
+
+/* ── Meal Item ───────────────────────────────────────────── */
+.meal-item {
+  padding: var(--kb-space-4) 0;
+  border-bottom: 1px solid var(--surface-border);
+  transition: var(--kb-transition-base);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    .meal-name { color: var(--kb-teal); }
+  }
+}
+
+.meal-name {
+  font-size: var(--kb-font-size-lg);
+  font-weight: var(--kb-font-weight-semibold);
+  color: var(--kb-brown);
+  margin: 0;
+  transition: var(--kb-transition-base);
+}
+
+.meal-price {
+  font-size: var(--kb-font-size-lg);
+  font-weight: var(--kb-font-weight-bold);
+  color: var(--kb-gold);
+}
+
+.meal-description {
+  font-size: var(--kb-font-size-sm);
+  color: var(--text-color-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Add to Cart Button ──────────────────────────────────── */
+::ng-deep .meal-add-btn.p-button-rounded {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  background: var(--kb-gradient-feature) !important;
+  border: none !important;
+  box-shadow: var(--kb-shadow-teal);
+  color: #ffffff !important;
+  transition: var(--kb-transition-smooth);
+
+  &:hover:not(:disabled) {
+    transform: scale(1.12);
+    box-shadow: 0 6px 18px rgba(0, 129, 138, 0.4) !important;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    background: var(--surface-border) !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ── Fixed FAB Buttons ───────────────────────────────────── */
+::ng-deep .fab-cart.p-button {
+  background: var(--kb-gradient-gold) !important;
+  border: none !important;
+  box-shadow: var(--kb-shadow-gold) !important;
+  border-radius: var(--kb-radius-full) !important;
+  font-weight: var(--kb-font-weight-bold);
+  transition: var(--kb-transition-smooth);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(186, 150, 38, 0.5) !important;
+  }
+}
+
+/* ── Empty State ─────────────────────────────────────────── */
+.menu-empty {
+  text-align: center;
+  padding: var(--kb-space-12) var(--kb-space-8);
+  color: var(--text-color-secondary);
+  font-size: var(--kb-font-size-base);
+}
+
+/* ── Dialog Overrides ────────────────────────────────────── */
+::ng-deep .p-fluid {
+  .p-dialog-header {
+    font-weight: var(--kb-font-weight-bold);
+    color: var(--kb-brown);
+    font-family: 'Outfit', sans-serif;
+    border-bottom: 1.5px solid var(--surface-border);
+  }
+
+  .p-dialog-footer {
+    border-top: 1.5px solid var(--surface-border);
+  }
+}

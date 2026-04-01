@@ -75,7 +75,7 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--kb-font-family);
   color: var(--text-color);
   background-color: var(--surface-ground);
   margin: 0;
@@ -464,11 +464,12 @@ a {
 }
 .card {
   background: var(--surface-card);
-  border: 1px solid var(--surface-border);
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--card-shadow);
-  border-radius: 12px;
+  border: 1.5px solid var(--surface-border);
+  padding: var(--kb-space-8);
+  margin-bottom: var(--kb-space-8);
+  box-shadow: var(--kb-shadow-sm);
+  border-radius: var(--kb-radius-lg);
+  transition: var(--kb-transition-base);
 }
 .card:last-child {
   margin-bottom: 0;

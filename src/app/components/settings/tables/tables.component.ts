@@ -15,15 +15,15 @@ import { environment } from '../../../../environments/environment';
 export class TablesComponent {
 
   tableForm!: FormGroup;
-  
+
   constructor(
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private tablesServices: TablesInterface,
     private branchesService: BranchesInterface,
-    private dashboardService: DashboardInterface){
-    this.elementType= "canvas" as QRCodeElementType;
+    private dashboardService: DashboardInterface) {
+    this.elementType = "canvas" as QRCodeElementType;
   }
 
   initForm() {
@@ -38,12 +38,12 @@ export class TablesComponent {
   filteredTables: Table[] = []; // For search results
   searchTerm: string = '';
   highlightedTableId: number | null = null; // For visual feedback
-  
+
   branches: Branch[] = [];
   table: Table = {}
   visibleModal: boolean = false;
-  visibleQRModal:boolean = false;
-  isEdit:boolean = false;
+  visibleQRModal: boolean = false;
+  isEdit: boolean = false;
   public qrData = {
     allowEmptyString: true,
     alt: "A custom alt attribute",
@@ -53,7 +53,7 @@ export class TablesComponent {
     cssClass: "center",
     elementType: "canvas" as QRCodeElementType,
     errorCorrectionLevel: "M" as QRCodeErrorCorrectionLevel,
-    imageSrc: "./assets/layout/images/logo-dark.svg",
+    imageSrc: "./assets/layout/images/logo.png",
     imageHeight: 75,
     imageWidth: 150,
     margin: 4,
@@ -84,8 +84,8 @@ export class TablesComponent {
         this.checkLicenseLimit();
       },
       error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
-            }
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+      }
     });
   }
 
@@ -103,17 +103,17 @@ export class TablesComponent {
   }
 
   checkLicenseLimit() {
-      // Assuming instance ID is available from one of the services or manually passed 0 to infer from token
-      this.dashboardService.getLicenseStatus().subscribe((license: any) => {
-          if (license) {
-              this.maxTables = license.maxTables === 'Unlimited' ? -1 : parseInt(license.maxTables);
-              if (this.maxTables !== -1 && this.tables.length >= this.maxTables) {
-                  this.canCreateTables = false;
-              } else {
-                  this.canCreateTables = true;
-              }
-          }
-      });
+    // Assuming instance ID is available from one of the services or manually passed 0 to infer from token
+    this.dashboardService.getLicenseStatus().subscribe((license: any) => {
+      if (license) {
+        this.maxTables = license.maxTables === 'Unlimited' ? -1 : parseInt(license.maxTables);
+        if (this.maxTables !== -1 && this.tables.length >= this.maxTables) {
+          this.canCreateTables = false;
+        } else {
+          this.canCreateTables = true;
+        }
+      }
+    });
   }
 
   getBranches(): void {
@@ -127,10 +127,10 @@ export class TablesComponent {
     });
   }
 
-  showModal(isEdit:boolean = false, item?:Table){
+  showModal(isEdit: boolean = false, item?: Table) {
     this.isEdit = isEdit;
-    
-    if(isEdit){
+
+    if (isEdit) {
       this.table = item!;
       this.tableForm.patchValue({
         name: item?.name || '',
@@ -145,94 +145,94 @@ export class TablesComponent {
     this.visibleModal = true;
   }
 
-  confirmSave(){
+  confirmSave() {
     // Validate form
     if (this.tableForm.invalid) {
       Object.keys(this.tableForm.controls).forEach(key => {
         this.tableForm.get(key)?.markAsTouched();
       });
-      this.messageService.add({ 
-        severity: 'warn', 
-        summary: 'Validación', 
-        detail: 'Por favor completa todos los campos requeridos correctamente' 
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Validación',
+        detail: 'Por favor completa todos los campos requeridos correctamente'
       });
       return;
     }
 
     const formValue = this.tableForm.value;
-    
+
     // Build table object from form
     this.table.name = formValue.name;
     this.table.branchId = formValue.branchId;
     this.table.additional = formValue.additional;
 
-    if(this.isEdit){
-      this.tablesServices.updateItem(this.table!.id!,this.table).subscribe({
+    if (this.isEdit) {
+      this.tablesServices.updateItem(this.table!.id!, this.table).subscribe({
         next: (data: any) => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: '¡Éxito!', 
-            detail: 'Mesa actualizada correctamente' 
+          this.messageService.add({
+            severity: 'success',
+            summary: '¡Éxito!',
+            detail: 'Mesa actualizada correctamente'
           });
           this.highlightedTableId = this.table.id ?? null;
           this.getTables();
           setTimeout(() => this.highlightedTableId = null, 2000);
         },
         error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
-            }
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+        }
       });
     }
-    else{
+    else {
       this.tablesServices.createItem(this.table).subscribe({
         next: (data: any) => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: '¡Éxito!', 
-            detail: 'Mesa creada correctamente' 
+          this.messageService.add({
+            severity: 'success',
+            summary: '¡Éxito!',
+            detail: 'Mesa creada correctamente'
           });
           this.highlightedTableId = data.id ?? null;
           this.getTables();
           setTimeout(() => this.highlightedTableId = null, 2000);
         },
         error: (e) => {
-              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
-            }
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: e.error.messages });
+        }
       });
     }
     this.visibleModal = false;
   }
 
-  confirmDeleted(item:Table) {
+  confirmDeleted(item: Table) {
     this.confirmationService.confirm({
-        header: '¿Confirmar eliminación?',
-        message: `¿Estás seguro de eliminar la mesa <strong>${item.name}</strong>?<br>Esta acción no se puede deshacer.`,
-        icon: 'pi pi-exclamation-triangle',
-        acceptButtonStyleClass: 'p-button-danger',
-        acceptLabel: 'Sí, eliminar',
-        rejectLabel: 'Cancelar',
-        accept: () => {
-          this.tablesServices.deleteItem(item.id!).subscribe({
-            next: (data: any) => {
-              this.messageService.add({ 
-                severity: 'success', 
-                summary: 'Eliminada', 
-                detail: `Mesa ${item.name} eliminada correctamente` 
-              });
-              this.getTables();
-            },
-            error: (e) => {
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
-            }
-          });
-        }
+      header: '¿Confirmar eliminación?',
+      message: `¿Estás seguro de eliminar la mesa <strong>${item.name}</strong>?<br>Esta acción no se puede deshacer.`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.tablesServices.deleteItem(item.id!).subscribe({
+          next: (data: any) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Eliminada',
+              detail: `Mesa ${item.name} eliminada correctamente`
+            });
+            this.getTables();
+          },
+          error: (e) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: e.error.messages });
+          }
+        });
+      }
     });
   }
 
-  showQRModal(item:Table){
+  showQRModal(item: Table) {
     this.visibleQRModal = true;
     this.table = item!;
-    this.qrData.qrdata = environment.baseUrl+item.identity;
+    this.qrData.qrdata = environment.baseUrl + item.identity;
   }
   saveQRAsImage(parent: FixMeLater) {
     let parentElement = null

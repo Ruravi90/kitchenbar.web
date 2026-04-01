@@ -7,7 +7,7 @@
     <div class="kb-navbar__inner">
       <!-- Logo -->
       <a class="kb-navbar__logo" href="#">
-        <img src="assets/layout/images/logo-dark.svg" alt="KitchenBar" height="40" />
+        <img src="assets/layout/images/logo.png" alt="KitchenBar" height="40" />
         <span class="kb-navbar__brand">Kitchen<span class="kb-navbar__brand--accent">Bar</span></span>
       </a>
 
@@ -19,17 +19,22 @@
       <!-- Nav links -->
       <div class="kb-navbar__menu" [class.kb-navbar__menu--open]="mobileMenuVisible">
         <ul class="kb-navbar__links">
-          <li><a (click)="router.navigate(['/landing'], { fragment: 'home' })">{{ "LANDING.NAV.HOME" | translate }}</a></li>
-          <li><a (click)="router.navigate(['/landing'], { fragment: 'features' })">{{ "LANDING.NAV.FEATURES" | translate }}</a></li>
-          <li><a (click)="router.navigate(['/landing'], { fragment: 'roadmap' })">{{ "LANDING.NAV.ROADMAP" | translate }}</a></li>
+          <li><a (click)="router.navigate(['/landing'], { fragment: 'home' })">{{ "LANDING.NAV.HOME" | translate }}</a>
+          </li>
+          <li><a (click)="router.navigate(['/landing'], { fragment: 'features' })">{{ "LANDING.NAV.FEATURES" | translate
+              }}</a></li>
+          <li><a (click)="router.navigate(['/landing'], { fragment: 'roadmap' })">{{ "LANDING.NAV.ROADMAP" | translate
+              }}</a></li>
         </ul>
 
         <div class="kb-navbar__actions">
           <!-- Language switcher -->
           <div class="kb-lang-switch">
-            <button (click)="switchLanguage('es')" [class.active]="translationService.getCurrentLanguage() === 'es'">ES</button>
+            <button (click)="switchLanguage('es')"
+              [class.active]="translationService.getCurrentLanguage() === 'es'">ES</button>
             <span>|</span>
-            <button (click)="switchLanguage('en')" [class.active]="translationService.getCurrentLanguage() === 'en'">EN</button>
+            <button (click)="switchLanguage('en')"
+              [class.active]="translationService.getCurrentLanguage() === 'en'">EN</button>
           </div>
 
           <a class="kb-btn kb-btn--ghost" (click)="router.navigate(['/auth/login'])">
@@ -70,7 +75,8 @@
           <i class="pi pi-arrow-right"></i>
           {{ "LANDING.HERO.GET_STARTED" | translate }}
         </a>
-        <a class="kb-btn kb-btn--ghost-white kb-btn--lg" (click)="router.navigate(['/landing'], { fragment: 'features' })">
+        <a class="kb-btn kb-btn--ghost-white kb-btn--lg"
+          (click)="router.navigate(['/landing'], { fragment: 'features' })">
           <i class="pi pi-play-circle"></i>
           Ver funciones
         </a>
@@ -327,7 +333,7 @@
   <footer class="kb-footer">
     <div class="kb-footer__inner">
       <div class="kb-footer__brand">
-        <img src="assets/layout/images/logo-dark.svg" alt="KitchenBar" height="32" />
+        <img src="assets/layout/images/logo.png" alt="KitchenBar" height="32" />
         <span>KitchenBar</span>
       </div>
       <p class="kb-footer__copy">{{ "LANDING.FOOTER.RIGHTS" | translate }}</p>

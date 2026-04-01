@@ -1,1 +1,129 @@
+/* Reservation Dialog — KitchenBar Design System */
 
+::ng-deep .reservation-dialog {
+    .p-dialog-header {
+        background: #ffffff !important;
+        border-bottom: 1.5px solid var(--surface-border) !important;
+        padding: var(--kb-space-6) var(--kb-space-8) !important;
+        
+        .p-dialog-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: var(--kb-font-weight-bold);
+            color: var(--kb-brown);
+            font-size: var(--kb-font-size-xl);
+        }
+    }
+
+    .p-dialog-content {
+        background: #ffffff !important;
+        padding: var(--kb-space-8) !important;
+    }
+
+    .p-dialog-footer {
+        background: #ffffff !important;
+        border-top: 1.5px solid var(--surface-border) !important;
+        padding: var(--kb-space-6) var(--kb-space-8) !important;
+    }
+}
+
+/* ── Form Fields ────────────────────────────────────────── */
+.field {
+    margin-bottom: var(--kb-space-6);
+    
+    label {
+        display: block;
+        font-family: 'Outfit', sans-serif;
+        font-weight: var(--kb-font-weight-semibold);
+        color: var(--kb-brown);
+        margin-bottom: var(--kb-space-2);
+        font-size: var(--kb-font-size-sm);
+    }
+}
+
+/* ── Table Cards ────────────────────────────────────────── */
+.table-card {
+    background: #ffffff;
+    border: 1.5px solid var(--surface-border);
+    transition: var(--kb-transition-smooth);
+    margin-bottom: var(--kb-space-4);
+    
+    &:hover {
+        border-color: var(--kb-teal-light);
+        background: rgba(0, 129, 138, 0.02);
+    }
+    
+    &.selected {
+        border-color: var(--kb-teal) !important;
+        background: rgba(0, 129, 138, 0.05) !important;
+        box-shadow: var(--kb-shadow-sm);
+    }
+    
+    .font-bold {
+        color: var(--kb-brown);
+        font-family: 'Outfit', sans-serif;
+    }
+}
+
+/* ── Availability Message ───────────────────────────────── */
+.availability-step {
+    animation: kb-fade-in 0.4s var(--kb-transition-smooth);
+    
+    .text-lg {
+        font-family: 'Outfit', sans-serif;
+        font-weight: var(--kb-font-weight-semibold);
+        color: var(--kb-teal-dark);
+    }
+}
+
+/* ── Buttons ────────────────────────────────────────────── */
+::ng-deep .p-button {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: var(--kb-font-weight-bold) !important;
+    border-radius: var(--kb-radius-md) !important;
+    transition: var(--kb-transition-smooth) !important;
+
+    &.p-button-primary {
+        background: var(--kb-gradient-feature) !important;
+        border: none !important;
+        box-shadow: var(--kb-shadow-teal);
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 129, 138, 0.35);
+        }
+    }
+
+    &.p-button-success {
+        background: var(--kb-gradient-gold) !important;
+        border: none !important;
+        box-shadow: var(--kb-shadow-gold);
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(186, 150, 38, 0.4);
+        }
+    }
+
+    &.p-button-text {
+        color: var(--text-color-secondary) !important;
+        
+        &:hover {
+            background: rgba(0, 129, 138, 0.05) !important;
+            color: var(--kb-teal) !important;
+        }
+    }
+}
+
+/* ── Inputs ─────────────────────────────────────────────── */
+::ng-deep .p-inputtext, 
+::ng-deep .p-dropdown,
+::ng-deep .p-calendar .p-inputtext {
+    border-radius: var(--kb-radius-md) !important;
+    border: 1.5px solid var(--surface-border) !important;
+    font-family: 'Outfit', sans-serif !important;
+    
+    &:enabled:focus {
+        border-color: var(--kb-teal) !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 129, 138, 0.1) !important;
+    }
+}

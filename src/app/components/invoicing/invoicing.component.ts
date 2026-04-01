@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-invoicing',
   templateUrl: './invoicing.component.html',
+  styleUrls: ['./invoicing.component.scss'],
   providers: [MessageService]
 })
 export class InvoicingComponent implements OnInit {

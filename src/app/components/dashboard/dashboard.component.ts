@@ -105,8 +105,8 @@ export class DashboardComponent implements OnInit {
             {
               label: 'Ventas',
               data: [data.today, data.lastWeek],
-              backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-              borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)'],
+              backgroundColor: ['rgba(0,129,138,0.25)', 'rgba(186,150,38,0.25)'],
+              borderColor: ['#00818A', '#BA9626'],
               borderWidth: 1
             }
           ]
@@ -129,18 +129,18 @@ export class DashboardComponent implements OnInit {
             {
               data: data.map((item: any) => item.quantity),
               backgroundColor: [
-                  "#42A5F5",
-                  "#66BB6A",
-                  "#FFA726",
-                  "#26C6DA",
-                  "#7E57C2"
+                  "#00818A",
+                  "#BA9626",
+                  "#88F640",
+                  "#D4AF37",
+                  "#005a61"
               ],
               hoverBackgroundColor: [
-                  "#64B5F6",
-                  "#81C784",
-                  "#FFB74D",
-                  "#4DD0E1",
-                  "#9575CD"
+                  "#009CA6",
+                  "#D4AF37",
+                  "#66CC20",
+                  "#BA9626",
+                  "#00818A"
               ]
             }
           ]
@@ -163,8 +163,8 @@ export class DashboardComponent implements OnInit {
             {
               label: 'Órdenes',
               data: data.map((item: any) => item.count),
-              backgroundColor: '#42A5F5',
-              borderColor: '#1E88E5',
+              backgroundColor: 'rgba(0,129,138,0.7)',
+              borderColor: '#00818A',
               borderWidth: 1
             }
           ]
@@ -190,19 +190,19 @@ export class DashboardComponent implements OnInit {
                 {
                     type: 'bar',
                     label: 'Stock Actual',
-                    backgroundColor: '#66BB6A',
+                    backgroundColor: '#00818A',
                     data: sortedData.map((item: any) => item.currentStock)
                 },
                 {
                     type: 'bar',
                     label: 'Consumo Predicho (7d)',
-                    backgroundColor: '#FFA726',
+                    backgroundColor: '#BA9626',
                     data: sortedData.map((item: any) => item.predictedConsumption)
                 },
                 {
                     type: 'bar',
                     label: 'Sugerencia Compra',
-                    backgroundColor: '#EF5350',
+                    backgroundColor: '#900000',
                     data: sortedData.map((item: any) => item.suggestedReorder)
                 }
             ]

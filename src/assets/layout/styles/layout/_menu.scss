@@ -1,35 +1,63 @@
-/* Sidebar/Menu - Warm Coffee Theme */
+/* Sidebar/Menu — KitchenBar Design System */
 
 .layout-sidebar {
-  background: #FFFFFF !important;
-  border: 1px solid rgba(111, 78, 55, 0.15) !important;
-  box-shadow: 0 4px 16px rgba(62, 39, 35, 0.08) !important;
+  background: #ffffff !important;
+  border-right: 1.5px solid var(--surface-border) !important;
+  box-shadow: var(--kb-shadow-sm) !important;
+  transition: var(--kb-transition-base);
+  
+  @media (min-width: 992px) {
+    top: 5rem;
+    left: 0;
+    height: calc(100vh - 5rem);
+    border-radius: 0;
+  }
 }
 
 .layout-menu {
   .layout-root-menuitem {
     > .layout-menuitem-root-text {
-      color: var(--coffee-roasted) !important;
-      font-weight: 700;
-      font-size: 0.75rem;
-      letter-spacing: 0.5px;
+      color: var(--text-color-secondary) !important;
+      font-weight: var(--kb-font-weight-bold);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: var(--kb-space-6) 0 var(--kb-space-2) var(--kb-space-4);
+      font-family: 'Outfit', sans-serif;
     }
   }
   
   ul a {
-    color: var(--coffee-espresso) !important;
-    border-radius: 12px;
+    color: var(--kb-brown) !important;
+    border-radius: var(--kb-radius-lg);
+    margin: 2px var(--kb-space-2);
+    padding: var(--kb-space-3) var(--kb-space-4);
+    font-family: 'Outfit', sans-serif;
+    transition: var(--kb-transition-base);
+    
+    .layout-menuitem-icon {
+      color: var(--text-color-secondary);
+      transition: var(--kb-transition-base);
+    }
     
     &.active-route {
-      background: linear-gradient(135deg, var(--coffee-caramel), var(--coffee-roasted)) !important;
-      color: #FFFFFF !important;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(193, 154, 107, 0.3);
+      background: var(--kb-gradient-feature) !important;
+      color: #ffffff !important;
+      font-weight: var(--kb-font-weight-semibold);
+      box-shadow: var(--kb-shadow-teal);
+      
+      .layout-menuitem-icon {
+        color: #ffffff !important;
+      }
     }
     
     &:hover:not(.active-route) {
-      background: rgba(193, 154, 107, 0.1) !important;
-      color: var(--coffee-roasted) !important;
+      background: rgba(0, 129, 138, 0.08) !important;
+      color: var(--kb-teal) !important;
+      
+      .layout-menuitem-icon {
+        color: var(--kb-teal) !important;
+      }
     }
   }
 }
